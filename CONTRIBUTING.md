@@ -1,6 +1,7 @@
 # New Issues are for bug reports or feature requests only!!  Questions on how to use the grid should be posted to Stack Overflow or Gitter https://gitter.im/angular-ui/ui-grid.
 
 # Contributing to UI Grid
+- [Kandula Komali Reddy](https://github.com/Komali0706)
 
 Please take a moment to review this document in order to make the contribution
 process easy and effective for everyone involved.
