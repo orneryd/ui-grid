@@ -164,6 +164,15 @@ describe('uiGridHeaderCell', function() {
 				expect(headers.length).toEqual(2);
 			});
 		});
+
+		describe('accessibility attributes', function() {
+			it('should use a descriptive label and menu popup type for the column menu button', function() {
+				var menuButton = $(grid).find('.ui-grid-column-menu-button').first();
+
+				expect(menuButton.attr('aria-label')).toEqual('Column options');
+				expect(menuButton.attr('aria-haspopup')).toEqual('menu');
+			});
+		});
 		// TODO(c0bra): Allow extra items to be added to a column menu through columnDefs
 	});
 
