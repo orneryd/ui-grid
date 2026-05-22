@@ -9,7 +9,7 @@
           aria: {
             defaultFilterLabel: 'Filter for column',
             removeFilter: 'Remove Filter',
-            columnMenuButtonLabel: 'Column Menu',
+            columnMenuButtonLabel: 'Column Menu Button',
             column: 'Column'
           },
           priority: 'Priority:',
