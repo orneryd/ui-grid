@@ -803,9 +803,9 @@ angular.module('ui.grid')
             .then(function() {
               self.preCompileCellTemplates();
               self.queueGridRefresh();
-            }).catch(angular.noop);
+            }).catch(function(err) { $log.error(err); });
         }
-      }).catch(angular.noop);
+      }).catch(function(err) { $log.error(err); });
   };
 
   /**
@@ -924,7 +924,7 @@ angular.module('ui.grid')
       if (options.preCompileCellTemplates) {
         self.preCompileCellTemplates();
       }
-    }).catch(angular.noop);
+    }).catch(function(err) { $log.error(err); });
   };
 
   Grid.prototype.preCompileCellTemplate = function(col) {
@@ -953,7 +953,7 @@ angular.module('ui.grid')
       } else if ( col.cellTemplatePromise ) {
         col.cellTemplatePromise.then( function() {
           self.preCompileCellTemplate( col );
-        }).catch(angular.noop);
+        }).catch(function(err) { $log.error(err); });
       }
     });
   };
@@ -1261,12 +1261,12 @@ angular.module('ui.grid')
     var p1 = $q.when(self.processRowsProcessors(self.rows))
       .then(function (renderableRows) {
         return self.setVisibleRows(renderableRows);
-      }).catch(angular.noop);
+      }).catch(function(err) { $log.error(err); });
 
     var p2 = $q.when(self.processColumnsProcessors(self.columns))
       .then(function (renderableColumns) {
         return self.setVisibleColumns(renderableColumns);
-      }).catch(angular.noop);
+      }).catch(function(err) { $log.error(err); });
 
     return $q.all([p1, p2]);
   };
@@ -1564,7 +1564,7 @@ angular.module('ui.grid')
           else {
             finished.resolve(myRenderableColumns);
           }
-        }).catch(angular.noop);
+        }).catch(function(err) { $log.error(err); });
     }
 
     // Start on the first processor
@@ -1637,7 +1637,7 @@ angular.module('ui.grid')
 
     self.refreshCanceller.then(function () {
       self.refreshCanceller = null;
-    }).catch(angular.noop);
+    }).catch(function(err) { $log.error(err); });
 
     return self.refreshCanceller;
   };
@@ -1662,7 +1662,7 @@ angular.module('ui.grid')
 
     self.gridRefreshCanceller.then(function () {
       self.gridRefreshCanceller = null;
-    }).catch(angular.noop);
+    }).catch(function(err) { $log.error(err); });
 
     return self.gridRefreshCanceller;
   };
@@ -2116,16 +2116,16 @@ angular.module('ui.grid')
 
     var p1 = self.processRowsProcessors(self.rows).then(function (renderableRows) {
       self.setVisibleRows(renderableRows);
-    }).catch(angular.noop);
+    }).catch(function(err) { $log.error(err); });
 
     var p2 = self.processColumnsProcessors(self.columns).then(function (renderableColumns) {
       self.setVisibleColumns(renderableColumns);
-    }).catch(angular.noop);
+    }).catch(function(err) { $log.error(err); });
 
     return $q.all([p1, p2]).then(function () {
       self.refreshCanvas(true);
       self.redrawInPlace(rowsAltered);
-    }).catch(angular.noop);
+    }).catch(function(err) { $log.error(err); });
   };
 
   /**
@@ -2146,7 +2146,7 @@ angular.module('ui.grid')
         self.redrawInPlace();
 
         self.refreshCanvas( true );
-      }).catch(angular.noop);
+      }).catch(function(err) { $log.error(err); });
   };
 
   /**

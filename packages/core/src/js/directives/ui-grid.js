@@ -31,7 +31,7 @@
               self.grid.preCompileCellTemplates();
 
               self.grid.refreshCanvas(true);
-            }).catch(angular.noop);
+            }).catch(function(err) { $log.error(err); });
         }) );
       }
 
@@ -118,7 +118,7 @@
             promises.push(self.grid.buildColumns()
               .then(function() {
                 self.grid.preCompileCellTemplates();
-              }).catch(angular.noop));
+              }).catch(function(err) { $log.error(err); }));
           }
 
           $q.all(promises).then(function() {
@@ -133,8 +133,8 @@
                   self.grid.refreshCanvas(true);
                   self.grid.callDataChangeCallbacks(uiGridConstants.dataChange.ROW);
                 });
-              }).catch(angular.noop);
-          }).catch(angular.noop);
+              }).catch(function(err) { $log.error(err); });
+          }).catch(function(err) { $log.error(err); });
         }
       }
 
