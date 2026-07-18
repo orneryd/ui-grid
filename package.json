@@ -51,7 +51,7 @@
   "homepage": "http://ui-grid.info/",
   "license": "MIT",
   "devDependencies": {
-    "adm-zip": "^0.4.11",
+    "adm-zip": "^0.6.0",
     "bower": "^1.8.8",
     "canonical-path": "0.0.2",
     "coveralls": "^3.0.6",
