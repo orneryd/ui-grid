@@ -33,16 +33,6 @@ jobs:
           node-version: 26.4.0
           cache: npm
 
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@1.95.0
-        with:
-          targets: wasm32-unknown-unknown
-
-      - name: Install wasm-pack
-        uses: taiki-e/install-action@v2
-        with:
-          tool: wasm-pack
-
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 

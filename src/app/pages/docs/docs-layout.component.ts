@@ -26,8 +26,6 @@ import { DocsCustomComponentsComponent } from './topics/custom-components.compon
 import { DocsI18nComponent } from './topics/i18n.component';
 import { DocsAccessibilityComponent } from './topics/accessibility.component';
 import { DocsReactComponent } from './topics/react.component';
-import { DocsRustComponent } from './topics/rust.component';
-import { DocsRustEguiComponent } from './topics/rust-egui.component';
 
 @Component({
   selector: 'app-docs-layout',
@@ -57,8 +55,6 @@ import { DocsRustEguiComponent } from './topics/rust-egui.component';
     DocsI18nComponent,
     DocsAccessibilityComponent,
     DocsReactComponent,
-    DocsRustComponent,
-    DocsRustEguiComponent,
   ],
   templateUrl: './docs-layout.component.html',
   styleUrl: './docs-layout.component.scss',
@@ -89,8 +85,6 @@ export class DocsLayoutComponent {
     { id: 'custom-components', label: 'Custom Sub-Components' },
     { id: 'i18n', label: 'Internationalization' },
     { id: 'accessibility', label: 'Accessibility' },
-    { id: 'rust', label: 'Rust / WASM' },
-    { id: 'rust-egui', label: 'Rust / egui' },
   ] as const;
 
   private readonly route = inject(ActivatedRoute);

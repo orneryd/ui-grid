@@ -1,15 +1,10 @@
-import { Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: 'home',
     loadComponent: () => import('./pages/home/home.component').then((m) => m.HomeComponent),
-  },
-  {
-    path: 'rust',
-    loadComponent: () =>
-      import('./pages/rust/rust-page.component').then((m) => m.RustPageComponent),
   },
   {
     path: 'web-components',

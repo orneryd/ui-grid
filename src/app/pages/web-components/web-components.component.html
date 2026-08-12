@@ -10,7 +10,6 @@
             <p class="page-links">
                 <a routerLink="/home" class="demo-link">Angular Demo</a>
                 <a routerLink="/react" class="demo-link demo-link-secondary">React Demo</a>
-                <a routerLink="/rust" class="demo-link demo-link-secondary">Rust</a>
                 <a routerLink="/docs/web-component" class="demo-link demo-link-secondary">Docs</a>
             </p>
         </div>
@@ -89,25 +88,14 @@
             </div>
 
             @if (primaryGridActive()) {
-                <ui-grid-element
-                    #primaryGrid
-                    [attr.grid-id]="primaryConfig().id"
-                    [attr.title]="primaryConfig().title"
-                    [attr.empty-message]="primaryConfig().emptyMessage"
-                    [attr.row-height]="primaryConfig().rowHeight"
-                    [attr.virtualization-threshold]="primaryConfig().virtualizationThreshold"
-                    [attr.grouping]="primaryConfig().groupingJson ?? null"
-                    [attr.column-defs]="primaryConfig().columnDefsJson"
-                    enable-sorting
-                    enable-filtering
-                    enable-grouping
-                    enable-column-moving
-                    enable-column-resizing
-                    enable-virtualization
-                    enable-cell-edit-on-focus
-                    enable-row-selection
-                    enable-full-row-selection>
-                </ui-grid-element>
+            <ui-grid-element #primaryGrid [attr.grid-id]="primaryConfig().id" [attr.title]="primaryConfig().title"
+                [attr.empty-message]="primaryConfig().emptyMessage" [attr.row-height]="primaryConfig().rowHeight"
+                [attr.virtualization-threshold]="primaryConfig().virtualizationThreshold"
+                [attr.grouping]="primaryConfig().groupingJson ?? null"
+                [attr.column-defs]="primaryConfig().columnDefsJson" enable-sorting enable-filtering enable-grouping
+                enable-column-moving enable-column-resizing enable-virtualization enable-cell-edit-on-focus
+                enable-row-selection enable-full-row-selection>
+            </ui-grid-element>
             }
         </section>
     </section>
@@ -125,7 +113,8 @@
         <div class="panel-header">
             <div>
                 <h2>Web Component Demo Code</h2>
-                <p>These snippets match the two live examples on this page: the primary grid and the pinning harness.</p>
+                <p>These snippets match the two live examples on this page: the primary grid and the pinning harness.
+                </p>
             </div>
         </div>
         <div class="code-grid">
@@ -152,39 +141,34 @@
             }
         </div>
         @if (demoGridActive()) {
-            <ui-grid-element
-                #demoGrid
-                [attr.grid-id]="demoConfig().id"
-                [attr.title]="demoConfig().title"
-                [attr.empty-message]="demoConfig().emptyMessage"
-                [attr.row-height]="demoConfig().rowHeight"
-                [attr.virtualization-threshold]="demoConfig().virtualizationThreshold"
-                [attr.tree-children-field]="demoConfig().treeChildrenField ?? null"
-                [attr.tree-indent]="demoConfig().treeIndent ?? null"
-                [attr.expandable-row-height]="demoConfig().expandableRowHeight ?? null"
-                [attr.column-defs]="demoConfig().columnDefsJson"
-                [attr.data]="demoConfig().dataJson"
-                [attr.enable-sorting]="demoConfig().enableSorting ? '' : null"
-                [attr.enable-filtering]="demoConfig().enableFiltering ? '' : null"
-                [attr.enable-grouping]="demoConfig().enableGrouping ? '' : null"
-                [attr.enable-column-moving]="demoConfig().enableColumnMoving ? '' : null"
-                [attr.enable-column-resizing]="demoConfig().enableColumnResizing ? '' : null"
-                [attr.enable-virtualization]="demoConfig().enableVirtualization ? '' : null"
-                [attr.enable-cell-edit-on-focus]="demoConfig().enableCellEditOnFocus ? '' : null"
-                [attr.enable-pinning]="demoConfig().enablePinning ? '' : null"
-                [attr.enable-expandable]="demoConfig().enableExpandable ? '' : null"
-                [attr.enable-tree-view]="demoConfig().enableTreeView ? '' : null"
-                [attr.show-tree-expand-no-children]="demoConfig().showTreeExpandNoChildren ? '' : null"
-                [attr.enable-pagination]="demoConfig().enablePagination ? '' : null"
-                [attr.enable-pagination-controls]="demoConfig().enablePaginationControls ? '' : null"
-                [attr.pagination-page-size]="demoConfig().paginationPageSize ?? null"
-                [attr.pagination-page-sizes]="demoConfig().paginationPageSizesJson ?? null"
-                [attr.enable-infinite-scroll]="demoConfig().enableInfiniteScroll === undefined ? null : (demoConfig().enableInfiniteScroll ? 'true' : 'false')"
-                [attr.infinite-scroll-up]="demoConfig().infiniteScrollUp ? '' : null"
-                [attr.infinite-scroll-down]="demoConfig().infiniteScrollDown ? '' : null"
-                [attr.infinite-scroll-rows-from-end]="demoConfig().infiniteScrollRowsFromEnd ?? null"
-                [attr.enable-row-selection]="demoConfig().enableRowSelection ? '' : null">
-            </ui-grid-element>
+        <ui-grid-element #demoGrid [attr.grid-id]="demoConfig().id" [attr.title]="demoConfig().title"
+            [attr.empty-message]="demoConfig().emptyMessage" [attr.row-height]="demoConfig().rowHeight"
+            [attr.virtualization-threshold]="demoConfig().virtualizationThreshold"
+            [attr.tree-children-field]="demoConfig().treeChildrenField ?? null"
+            [attr.tree-indent]="demoConfig().treeIndent ?? null"
+            [attr.expandable-row-height]="demoConfig().expandableRowHeight ?? null"
+            [attr.column-defs]="demoConfig().columnDefsJson" [attr.data]="demoConfig().dataJson"
+            [attr.enable-sorting]="demoConfig().enableSorting ? '' : null"
+            [attr.enable-filtering]="demoConfig().enableFiltering ? '' : null"
+            [attr.enable-grouping]="demoConfig().enableGrouping ? '' : null"
+            [attr.enable-column-moving]="demoConfig().enableColumnMoving ? '' : null"
+            [attr.enable-column-resizing]="demoConfig().enableColumnResizing ? '' : null"
+            [attr.enable-virtualization]="demoConfig().enableVirtualization ? '' : null"
+            [attr.enable-cell-edit-on-focus]="demoConfig().enableCellEditOnFocus ? '' : null"
+            [attr.enable-pinning]="demoConfig().enablePinning ? '' : null"
+            [attr.enable-expandable]="demoConfig().enableExpandable ? '' : null"
+            [attr.enable-tree-view]="demoConfig().enableTreeView ? '' : null"
+            [attr.show-tree-expand-no-children]="demoConfig().showTreeExpandNoChildren ? '' : null"
+            [attr.enable-pagination]="demoConfig().enablePagination ? '' : null"
+            [attr.enable-pagination-controls]="demoConfig().enablePaginationControls ? '' : null"
+            [attr.pagination-page-size]="demoConfig().paginationPageSize ?? null"
+            [attr.pagination-page-sizes]="demoConfig().paginationPageSizesJson ?? null"
+            [attr.enable-infinite-scroll]="demoConfig().enableInfiniteScroll === undefined ? null : (demoConfig().enableInfiniteScroll ? 'true' : 'false')"
+            [attr.infinite-scroll-up]="demoConfig().infiniteScrollUp ? '' : null"
+            [attr.infinite-scroll-down]="demoConfig().infiniteScrollDown ? '' : null"
+            [attr.infinite-scroll-rows-from-end]="demoConfig().infiniteScrollRowsFromEnd ?? null"
+            [attr.enable-row-selection]="demoConfig().enableRowSelection ? '' : null">
+        </ui-grid-element>
         }
     </section>
 </main>

@@ -1,6 +1,6 @@
 # UI Grid — Agent Instructions
 
-Multi-platform data grid. Framework-neutral core with Angular, React, vanilla web component, Rust/egui, and C/LVGL targets.
+Web data grid with a framework-neutral TypeScript core, Angular, React, and a vanilla web component. The compiled Rust/WASM core is consumed from `@ornery/ui-grid-wasm`.
 
 ## Architecture
 
@@ -9,7 +9,6 @@ projects/ui-grid-core/     Pure TypeScript engine (pipeline, sorting, filtering,
 projects/ui-grid-vanilla/  <ui-grid-element> custom element — the rendering engine
 projects/ui-grid-react/    React wrapper (mounts vanilla element, projects via portals)
 projects/ui-grid/          Angular wrapper (mounts vanilla element, projects via ng-template)
-crates/                    Rust core, egui adapter, WASM bridge, C ABI
 src/app/                   Angular demo/docs application
 ```
 
@@ -27,7 +26,7 @@ npm test                     # All test suites
 npm run test:angular         # Angular tests (vitest via ng)
 npm run test:react           # React tests (vitest)
 npm run test:vanilla         # Vanilla tests (vitest)
-npm run test:rust            # Rust tests (cargo test --workspace)
+npm run prepare:wasm         # Materialize the pinned WASM npm package into dist/
 ```
 
 ## Package Dependencies (build order)
@@ -63,7 +62,7 @@ Interactive state that survives `setOptions`: sort, filters, expanded rows, sele
 - Test files: `*.test.ts` / `*.test.tsx` colocated with source
 - Shadow DOM testing: query via `el.shadowRoot.querySelector()`
 - jsdom lacks `adoptedStyleSheets` — polyfilled in test-setup files
-- Rust: `cargo test --workspace`, `cargo clippy --workspace --all-targets -- -D warnings`
+- WASM artifacts are provided by the pinned `@ornery/ui-grid-wasm` npm dependency
 
 ## Do NOT
 
@@ -73,3 +72,4 @@ Interactive state that survives `setOptions`: sort, filters, expanded rows, sele
 - Call `setFrameworkRenderedSlots` on every options update — only when template columns structurally change
 - Skip `frameworkSlots.flush()` after rendering new DOM that contains slot placeholders
 - Add `node_modules/`, `dist/`, or `.angular/cache/` to commits
+- Add Rust source, Cargo manifests, or Rust toolchain steps; those belong in `orneryd/uiGrid`

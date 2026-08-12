@@ -243,7 +243,7 @@ export default defineConfig({
 
 ## API
 
-### `mountVanillaUiGrid(target, options, rustModule?, tagName?)`
+### `mountVanillaUiGrid(target, options, wasmModule?, tagName?)`
 
 Mount a grid into a target element. Returns the grid element.
 

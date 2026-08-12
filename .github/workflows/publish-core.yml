@@ -28,7 +28,6 @@ jobs:
           node-version: 26.4.0
           registry-url: https://registry.npmjs.org
           scope: '@ornery'
-          always-auth: true
           cache: npm
 
       - name: Install dependencies

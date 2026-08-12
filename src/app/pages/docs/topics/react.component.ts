@@ -35,13 +35,7 @@ import {
 type ReactRoot = ReturnType<typeof mountUiGrid>;
 
 type DemoMode =
-  | 'expandable'
-  | 'tree'
-  | 'templated'
-  | 'pinning'
-  | 'pagination'
-  | 'infinite'
-  | 'trading';
+  'expandable' | 'tree' | 'templated' | 'pinning' | 'pagination' | 'infinite' | 'trading';
 
 function createHarnessRows(count = 18): GridRecord[] {
   return Array.from({ length: count }, (_value, index) => ({
@@ -113,7 +107,6 @@ function createInfiniteRows(start: number, count: number): GridRecord[] {
           <p class="page-links">
             <a routerLink="/home" class="demo-link">Angular Demo</a>
             <a routerLink="/web-components" class="demo-link demo-link-secondary">Web Components</a>
-            <a routerLink="/rust" class="demo-link demo-link-secondary">Rust</a>
             <a routerLink="/docs" class="demo-link demo-link-secondary">Docs</a>
           </p>
         </div>

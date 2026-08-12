@@ -1,22 +1,23 @@
-[![CI](https://github.com/orneryd/uiGrid/actions/workflows/ci.yml/badge.svg)](https://github.com/orneryd/uiGrid/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/github/orneryd/uiGrid/badge.svg?branch=main)](https://coveralls.io/github/orneryd/uiGrid?branch=main)
+[![CI](https://github.com/orneryd/ui-grid/actions/workflows/ci.yml/badge.svg)](https://github.com/orneryd/ui-grid/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/orneryd/ui-grid/badge.svg?branch=main)](https://coveralls.io/github/orneryd/ui-grid?branch=main)
 [![npm](https://img.shields.io/npm/v/@ornery/ui-grid)](https://www.npmjs.com/package/@ornery/ui-grid)
-[![crates.io](https://img.shields.io/crates/v/ui-grid-egui)](https://crates.io/crates/ui-grid-egui)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE.md)
 
 #### [Discord Community](https://discord.gg/Baz4w8ZWN)
 
 # UI Grid — Remastered
 
-**The modern multi-platform data grid. Every feature free and open source. Built for Angular, Web-Components, React, native Rust/egui, and native C/LVGL.**
+**The modern web data grid for Angular, React, and Web Components. Every feature is free and open source.**
 
-A from-scratch rewrite of the original [AngularJS ui-grid](https://github.com/angular-ui/ui-grid) — by the original author. Same `gridOptions` / `columnDefs` / `onRegisterApi` api surface, modern Angular signals internals, and zero legacy baggage.
+Rust, WASM implementation, egui, and native adapter source and documentation live in [orneryd/uiGrid](https://github.com/orneryd/uiGrid).
+
+A from-scratch rewrite of the original by the original author. Same `gridOptions` / `columnDefs` / `onRegisterApi` api surface, modern Angular signals internals, and zero legacy baggage.
 
 Just like the original grid, it will **NEVER** be monetized. This is purely my contribution to the greater community.
 
 It proves that the datagrid cabal wants you to think it's hard to write a data grid. Well, it's not, and nobody should be paying to group data.
 
-**[Live Demo & Docs](https://orneryd.github.io/uiGrid/)** | **[npm](https://www.npmjs.com/package/@ornery/ui-grid)** | **[crates.io](https://crates.io/crates/ui-grid-egui)** | **[Used by NornicDB](https://orneryd.github.io/NornicDB/)**
+**[Live Demo & Docs](https://orneryd.github.io/ui-grid/)** | **[npm](https://www.npmjs.com/package/@ornery/ui-grid)** | **[Rust Project](https://github.com/orneryd/uiGrid)** | **[Used by NornicDB](https://orneryd.github.io/NornicDB/)**
 
 ---
 
@@ -62,8 +63,6 @@ Everything below ships free and MIT-licensed. No enterprise tier, no license key
 | **SSR Support**           | **Free** |         —         |    ~$999/dev/yr    |         —         |      —       |        —        |
 | i18n (6 locales built-in) | **Free** |       Free        |         —          |       Free        |     Paid     |   Community\*   |
 | React                     | **Yes**  |      Wrapper      |      Wrapper       |        No         |   Wrapper    |     Wrapper     |
-| Rust/egui Native          | **Yes**  |        No         |         No         |        No         |      No      |       No        |
-| C/LVGL Native             | **Yes**  |        No         |         No         |        No         |      No      |       No        |
 | Angular                   | **Yes**  |      Wrapper      |      Wrapper       |        No         |   Wrapper    |     Wrapper     |
 | **License**               | **MIT**  |        MIT        |     Commercial     |   Apache/Comm.    |  Commercial  | Comm./Community |
 | **Price**                 |  **$0**  |        $0         |    ~$999/dev/yr    | $159/dev/mo (Pro) | ~$799/dev/yr |    See below    |
@@ -204,58 +203,6 @@ await mountVanillaUiGrid(document.getElementById('app'), {
 });
 ```
 
-### Native Rust / egui
-
-```toml
-[dependencies]
-ui-grid-egui = "0.1"
-ui-grid-core = "0.1"
-```
-
-```rust
-use ui_grid_egui::{EguiColumnExt, EguiGrid, GridThemePreset};
-use ui_grid_core::models::{GridColumnDef, GridOptions};
-
-let mut grid = EguiGrid::new();
-let theme = GridThemePreset::DefaultDark.build();
-let mut column_ext: Vec<EguiColumnExt> = vec![];
-
-// Each frame, inside your egui UI:
-grid.show(ui, &mut options, &columns, &mut column_ext, &theme);
-```
-
-To run the interactive demo app locally:
-
-```bash
-git clone https://github.com/orneryd/uiGrid.git
-cd uiGrid
-cargo run -p ui-grid-egui --example demo --release
-```
-
-See [docs/rust-egui.md](./docs/rust-egui.md) for pinning, CSV export, save/restore state, and custom column extensions.
-
-### Native C / LVGL
-
-The C adapter sits on top of the same Rust core and C ABI contract used by the other foreign bindings. The current demo uses LVGL with the SDL desktop backend.
-
-Prerequisites:
-
-- Rust 1.95+
-- CMake 3.20+
-- SDL2
-
-```bash
-brew install sdl2
-cargo build -p ui-grid-c-abi
-cmake -S crates/ui-grid-lvgl -B target/ui-grid-lvgl
-cmake --build target/ui-grid-lvgl -j4
-./target/ui-grid-lvgl/ui-grid-lvgl-demo
-```
-
-The LVGL demo currently exercises the native C grid shell with sorting, grouping, pinning, state save/restore, theme presets, live trading-row updates, and the shared projection/command contract.
-
----
-
 ## Features
 
 - **Sorting** — click column headers to cycle asc/desc/none, custom comparators, programmatic API
@@ -280,7 +227,6 @@ The LVGL demo currently exercises the native C grid shell with sorting, grouping
 - **Export/Import Menu** — `buildGridExporterMenuItems()` with per-format and per-scope flags, i18n-driven menu labels
 - **Virtual Scrolling** — virtual scroll viewport, auto-enabled at 40+ rows
 - **Save/Restore State** — serialize and restore sort, filters, grouping, collapsed groups, pinning, column order, column widths, pagination, selection, focused cell, tree/expandable expansion, and scroll position (per-field opt-in flags)
-- **Native Rust and C Grids** — shared Rust core with native Rust/egui and native C/LVGL adapters driven by the same projection and command contract
 - **Auto Resize** — ResizeObserver-driven viewport height recalculation
 - **Custom Cell Templates** — Angular `ng-template`, React `cellRenderers` map (per-column render functions), vanilla `<template>` slots with slot-based portal projection
 - **Shadow DOM** — encapsulated styles with CSS custom property and `::part()` hooks
@@ -342,24 +288,22 @@ See [docs/custom-builds.md](./docs/custom-builds.md) for the full feature flag t
 
 ## Documentation
 
-| Guide                                        | Description                                            |
-| -------------------------------------------- | ------------------------------------------------------ |
-| [Getting Started](./docs/getting-started.md) | Install, minimal setup, run the demo                   |
-| [Features](./docs/features.md)               | Overview of all features with code examples            |
-| [Theming](./docs/theming.md)                 | CSS custom properties, `::part()` hooks, sample themes |
-| [API Reference](./docs/api-reference.md)     | GridOptions, GridColumnDef, UiGridApi                  |
-| [Cell Editing](./docs/cell-editing.md)       | Keyboard navigation, conditional editing, API          |
-| [Tree View](./docs/tree-view.md)             | Hierarchical data, options, API                        |
-| [Expandable Rows](./docs/expandable-rows.md) | Master/detail, template context, API                   |
-| [Custom Builds](./docs/custom-builds.md)     | Feature flags, build presets, locale baking            |
-| [Web Component](./docs/web-component.md)     | Vanilla `<ui-grid-element>` custom element usage       |
-| [Internationalization](./docs/i18n.md)       | Runtime overrides, build-time locales                  |
-| [Accessibility](./docs/accessibility.md)     | ARIA roles, keyboard navigation, screen reader support |
-| [Rust / WASM](./docs/rust.md)                | Rust pipeline in Angular, React, and vanilla hosts     |
-| [Rust / egui](./docs/rust-egui.md)           | Native egui adapter with pinning, export, save/restore |
-| `README native C / LVGL section`             | Native C/LVGL build and demo run instructions          |
+| Guide                                             | Description                                            |
+| ------------------------------------------------- | ------------------------------------------------------ |
+| [Getting Started](./docs/getting-started.md)      | Install, minimal setup, run the demo                   |
+| [Features](./docs/features.md)                    | Overview of all features with code examples            |
+| [Theming](./docs/theming.md)                      | CSS custom properties, `::part()` hooks, sample themes |
+| [API Reference](./docs/api-reference.md)          | GridOptions, GridColumnDef, UiGridApi                  |
+| [Cell Editing](./docs/cell-editing.md)            | Keyboard navigation, conditional editing, API          |
+| [Tree View](./docs/tree-view.md)                  | Hierarchical data, options, API                        |
+| [Expandable Rows](./docs/expandable-rows.md)      | Master/detail, template context, API                   |
+| [Custom Builds](./docs/custom-builds.md)          | Feature flags, build presets, locale baking            |
+| [Web Component](./docs/web-component.md)          | Vanilla `<ui-grid-element>` custom element usage       |
+| [Internationalization](./docs/i18n.md)            | Runtime overrides, build-time locales                  |
+| [Accessibility](./docs/accessibility.md)          | ARIA roles, keyboard navigation, screen reader support |
+| [Rust Project](https://github.com/orneryd/uiGrid) | Rust/WASM implementation, egui, and native adapters    |
 
-Interactive versions of all documentation are also available in the [live demo](https://orneryd.github.io/uiGrid/).
+Interactive versions of all web documentation are also available in the [live demo](https://orneryd.github.io/ui-grid/).
 
 ---
 
@@ -370,30 +314,7 @@ npm start          # Dev server at localhost:4200
 npm test           # Run tests (Vitest)
 npm run build      # Production build
 npm run build:library   # Build the library (ng-packagr)
-npm run build:rust:web  # Build the browser-native Rust/WASM artifact
-npm run start:vanilla   # Run the Rust-backed browser demo at 127.0.0.1:4174
-```
-
-### Rust / egui
-
-Requires [Rust 1.95+](https://rustup.rs/).
-
-```bash
-cargo test --workspace                                    # Run all Rust tests
-cargo clippy --workspace --all-targets -- -D warnings     # Lint
-cargo run -p ui-grid-egui --example demo --release        # Run the native egui demo app
-```
-
-### C / LVGL
-
-Requires SDL2 plus the Rust/C ABI build.
-
-```bash
-brew install sdl2
-cargo build -p ui-grid-c-abi
-cmake -S crates/ui-grid-lvgl -B target/ui-grid-lvgl
-cmake --build target/ui-grid-lvgl -j4
-./target/ui-grid-lvgl/ui-grid-lvgl-demo                  # Run the native C/LVGL demo app
+npm run start:vanilla   # Run the framework-neutral browser demo at 127.0.0.1:4174
 ```
 
 ---
@@ -407,8 +328,6 @@ cmake --build target/ui-grid-lvgl -j4
 | RxJS       | 7.8     |
 | Node       | 22.20   |
 | npm        | 11.11   |
-| Rust       | 1.95+   |
-| egui       | 0.34    |
 
 ---
 

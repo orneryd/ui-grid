@@ -154,29 +154,18 @@ The original bulk `options` property remains available when you need callbacks o
 ## Run the Demo Locally
 
 ```bash
-git clone https://github.com/orneryd/uiGrid.git
-cd uiGrid
+git clone https://github.com/orneryd/ui-grid.git
+cd ui-grid
 npm ci
 npm start
 ```
 
-Open `http://localhost:4200` to see the full demo with 100,000 rows, theming, and all features active. The live demo includes dedicated pages for Angular, React, Web Components, and Rust usage.
-
-## Run the Rust-backed Demo Locally
-
-If you want to exercise the Rust/WASM engine directly in the browser:
-
-```bash
-npm run start:vanilla
-```
-
-Open `http://127.0.0.1:4174/` to see the framework-agnostic vanilla demo that mounts the grid through the Rust-backed browser pipeline.
+Open `http://localhost:4200` to see the full demo with 100,000 rows, theming, and all features active. The live demo includes dedicated pages for Angular, React, and Web Components.
 
 ## Next Steps
 
 - [Features](./features.md) — see everything the grid can do
 - [Theming](./theming.md) — customize colors and layout via CSS custom properties
 - [API Reference](./api-reference.md) — full GridOptions, GridColumnDef, and UiGridApi documentation
-- [Web Component](./web-component.md) — Angular-backed and vanilla web component outputs
-- [Rust / WASM](./rust.md) — use the Rust pipeline in Angular, React, or vanilla hosts
-- [Rust / egui](./rust-egui.md) — native Rust `ui-grid-egui` adapter with pinning, export, and save/restore
+- [Web Component](./web-component.md) — framework-neutral custom element usage
+- [Rust Project](https://github.com/orneryd/uiGrid) — Rust/WASM implementation, egui, and native adapters

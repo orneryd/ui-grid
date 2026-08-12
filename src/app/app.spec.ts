@@ -6,7 +6,7 @@ describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideRouter([])]
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 
@@ -28,7 +28,7 @@ describe('App', () => {
     const themeButtons = compiled.querySelectorAll('.nav-theme-btn');
 
     expect(brand?.textContent).toContain('UI Grid');
-    expect(links).toEqual(expect.arrayContaining(['Demo', 'Rust', 'Docs', 'Themes']));
+    expect(links).toEqual(expect.arrayContaining(['Demo', 'Docs', 'Themes']));
     expect(themeButtons).toHaveLength(2);
   });
 
@@ -38,7 +38,9 @@ describe('App', () => {
     await fixture.whenStable();
 
     const host = fixture.nativeElement as HTMLElement;
-    const [colorBtn, visualBtn] = [...host.querySelectorAll('.nav-theme-btn')] as HTMLButtonElement[];
+    const [colorBtn, visualBtn] = [
+      ...host.querySelectorAll('.nav-theme-btn'),
+    ] as HTMLButtonElement[];
 
     expect(host.getAttribute('data-color-mode')).toBe('dark');
     expect(host.getAttribute('data-visual-mode')).toBe('default');
