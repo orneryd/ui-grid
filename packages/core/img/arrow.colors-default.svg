@@ -1,6 +1,0 @@
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" 
-    xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0"
-    height="10px" width="10px" viewBox="0 0 20 20" 
-        class="ui-grid-sortarrow">
-  <polyline points="10,4 18,18 2,18, 10,4"  />
-</svg>

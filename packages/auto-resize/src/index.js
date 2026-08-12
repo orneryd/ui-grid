@@ -1,1 +1,0 @@
-require('./js/auto-resize');

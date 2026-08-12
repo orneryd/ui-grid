@@ -1,3 +1,0 @@
-This change will... . I did this because...
-
-Closes (INSERT COMMA SEPARATED LIST OF ISSUE NUMBERS HERE)
