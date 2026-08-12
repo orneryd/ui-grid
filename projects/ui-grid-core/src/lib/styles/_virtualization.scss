@@ -1,0 +1,18 @@
+// Virtualization styles
+// Auto-extracted from grid.core.styles.scss
+
+.grid-viewport {
+  width: 100%;
+}
+
+.grid-virtual-spacer {
+  position: relative;
+  width: max-content;
+  min-width: 100%;
+}
+
+.grid-virtual-body {
+  position: absolute;
+  left: 0;
+}
+

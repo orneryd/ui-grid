@@ -1,0 +1,56 @@
+// Status Pill styles
+// Auto-extracted from grid.core.styles.scss
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ui-grid-status-pill-padding-block) var(--ui-grid-status-pill-padding-inline);
+  border-radius: var(--ui-grid-status-pill-radius);
+  background: var(--ui-grid-status-pill-default-bg);
+  color: var(--ui-grid-cell-color);
+  font-size: var(--ui-grid-status-pill-font-size);
+  font-weight: 700;
+}
+
+.status-pill-enterprise {
+  background: var(--ui-grid-status-enterprise-bg);
+  color: var(--ui-grid-status-enterprise-color);
+}
+
+.status-pill-active {
+  background: var(--ui-grid-status-active-bg);
+  color: var(--ui-grid-status-active-color);
+}
+
+.status-pill-expansion {
+  background: var(--ui-grid-status-expansion-bg);
+  color: var(--ui-grid-status-expansion-color);
+}
+
+.status-pill-pilot {
+  background: var(--ui-grid-status-pilot-bg);
+  color: var(--ui-grid-status-pilot-color);
+}
+
+@media (max-width: 900px) {
+  .metrics-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grid-hero,
+  .grid-toolbar {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .hero-actions {
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 640px) {
+  .metrics-strip {
+    grid-template-columns: 1fr;
+  }
+}

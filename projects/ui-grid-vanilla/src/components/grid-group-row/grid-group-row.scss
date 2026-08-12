@@ -1,0 +1,24 @@
+// Group row shadow-scoped styles — composed entirely from core mixins.
+@use "@ornery/ui-grid-core/src/lib/styles/group-row" as gr;
+@use "@ornery/ui-grid-core/src/lib/styles/utilities" as util;
+
+:host {
+  @include gr.host-shadow;
+}
+
+span,
+small {
+  @include gr.muted-text;
+}
+
+.toggle-icon {
+  @include gr.toggle-icon;
+}
+
+.group-disclosure-icon {
+  @include gr.disclosure-icon;
+}
+
+.sr-only {
+  @include util.sr-only;
+}

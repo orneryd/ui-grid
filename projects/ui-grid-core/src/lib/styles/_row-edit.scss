@@ -1,0 +1,48 @@
+// Row-edit styles. Ports ui.grid.rowEdit.less (rowSaving / rowDirty /
+// rowError) onto the new grid's token system so consumers can re-theme each
+// state through --ui-grid-* custom properties.
+//
+// The original module only changed the text color — we match that default
+// but also paint a subtle background stripe on dirty rows so the state is
+// discoverable without scanning for color shifts.
+
+.body-cell.ui-grid-row-dirty {
+  color: var(
+    --ui-grid-row-dirty-color,
+    var(--app-ui-grid-row-dirty-color, #610B38)
+  );
+  background: var(
+    --ui-grid-row-dirty-bg,
+    var(
+      --app-ui-grid-row-dirty-bg,
+      color-mix(
+        in srgb,
+        var(--ui-grid-accent, #2563eb) 8%,
+        var(--ui-grid-surface, #ffffff)
+      )
+    )
+  );
+}
+
+.body-cell.ui-grid-row-saving {
+  color: var(
+    --ui-grid-row-saving-color,
+    var(--app-ui-grid-row-saving-color, #848484)
+  ) !important;
+  opacity: var(--ui-grid-row-saving-opacity, 0.75);
+  cursor: progress;
+}
+
+.body-cell.ui-grid-row-error {
+  color: var(
+    --ui-grid-row-error-color,
+    var(--app-ui-grid-row-error-color, #FF0000)
+  ) !important;
+  background: var(
+    --ui-grid-row-error-bg,
+    var(
+      --app-ui-grid-row-error-bg,
+      color-mix(in srgb, #ff0000 14%, var(--ui-grid-surface, #ffffff))
+    )
+  );
+}

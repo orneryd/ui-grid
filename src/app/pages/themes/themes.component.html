@@ -1,0 +1,84 @@
+<div class="themes-page">
+  <header class="themes-header">
+    <p class="themes-eyebrow">Theming</p>
+    <h1>Theme System</h1>
+    <p class="themes-lead">
+      UI Grid renders inside Shadow DOM. All visual customization flows through CSS custom properties
+      that pierce the shadow boundary, plus <code>::part()</code> selectors for structural overrides.
+      Toggle the theme controls in the nav bar to see the grid adapt in real time.
+    </p>
+  </header>
+
+  <section class="themes-section">
+    <h2>Live Preview</h2>
+    <p>This grid inherits its theme from the app shell. Toggle dark/light and studio/wireframe in the nav bar above:</p>
+    <div class="themes-grid-demo">
+      <app-ui-grid [options]="previewOptions" />
+    </div>
+  </section>
+
+  <section class="themes-section">
+    <h2>CSS Custom Properties</h2>
+    <p>Set these on any ancestor of the grid component. They pierce the Shadow DOM boundary:</p>
+    <table class="themes-table">
+      <thead><tr><th>Variable</th><th>Default</th><th>Controls</th></tr></thead>
+      <tbody>
+        <tr><td><code>--ui-grid-surface</code></td><td><code>#ffffff</code></td><td>Grid background</td></tr>
+        <tr><td><code>--ui-grid-border-color</code></td><td><code>#e5e7eb</code></td><td>All grid borders</td></tr>
+        <tr><td><code>--ui-grid-header-background</code></td><td><code>#f3f4f6</code></td><td>Header row background</td></tr>
+        <tr><td><code>--ui-grid-header-weight</code></td><td><code>600</code></td><td>Header font weight</td></tr>
+        <tr><td><code>--ui-grid-cell-color</code></td><td><code>#111827</code></td><td>Cell text color</td></tr>
+        <tr><td><code>--ui-grid-muted-color</code></td><td><code>#6b7280</code></td><td>Secondary text</td></tr>
+        <tr><td><code>--ui-grid-row-odd</code></td><td><code>#ffffff</code></td><td>Odd row background</td></tr>
+        <tr><td><code>--ui-grid-row-even</code></td><td><code>#f9fafb</code></td><td>Even row background</td></tr>
+        <tr><td><code>--ui-grid-row-hover</code></td><td><code>#eff6ff</code></td><td>Hovered row</td></tr>
+        <tr><td><code>--ui-grid-accent</code></td><td><code>#2563eb</code></td><td>Active indicators, focus rings</td></tr>
+        <tr><td><code>--ui-grid-group-background</code></td><td><code>#e5e7eb</code></td><td>Group header rows</td></tr>
+        <tr><td><code>--ui-grid-radius</code></td><td><code>12px</code></td><td>Container border radius</td></tr>
+        <tr><td><code>--ui-grid-shadow</code></td><td><code>0 1px 3px ...</code></td><td>Container box shadow</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="themes-section">
+    <h2>::part() Hooks</h2>
+    <p>Target specific structural elements with full CSS access:</p>
+    <table class="themes-table">
+      <thead><tr><th>Part Name</th><th>Target Element</th></tr></thead>
+      <tbody>
+        <tr><td><code>shell</code></td><td>Outermost grid wrapper</td></tr>
+        <tr><td><code>hero</code></td><td>Title / toolbar area</td></tr>
+        <tr><td><code>grid-frame</code></td><td>Scrollable grid container</td></tr>
+        <tr><td><code>grid-toolbar</code></td><td>Toolbar with row count</td></tr>
+        <tr><td><code>header</code></td><td>Header row container</td></tr>
+        <tr><td><code>header-cell</code></td><td>Individual header cell</td></tr>
+        <tr><td><code>filter-cell</code></td><td>Filter input cell</td></tr>
+        <tr><td><code>body-cell</code></td><td>Data cell</td></tr>
+        <tr><td><code>group-row</code></td><td>Group header row</td></tr>
+        <tr><td><code>expandable-row</code></td><td>Expanded detail row</td></tr>
+        <tr><td><code>pagination</code></td><td>Pagination footer</td></tr>
+        <tr><td><code>empty-state</code></td><td>Empty state message</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="themes-section">
+    <h2>Sample Theme (copy-pasteable)</h2>
+    <p>A complete purple brand theme you can drop into your app:</p>
+    <app-code-block lang="scss" [code]="sampleTheme" />
+  </section>
+
+  <section class="themes-section">
+    <h2>Host Attribute Pattern</h2>
+    <p>
+      The demo app uses <code>data-color-mode</code> and <code>data-visual-mode</code> attributes
+      on the root component to drive a 2x2 theme matrix. Each combination defines a full set of
+      semantic CSS tokens that cascade into the grid:
+    </p>
+    <app-code-block lang="scss" [code]="hostAttrSnippet" />
+    <p>
+      You can use this same pattern in your own app to support multiple themes without
+      JavaScript theme-switching logic — just set a data attribute and let CSS do the work.
+    </p>
+  </section>
+</div>

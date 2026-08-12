@@ -1,0 +1,66 @@
+// Grid Table styles
+//
+// Layout: `.grid-table` is a flex column. Header + filter live in their own
+// non-visible-scrollbar strips (real scroll containers so `position: sticky`
+// on pinned header/filter cells resolves correctly). The body lives in
+// `.grid-body-viewport` which owns the only visible scrollbar. The element
+// imperatively syncs `scrollLeft` from body → header + filter strips so the
+// columns stay perfectly aligned — this is the same strategy the old
+// ui-grid used (ui-grid-viewport.js).
+
+.grid-table {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--ui-grid-surface);
+  overflow-anchor: none;
+}
+
+.grid-header-strip,
+.grid-filter-strip {
+  flex: 0 0 auto;
+  position: sticky;
+  z-index: var(--ui-grid-header-z-index);
+  background: var(--ui-grid-surface);
+  // overflow: hidden like the old grid — strips are never user-scrollable.
+  // JS mirrors body viewport scrollLeft onto them via syncHeaderHorizontalScroll.
+  overflow: hidden;
+}
+
+.grid-header-strip {
+  top: 0;
+}
+
+.grid-filter-strip {
+  top: var(--ui-grid-header-sticky-top, 0px);
+}
+
+.grid-body-viewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-anchor: none;
+  // Disable horizontal rubber-band bounce at the first/last column.
+  // Vertical bounce is allowed because it matches native list scrolling
+  // expectations.
+  overscroll-behavior-x: none;
+}
+
+.header-grid,
+.filter-grid,
+.body-grid {
+  display: grid;
+  width: 100%;
+  min-width: max-content;
+}
+
+.header-cell,
+.filter-cell,
+.body-cell,
+.group-row {
+  min-width: 0;
+}

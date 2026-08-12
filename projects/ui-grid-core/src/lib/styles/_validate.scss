@@ -1,0 +1,39 @@
+// Validate styles. Ports the `.invalid` visual from ui.grid.validate.less
+// onto the new token system so consumers can re-theme the invalid-cell
+// badge + background through `--ui-grid-cell-invalid-*` properties.
+//
+// The original module drew a red triangle in the top-right corner of
+// invalid cells. We match that with a ::after marker so the cell content
+// stays untouched (editors, templates, etc. render the same way when the
+// cell is valid or invalid).
+
+.body-cell.ui-grid-cell-invalid {
+  position: relative;
+  background: var(
+    --ui-grid-cell-invalid-bg,
+    var(
+      --app-ui-grid-cell-invalid-bg,
+      color-mix(in srgb, #ff0000 10%, var(--ui-grid-surface, #ffffff))
+    )
+  );
+}
+
+.body-cell.ui-grid-cell-invalid::after {
+  // Red triangle in the top-right corner — matches the old ui.grid.validate
+  // invalid-cell marker. Rendered via a pair of transparent borders meeting
+  // at the cell edge; the top+right borders paint, the bottom+left are
+  // transparent so the triangle points toward the cell's upper-right.
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0
+    var(--ui-grid-cell-invalid-marker-size, 8px)
+    var(--ui-grid-cell-invalid-marker-size, 8px) 0;
+  border-color: transparent
+    var(--ui-grid-cell-invalid-marker-color, #ff0000) transparent transparent;
+  pointer-events: none;
+}

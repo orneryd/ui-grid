@@ -1,0 +1,292 @@
+<ng-template #statusTemplate let-value>
+  <span class="status-pill" [class.status-pill-enterprise]="value === 'Enterprise'"
+    [class.status-pill-active]="value === 'Active'" [class.status-pill-expansion]="value === 'Expansion'"
+    [class.status-pill-pilot]="value === 'Pilot'">
+    {{ value }}
+  </span>
+</ng-template>
+
+<ng-template #priceColorTemplate let-value let-row="row">
+  <span [style.color]="row['priceColor']" style="font-variant-numeric:tabular-nums">{{ value }}</span>
+</ng-template>
+
+<ng-template #changeColorTemplate let-value let-row="row">
+  <span [style.color]="row['changeColor']">{{ value }}</span>
+</ng-template>
+
+<main class="app-shell">
+  <header class="demo-header">
+    <section class="hero-panel">
+      <div class="hero-copy">
+        <p class="eyebrow">Open-source Multi-platform data grid</p>
+        <h1>UI Grid <span class="hero-accent">Remastered</span></h1>
+        <p class="hero-summary">
+          A from-scratch rewrite of the legendary AngularJS ui-grid — by the original author.
+          Familiar <code>gridOptions</code> / <code>columnDefs</code> / <code>onRegisterApi</code> api surface,
+          modern Angular signals internals, and app-level theming through Shadow DOM.
+        </p>
+        <p class="hero-cta">
+          <a routerLink="/docs/getting-started" class="cta-link">Get started</a>
+          <a routerLink="/docs" class="cta-link cta-link-secondary">Browse docs</a>
+        </p>
+      </div>
+    </section>
+  </header>
+
+  <div class="section-switch" role="tablist" aria-label="Angular demo output mode">
+    <button
+      type="button"
+      class="section-button"
+      [class.section-button-active]="surface() === 'native'"
+      [attr.aria-selected]="surface() === 'native'"
+      (click)="setSurface('native')"
+    >
+      Angular Native
+    </button>
+    <button
+      type="button"
+      class="section-button"
+      [class.section-button-active]="surface() === 'element'"
+      [attr.aria-selected]="surface() === 'element'"
+      (click)="setSurface('element')"
+    >
+      Angular Element
+    </button>
+  </div>
+
+  @if (surface() === 'native') {
+    <section class="grid-stage">
+      <section class="angular-demo-shell">
+        <header class="angular-demo-shell__header">
+          <div>
+            <p class="angular-demo-shell__eyebrow">Angular package demo</p>
+            <h2>{{ options().title ?? 'UI Grid' }}</h2>
+            <p>
+              Familiar <code>gridOptions</code> and <code>onRegisterApi</code>, rebuilt with Angular signals,
+              row virtualization, grouping, sorting, filtering, column ordering, and Excel-style
+              column resizing with drag handles plus double-click auto fit.
+            </p>
+          </div>
+          <div class="angular-demo-shell__actions">
+            <button type="button" class="state-button" (click)="runBenchmark()">Benchmark</button>
+            <button type="button" class="state-button state-button-secondary" (click)="exportCsv()">Export CSV</button>
+            <div class="angular-demo-shell__stats">
+              <span>{{ visibleRowCount() }}</span>
+              <small>visible rows</small>
+            </div>
+          </div>
+        </header>
+
+        <section class="angular-demo-shell__metrics" aria-label="Angular grid metrics">
+          <article>
+            <strong>{{ virtualizationLabel() }}</strong>
+            <span>virtualization</span>
+          </article>
+          <article>
+            <strong>{{ groupColumnCount() }}</strong>
+            <span>group columns</span>
+          </article>
+          <article>
+            <strong>{{ selectedRowCount() }}</strong>
+            <span>selected</span>
+          </article>
+          <article>
+            <strong>{{ benchmarkResult()?.averageMs?.toFixed(2) || '—' }}</strong>
+            <span>benchmark avg</span>
+          </article>
+        </section>
+
+        <div class="angular-demo-shell__toolbar">
+          <div>
+            <strong>{{ visibleRowCount() }}</strong>
+            <span>of {{ totalRows() }} rows</span>
+          </div>
+          <p>
+            <code>gridOptions</code> compatibility layer: sorting, filtering, grouping, column moving,
+            column resizing, templating, and virtualized rendering.
+          </p>
+        </div>
+
+        <app-ui-grid [options]="options()" />
+      </section>
+    </section>
+
+    <section class="state-panel code-panel">
+      <div class="state-header">
+        <div>
+          <h2>Angular Demo Code</h2>
+          <p>The live Angular demo is driven by a computed <code>GridOptions</code> object and the shared grid API.</p>
+        </div>
+        <div class="state-actions">
+          <a routerLink="/rust" class="state-button state-button-secondary">Rust Usage</a>
+          <a routerLink="/docs/getting-started" class="state-button state-button-secondary">Angular Docs</a>
+        </div>
+      </div>
+      <div class="code-grid">
+        <app-code-block lang="typescript" [code]="angularDemoSnippet" />
+        <app-code-block lang="typescript" [code]="angularStateSnippet" />
+      </div>
+    </section>
+
+    <section class="state-panel">
+      <div class="state-header">
+        <div>
+          <h2>Saved State</h2>
+          <p>Capture and restore state using <code>gridApi.saveState.save()</code> and
+            <code>gridApi.saveState.restore(...)</code>.</p>
+        </div>
+        <div class="state-actions">
+          <button type="button" class="state-button" (click)="captureState()">Capture State</button>
+          <button type="button" class="state-button state-button-secondary" (click)="restoreState()">Restore
+            State</button>
+        </div>
+      </div>
+      <pre>{{ savedStateJson() }}</pre>
+    </section>
+
+    <section class="harness-stage">
+      <app-grid-browser-harness />
+    </section>
+  }
+
+  @if (surface() === 'element') {
+    <section class="grid-stage">
+      <section class="angular-demo-shell angular-demo-shell--element">
+        <header class="angular-demo-shell__header">
+          <div>
+            <p class="angular-demo-shell__eyebrow">Angular-backed custom element demo</p>
+            <h2>{{ elementPrimaryConfig().title }}</h2>
+            <p>{{ elementPrimaryConfig().description }}</p>
+            <p class="angular-element-shell__difference">
+              This is the Angular-backed <code>@ornery/ui-grid</code> element. For the separate framework-free
+              vanilla custom element built from <code>@ornery/ui-grid-vanilla</code>, see
+              <a routerLink="/web-components">the vanilla web component page</a>.
+            </p>
+          </div>
+          <div class="angular-demo-shell__actions">
+            <a routerLink="/docs/web-component" class="state-button state-button-secondary">Element Docs</a>
+            <a routerLink="/web-components" class="state-button state-button-secondary">Vanilla Difference</a>
+            <div class="angular-demo-shell__stats">
+              <span>{{ totalRows() }}</span>
+              <small>rows via declarative attributes</small>
+            </div>
+          </div>
+        </header>
+
+        <section class="angular-demo-shell__metrics" aria-label="Angular element grid metrics">
+          <article>
+            <strong>On</strong>
+            <span>virtualization</span>
+          </article>
+          <article>
+            <strong>1</strong>
+            <span>group columns</span>
+          </article>
+          <article>
+            <strong>HTML</strong>
+            <span>declarative surface</span>
+          </article>
+        </section>
+
+        <div class="angular-demo-shell__toolbar">
+          <div>
+            <strong>{{ totalRows() }}</strong>
+            <span>rows configured in markup</span>
+          </div>
+          <p>
+            Same Angular package, routed through <code>@angular/elements</code> and configured with HTML attributes
+            instead of a bound <code>GridOptions</code> object, including declarative column resizing.
+          </p>
+        </div>
+
+        <ui-grid-element
+          class="angular-element-grid"
+          [attr.grid-id]="elementPrimaryConfig().id"
+          [attr.title]="elementPrimaryConfig().title"
+          [attr.empty-message]="elementPrimaryConfig().emptyMessage"
+          [attr.row-height]="elementPrimaryConfig().rowHeight"
+          [attr.virtualization-threshold]="elementPrimaryConfig().virtualizationThreshold"
+          [attr.grouping]="elementPrimaryConfig().groupingJson ?? null"
+          [attr.column-defs]="elementPrimaryConfig().columnDefsJson"
+          [attr.data]="elementPrimaryConfig().dataJson"
+          enable-sorting
+          enable-filtering
+          enable-grouping
+          enable-column-moving
+          enable-column-resizing
+          enable-virtualization
+          enable-cell-edit-on-focus>
+        </ui-grid-element>
+      </section>
+    </section>
+
+    <section class="state-panel code-panel">
+      <div class="state-header">
+        <div>
+          <h2>Web Component Code</h2>
+          <p>The Angular wrapper mounts the vanilla <code>&lt;ui-grid-element&gt;</code> and configures it declaratively.</p>
+        </div>
+        <div class="state-actions">
+          <a routerLink="/docs/web-component" class="state-button state-button-secondary">Element Docs</a>
+          <a routerLink="/web-components" class="state-button state-button-secondary">Vanilla Page</a>
+        </div>
+      </div>
+      <div class="code-grid">
+        <app-code-block lang="typescript" [code]="angularElementSnippet" />
+        <app-code-block lang="text" [code]="angularElementDifferenceSnippet" />
+      </div>
+    </section>
+
+    <section class="harness-stage">
+      <section class="browser-harness browser-harness--element">
+        <header class="browser-harness__header">
+          <div>
+            <p class="browser-harness__eyebrow">Angular Element Harness</p>
+            <h2>{{ elementScenarioConfig().title }}</h2>
+            <p>{{ elementScenarioConfig().description }}</p>
+          </div>
+          <div class="browser-harness__modes" role="tablist" aria-label="Angular element demo scenarios">
+            @for (scenario of elementScenarios; track scenario.value) {
+              <button
+                type="button"
+                class="browser-harness__mode"
+                [class.browser-harness__mode-active]="elementMode() === scenario.value"
+                [class.browser-harness__mode-trading]="scenario.value === 'trading'"
+                [attr.aria-selected]="elementMode() === scenario.value"
+                (click)="setElementMode(scenario.value)"
+              >
+                {{ scenario.label }}
+              </button>
+            }
+          </div>
+        </header>
+
+        <ui-grid-element
+          #scenarioGrid
+          class="angular-element-grid angular-element-grid--scenario"
+          [attr.grid-id]="elementScenarioConfig().id"
+          [attr.title]="elementScenarioConfig().title"
+          [attr.empty-message]="elementScenarioConfig().emptyMessage"
+          [attr.row-height]="elementScenarioConfig().rowHeight"
+          [attr.virtualization-threshold]="elementScenarioConfig().virtualizationThreshold"
+          [attr.column-defs]="elementScenarioConfig().columnDefsJson"
+          [attr.data]="elementScenarioConfig().dataJson"
+          [attr.tree-children-field]="elementScenarioConfig().treeChildrenField ?? null"
+          [attr.tree-indent]="elementScenarioConfig().treeIndent ?? null"
+          [attr.expandable-row-height]="elementScenarioConfig().expandableRowHeight ?? null"
+          [attr.enable-sorting]="elementScenarioConfig().enableSorting ? '' : null"
+          [attr.enable-filtering]="elementScenarioConfig().enableFiltering ? '' : null"
+          [attr.enable-grouping]="elementScenarioConfig().enableGrouping ? '' : null"
+          [attr.enable-column-moving]="elementScenarioConfig().enableColumnMoving ? '' : null"
+          [attr.enable-column-resizing]="elementScenarioConfig().enableColumnResizing ? '' : null"
+          [attr.enable-virtualization]="elementScenarioConfig().enableVirtualization ? '' : null"
+          [attr.enable-cell-edit-on-focus]="elementScenarioConfig().enableCellEditOnFocus ? '' : null"
+          [attr.enable-pinning]="elementScenarioConfig().enablePinning ? '' : null"
+          [attr.enable-expandable]="elementScenarioConfig().enableExpandable ? '' : null"
+          [attr.enable-tree-view]="elementScenarioConfig().enableTreeView ? '' : null"
+          [attr.show-tree-expand-no-children]="elementScenarioConfig().showTreeExpandNoChildren ? '' : null">
+        </ui-grid-element>
+      </section>
+    </section>
+  }
+</main>

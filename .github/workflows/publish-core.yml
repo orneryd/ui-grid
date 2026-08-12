@@ -1,0 +1,70 @@
+name: Publish Core package
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch, tag, or commit to publish
+        required: true
+        default: main
+      version:
+        description: Public version to publish
+        required: true
+        default: 0.1.0
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 26.4.0
+          registry-url: https://registry.npmjs.org
+          scope: '@ornery'
+          always-auth: true
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build the Core package
+        run: npm run build --prefix projects/ui-grid-core
+
+      - name: Set the package version
+        run: |
+          VERSION="${{ inputs.version }}"
+
+          cd projects/ui-grid-core
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          if [ "$CURRENT_VERSION" != "$VERSION" ]; then
+            npm version "$VERSION" --no-git-tag-version
+          else
+            echo "Package version already set to $VERSION"
+          fi
+
+      - name: Verify publish manifest
+        run: |
+          cd projects/ui-grid-core
+          node - <<'NODE'
+          const pkg = require('./package.json');
+          const peerDeps = Object.keys(pkg.peerDependencies ?? {});
+          const deps = Object.keys(pkg.dependencies ?? {});
+          const optionalDeps = Object.keys(pkg.optionalDependencies ?? {});
+          const forbidden = [...peerDeps, ...deps, ...optionalDeps].filter((name) => name === 'react' || name === 'react-dom' || name.startsWith('@angular/'));
+          if (forbidden.length > 0) {
+            throw new Error(`ui-grid-core publish manifest unexpectedly references framework packages: ${forbidden.join(', ')}`);
+          }
+          console.log('ui-grid-core publish manifest contains no React or Angular runtime, peer, or optional dependencies');
+          NODE
+
+      - name: Publish to npm
+        run: npm publish ./projects/ui-grid-core --access public --registry=https://registry.npmjs.org
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

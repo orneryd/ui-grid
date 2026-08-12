@@ -1,0 +1,881 @@
+.ui-grid-host {
+  /* Stretch to fill the parent so the autoresize observer can measure a
+     deterministic height. Consumers can override these properties to opt
+     back into intrinsic sizing. */
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  --_ui-grid-border-color: var(--ui-grid-border-color, var(--app-ui-grid-border-color, #d4d4d8));
+  --_ui-grid-header-background: var(
+    --ui-grid-header-background,
+    var(--app-ui-grid-header-background, #f3f4f6)
+  );
+  --_ui-grid-row-odd: var(--ui-grid-row-odd, var(--app-ui-grid-row-odd, #fcfcfd));
+  --_ui-grid-row-even: var(--ui-grid-row-even, var(--app-ui-grid-row-even, #f7f7f8));
+  --_ui-grid-row-hover: var(--ui-grid-row-hover, var(--app-ui-grid-row-hover, #eef4ff));
+  --_ui-grid-cell-color: var(--ui-grid-cell-color, var(--app-ui-grid-cell-color, #111827));
+  --_ui-grid-muted-color: var(--ui-grid-muted-color, var(--app-ui-grid-muted-color, #6b7280));
+  --_ui-grid-surface: var(--ui-grid-surface, var(--app-ui-grid-surface, #ffffff));
+  --_ui-grid-radius: var(--ui-grid-radius, var(--app-ui-grid-radius, 4px));
+  --_ui-grid-shadow: var(
+    --ui-grid-shadow,
+    var(--app-ui-grid-shadow, 0 10px 24px rgba(15, 23, 42, 0.08))
+  );
+  --_ui-grid-header-weight: var(--ui-grid-header-weight, var(--app-ui-grid-header-weight, 700));
+  --_ui-grid-accent: var(--ui-grid-accent, var(--app-ui-grid-accent, #2563eb));
+  --_ui-grid-group-background: var(
+    --ui-grid-group-background,
+    var(--app-ui-grid-group-background, #eceff3)
+  );
+  --_ui-grid-status-active-bg: var(
+    --ui-grid-status-active-bg,
+    var(--app-ui-grid-status-active-bg, rgba(22, 163, 74, 0.14))
+  );
+  --_ui-grid-status-active-color: var(
+    --ui-grid-status-active-color,
+    var(--app-ui-grid-status-active-color, #166534)
+  );
+  --_ui-grid-status-expansion-bg: var(
+    --ui-grid-status-expansion-bg,
+    var(--app-ui-grid-status-expansion-bg, rgba(37, 99, 235, 0.14))
+  );
+  --_ui-grid-status-expansion-color: var(
+    --ui-grid-status-expansion-color,
+    var(--app-ui-grid-status-expansion-color, #1d4ed8)
+  );
+  --_ui-grid-status-enterprise-bg: var(
+    --ui-grid-status-enterprise-bg,
+    var(--app-ui-grid-status-enterprise-bg, rgba(15, 118, 110, 0.14))
+  );
+  --_ui-grid-status-enterprise-color: var(
+    --ui-grid-status-enterprise-color,
+    var(--app-ui-grid-status-enterprise-color, #115e59)
+  );
+  --_ui-grid-status-pilot-bg: var(
+    --ui-grid-status-pilot-bg,
+    var(--app-ui-grid-status-pilot-bg, rgba(234, 88, 12, 0.14))
+  );
+  --_ui-grid-status-pilot-color: var(
+    --ui-grid-status-pilot-color,
+    var(--app-ui-grid-status-pilot-color, #c2410c)
+  );
+  --_ui-grid-pin-menu-open-z-index: var(
+    --ui-grid-pin-menu-open-z-index,
+    var(--app-ui-grid-pin-menu-open-z-index, 8)
+  );
+  --_ui-grid-pin-menu-z-index: var(--ui-grid-pin-menu-z-index, var(--app-ui-grid-pin-menu-z-index, 20));
+  --_ui-grid-pin-menu-gap: var(--ui-grid-pin-menu-gap, var(--app-ui-grid-pin-menu-gap, 0.25rem));
+  --_ui-grid-pin-menu-padding: var(
+    --ui-grid-pin-menu-padding,
+    var(--app-ui-grid-pin-menu-padding, 0.25rem)
+  );
+  --_ui-grid-pin-menu-radius: var(--ui-grid-pin-menu-radius, var(--app-ui-grid-pin-menu-radius, 999px));
+  --_ui-grid-pin-menu-shadow: var(
+    --ui-grid-pin-menu-shadow,
+    var(
+      --app-ui-grid-pin-menu-shadow,
+      0 10px 24px color-mix(in srgb, var(--_ui-grid-cell-color) 10%, transparent)
+    )
+  );
+  --_ui-grid-pin-menu-action-size: var(
+    --ui-grid-pin-menu-action-size,
+    var(--app-ui-grid-pin-menu-action-size, 1.75rem)
+  );
+  --_ui-grid-pin-control-collapsed-size: var(
+    --ui-grid-pin-control-collapsed-size,
+    var(--app-ui-grid-pin-control-collapsed-size, 1px)
+  );
+  --_ui-grid-pin-control-transition-duration: var(
+    --ui-grid-pin-control-transition-duration,
+    var(--app-ui-grid-pin-control-transition-duration, 160ms)
+  );
+  --_ui-grid-pin-control-transition-easing: var(
+    --ui-grid-pin-control-transition-easing,
+    var(--app-ui-grid-pin-control-transition-easing, cubic-bezier(0.22, 1, 0.36, 1))
+  );
+  --_ui-grid-pin-menu-scale-closed: var(
+    --ui-grid-pin-menu-scale-closed,
+    var(--app-ui-grid-pin-menu-scale-closed, 0.72)
+  );
+  display: block;
+  color: var(--_ui-grid-cell-color);
+}
+
+.ui-grid-host *,
+.ui-grid-host *::before,
+.ui-grid-host *::after {
+  --ui-grid-border-color: var(--_ui-grid-border-color);
+  --ui-grid-header-background: var(--_ui-grid-header-background);
+  --ui-grid-row-odd: var(--_ui-grid-row-odd);
+  --ui-grid-row-even: var(--_ui-grid-row-even);
+  --ui-grid-row-hover: var(--_ui-grid-row-hover);
+  --ui-grid-cell-color: var(--_ui-grid-cell-color);
+  --ui-grid-muted-color: var(--_ui-grid-muted-color);
+  --ui-grid-surface: var(--_ui-grid-surface);
+  --ui-grid-radius: var(--_ui-grid-radius);
+  --ui-grid-shadow: var(--_ui-grid-shadow);
+  --ui-grid-header-weight: var(--_ui-grid-header-weight);
+  --ui-grid-accent: var(--_ui-grid-accent);
+  --ui-grid-group-background: var(--_ui-grid-group-background);
+  --ui-grid-status-active-bg: var(--_ui-grid-status-active-bg);
+  --ui-grid-status-active-color: var(--_ui-grid-status-active-color);
+  --ui-grid-status-expansion-bg: var(--_ui-grid-status-expansion-bg);
+  --ui-grid-status-expansion-color: var(--_ui-grid-status-expansion-color);
+  --ui-grid-status-enterprise-bg: var(--_ui-grid-status-enterprise-bg);
+  --ui-grid-status-enterprise-color: var(--_ui-grid-status-enterprise-color);
+  --ui-grid-status-pilot-bg: var(--_ui-grid-status-pilot-bg);
+  --ui-grid-status-pilot-color: var(--_ui-grid-status-pilot-color);
+  --ui-grid-pin-menu-open-z-index: var(--_ui-grid-pin-menu-open-z-index);
+  --ui-grid-pin-menu-z-index: var(--_ui-grid-pin-menu-z-index);
+  --ui-grid-pin-menu-gap: var(--_ui-grid-pin-menu-gap);
+  --ui-grid-pin-menu-padding: var(--_ui-grid-pin-menu-padding);
+  --ui-grid-pin-menu-radius: var(--_ui-grid-pin-menu-radius);
+  --ui-grid-pin-menu-shadow: var(--_ui-grid-pin-menu-shadow);
+  --ui-grid-pin-menu-action-size: var(--_ui-grid-pin-menu-action-size);
+  --ui-grid-pin-control-collapsed-size: var(--_ui-grid-pin-control-collapsed-size);
+  --ui-grid-pin-control-transition-duration: var(--_ui-grid-pin-control-transition-duration);
+  --ui-grid-pin-control-transition-easing: var(--_ui-grid-pin-control-transition-easing);
+  --ui-grid-pin-menu-scale-closed: var(--_ui-grid-pin-menu-scale-closed);
+  box-sizing: border-box;
+}
+
+.grid-shell {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.grid-hero {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: flex-start;
+  padding: 1rem 0;
+  color: var(--ui-grid-cell-color);
+}
+
+.grid-hero > :first-child {
+  flex: 1 1 28rem;
+  min-width: min(100%, 20rem);
+}
+
+.ui-grid-host .eyebrow {
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  color: var(--ui-grid-muted-color);
+}
+
+.ui-grid-host h1 {
+  margin: 0;
+  font-size: clamp(1.4rem, 2vw, 2rem);
+  line-height: 1.1;
+}
+
+.deck {
+  max-width: 56ch;
+  margin: 0.75rem 0 0;
+  color: var(--ui-grid-muted-color);
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 0 1 auto;
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+.action {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.8rem 1.1rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.action-secondary {
+  background: var(--ui-grid-surface);
+  color: var(--ui-grid-cell-color);
+  border: 1px solid var(--ui-grid-border-color);
+}
+
+.stats-card {
+  min-width: 8rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--ui-grid-radius);
+  background: var(--ui-grid-surface);
+  border: 1px solid var(--ui-grid-border-color);
+  display: grid;
+}
+
+.stats-card span {
+  font-size: 1.9rem;
+  font-weight: 700;
+}
+
+.stats-card small {
+  color: var(--ui-grid-muted-color);
+}
+
+.grid-frame {
+  border-radius: var(--ui-grid-radius);
+  background: var(--ui-grid-surface);
+  border: 1px solid var(--ui-grid-border-color);
+  box-shadow: var(--ui-grid-shadow);
+  overflow: hidden;
+  /* Allow the frame to grow inside the flexed host so the body grid can fill
+     the available height when no explicit viewportHeight is set. */
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.metrics-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.metrics-strip article {
+  padding: 1rem 1.1rem;
+  border-radius: var(--ui-grid-radius);
+  background: var(--ui-grid-surface);
+  border: 1px solid var(--ui-grid-border-color);
+  display: grid;
+}
+
+.metrics-strip strong {
+  font-size: 1.3rem;
+}
+
+.metrics-strip span {
+  color: var(--ui-grid-muted-color);
+}
+
+.grid-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  align-items: center;
+  background: var(--ui-grid-header-background);
+  border-bottom: 1px solid var(--ui-grid-border-color);
+}
+
+.grid-toolbar div {
+  display: flex;
+  gap: 0.4rem;
+  align-items: baseline;
+}
+
+.grid-toolbar p {
+  margin: 0;
+  color: var(--ui-grid-muted-color);
+}
+
+/*
+ * Grid table layout. Header + filter rows live in their own
+ * non-user-scrollable strips (real scroll containers so `position: sticky`
+ * on pinned cells anchors correctly); the body has its own viewport with
+ * visible scrollbars. Horizontal scroll on the body is mirrored onto the
+ * strips imperatively via React's onScroll/onWheel handlers so the columns
+ * always stay aligned.
+ */
+.grid-table {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+  min-width: 0;
+  overflow-anchor: none;
+}
+
+.grid-header-strip,
+.grid-filter-strip {
+  flex: 0 0 auto;
+  position: sticky;
+  z-index: 3;
+  background: var(--ui-grid-surface);
+  /* Real scroll container so pinned sticky cells anchor to something,
+   * but we don't want the user scrolling it directly. JS drives the
+   * scrollLeft, the wheel handler forwards gestures to the body, and
+   * the scrollbar is hidden. */
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  touch-action: pan-y;
+  overscroll-behavior-x: none;
+}
+
+.grid-header-strip::-webkit-scrollbar,
+.grid-filter-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.grid-header-strip {
+  top: 0;
+}
+
+.grid-filter-strip {
+  top: var(--ui-grid-header-sticky-top, 0px);
+}
+
+.grid-body-viewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-anchor: none;
+  overscroll-behavior-x: none;
+}
+
+.header-grid,
+.filter-grid,
+.body-grid {
+  display: grid;
+  width: max-content;
+  min-width: 100%;
+}
+
+.header-cell,
+.filter-cell,
+.body-cell,
+.group-row {
+  min-width: 0;
+}
+
+.header-cell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--ui-grid-border-color);
+  background: var(--ui-grid-header-background);
+  font-weight: var(--ui-grid-header-weight);
+  align-items: center;
+  position: relative;
+}
+
+.header-cell[draggable='true'] {
+  cursor: grab;
+}
+
+.header-cell.is-dragging {
+  opacity: 0.6;
+}
+
+.header-cell.is-drag-target {
+  background: color-mix(in srgb, var(--ui-grid-accent) 9%, var(--ui-grid-header-background));
+  border: 1px dashed color-mix(in srgb, var(--ui-grid-accent) 45%, var(--ui-grid-border-color));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ui-grid-accent) 18%, transparent);
+}
+
+.header-cell.is-active {
+  background: color-mix(in srgb, var(--ui-grid-accent) 8%, var(--ui-grid-header-background));
+}
+
+.header-cell.is-pin-menu-open {
+  z-index: var(--ui-grid-pin-menu-open-z-index);
+}
+
+.column-resizer {
+  position: absolute;
+  top: 0;
+  right: -4px;
+  width: 8px;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: col-resize;
+  z-index: 5;
+}
+
+.column-resizer::after {
+  content: '';
+  position: absolute;
+  top: 20%;
+  bottom: 20%;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ui-grid-border-color, #888) 80%, transparent);
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.header-cell:hover .column-resizer::after,
+.column-resizer:focus-visible::after {
+  opacity: 1;
+}
+
+.header-label {
+  min-width: 0;
+  display: block;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  hyphens: none;
+}
+
+.header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  justify-self: end;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+}
+
+.header-action,
+.chip-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  background: var(--ui-grid-surface);
+  padding: 0;
+  font: inherit;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.header-action-disabled {
+  cursor: default;
+}
+
+.header-action svg,
+.chip-action svg {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+}
+
+.header-action {
+  color: var(--ui-grid-muted-color);
+  border: 1px solid var(--ui-grid-border-color);
+}
+
+.header-cell.is-active .header-action {
+  color: var(--ui-grid-accent);
+  border-color: color-mix(in srgb, var(--ui-grid-accent) 35%, var(--ui-grid-border-color));
+}
+
+.chip-action {
+  border: 1px solid var(--ui-grid-border-color);
+  color: var(--ui-grid-muted-color);
+}
+
+.chip-action-active {
+  background: color-mix(in srgb, var(--ui-grid-accent) 12%, var(--ui-grid-surface));
+  border-color: color-mix(in srgb, var(--ui-grid-accent) 35%, var(--ui-grid-border-color));
+  color: var(--ui-grid-accent);
+}
+
+.pin-control {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  justify-items: center;
+  min-width: 2rem;
+  overflow: hidden;
+}
+
+.pin-trigger {
+  grid-area: 1 / 1;
+  transform-origin: center;
+  transition:
+    width var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    height var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    opacity var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    transform var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    border-color var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    background-color var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    color var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing);
+}
+
+.pin-menu {
+  grid-area: 1 / 1;
+  z-index: var(--ui-grid-pin-menu-z-index);
+  display: grid;
+  grid-auto-rows: var(--ui-grid-pin-menu-action-size);
+  gap: var(--ui-grid-pin-menu-gap);
+  padding: var(--ui-grid-pin-menu-padding);
+  border: 1px solid var(--ui-grid-border-color);
+  border-radius: var(--ui-grid-pin-menu-radius);
+  background: var(--ui-grid-surface);
+  box-shadow: var(--ui-grid-pin-menu-shadow);
+  justify-items: center;
+  align-items: center;
+  width: 2rem;
+  max-height: var(--ui-grid-pin-control-collapsed-size);
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(var(--ui-grid-pin-menu-scale-closed));
+  transform-origin: center;
+  transition:
+    max-height var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    opacity var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    transform var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    padding var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    border-color var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    box-shadow var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing);
+}
+
+.pin-control-open {
+  align-items: start;
+}
+
+.pin-control-open .pin-trigger {
+  width: var(--ui-grid-pin-control-collapsed-size);
+  height: var(--ui-grid-pin-control-collapsed-size);
+  opacity: 0;
+  transform: scale(0.72);
+  pointer-events: none;
+}
+
+.pin-control-open .pin-menu {
+  max-height: calc(
+    (var(--ui-grid-pin-menu-action-size) * 2) + var(--ui-grid-pin-menu-gap) +
+      (var(--ui-grid-pin-menu-padding) * 2)
+  );
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+.pin-menu-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-grid-pin-menu-action-size);
+  height: var(--ui-grid-pin-menu-action-size);
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ui-grid-cell-color);
+  cursor: pointer;
+}
+
+.pin-menu-action:hover,
+.pin-menu-action:focus-visible {
+  outline: 0;
+  background: color-mix(in srgb, var(--ui-grid-accent) 12%, var(--ui-grid-surface));
+  color: var(--ui-grid-accent);
+}
+
+.pin-menu-action svg {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+}
+
+.filter-cell {
+  padding: 0.75rem 1rem 1rem;
+  border-bottom: 1px solid var(--ui-grid-border-color);
+  background: var(--ui-grid-header-background);
+  overflow: hidden;
+}
+
+.filter-cell input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  border: 1px solid var(--ui-grid-border-color);
+  border-radius: var(--ui-grid-radius);
+  background: var(--ui-grid-surface);
+  padding: 0.55rem 0.7rem;
+  font: inherit;
+}
+
+.filter-cell input:focus {
+  outline: 2px solid color-mix(in srgb, var(--ui-grid-accent) 18%, transparent);
+  border-color: var(--ui-grid-accent);
+}
+
+.body-cell {
+  padding: 0.95rem 1rem;
+  border-bottom: 1px solid var(--ui-grid-border-color);
+  color: var(--ui-grid-cell-color);
+  background: var(--ui-grid-row-even);
+  outline: 0;
+}
+
+.body-cell.body-cell-odd {
+  background: var(--ui-grid-row-odd);
+}
+
+.cell-shell {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.cell-value {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.row-toggle {
+  border: 1px solid var(--ui-grid-border-color);
+  background: var(--ui-grid-surface);
+  color: var(--ui-grid-cell-color);
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: 0 0 auto;
+  padding: 0;
+  font: inherit;
+}
+
+.toggle-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: currentColor;
+  pointer-events: none;
+}
+
+.group-disclosure-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.pagination-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  fill: currentColor;
+}
+
+.expandable-row {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--ui-grid-border-color);
+  background: color-mix(in srgb, var(--ui-grid-accent) 4%, var(--ui-grid-surface));
+}
+
+.body-grid > .body-cell:hover {
+  background: var(--ui-grid-row-hover);
+}
+
+.body-cell.cell-focused,
+.body-grid > .body-cell.cell-focused {
+  background: color-mix(in srgb, var(--ui-grid-accent) 10%, var(--ui-grid-surface));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ui-grid-accent) 28%, transparent);
+}
+
+.body-cell.cell-editing,
+.body-grid > .body-cell.cell-editing {
+  background: color-mix(in srgb, var(--ui-grid-accent) 7%, var(--ui-grid-surface));
+}
+
+.cell-editor {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  border: 1px solid color-mix(in srgb, var(--ui-grid-accent) 45%, var(--ui-grid-border-color));
+  border-radius: calc(var(--ui-grid-radius) - 1px);
+  background: var(--ui-grid-surface);
+  color: var(--ui-grid-cell-color);
+  padding: 0.45rem 0.55rem;
+  font: inherit;
+}
+
+.cell-editor:focus {
+  outline: 2px solid color-mix(in srgb, var(--ui-grid-accent) 18%, transparent);
+}
+
+.group-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  border: 0;
+  width: 100%;
+  padding: 0.9rem 1rem;
+  background: var(--ui-grid-group-background);
+  border-bottom: 1px solid var(--ui-grid-border-color);
+  color: var(--ui-grid-cell-color);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+.group-row span,
+.group-row small {
+  color: var(--ui-grid-muted-color);
+}
+
+.grid-viewport {
+  width: 100%;
+}
+
+.grid-virtual-spacer {
+  position: relative;
+  width: max-content;
+  min-width: 100%;
+}
+
+.grid-virtual-body {
+  position: absolute;
+  left: 0;
+}
+
+.body-cell.align-center {
+  text-align: center;
+}
+
+.body-cell.align-end {
+  text-align: right;
+}
+
+.empty-state {
+  display: grid;
+  place-items: center;
+  gap: 0.35rem;
+  min-height: 16rem;
+  text-align: center;
+  padding: 2rem;
+  color: var(--ui-grid-muted-color);
+  background: var(--ui-grid-surface);
+}
+
+.empty-state p,
+.empty-state strong {
+  margin: 0;
+}
+
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  border-top: 1px solid var(--ui-grid-border-color);
+  background: var(--ui-grid-header-background);
+}
+
+.pagination-bar p {
+  margin: 0;
+  color: var(--ui-grid-muted-color);
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.pagination-button {
+  padding: 0.45rem 0.8rem;
+}
+
+.pagination-size {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.pagination-size select {
+  border: 1px solid var(--ui-grid-border-color);
+  border-radius: var(--ui-grid-radius);
+  background: var(--ui-grid-surface);
+  padding: 0.35rem 0.55rem;
+  font: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.07);
+  color: var(--ui-grid-cell-color);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.status-pill-enterprise {
+  background: var(--ui-grid-status-enterprise-bg);
+  color: var(--ui-grid-status-enterprise-color);
+}
+
+.status-pill-active {
+  background: var(--ui-grid-status-active-bg);
+  color: var(--ui-grid-status-active-color);
+}
+
+.status-pill-expansion {
+  background: var(--ui-grid-status-expansion-bg);
+  color: var(--ui-grid-status-expansion-color);
+}
+
+.status-pill-pilot {
+  background: var(--ui-grid-status-pilot-bg);
+  color: var(--ui-grid-status-pilot-color);
+}
+
+@media (max-width: 900px) {
+  .metrics-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grid-hero,
+  .grid-toolbar {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .hero-actions {
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 640px) {
+  .metrics-strip {
+    grid-template-columns: 1fr;
+  }
+}

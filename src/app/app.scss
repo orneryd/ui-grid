@@ -1,0 +1,408 @@
+:host {
+	--app-demo-font-sans: 'Plus Jakarta Sans', sans-serif;
+	--app-demo-font-mono: 'IBM Plex Mono', monospace;
+	--app-demo-default-dark-page-background:
+		radial-gradient(circle at top, rgba(20, 184, 166, 0.2), transparent 28%),
+		linear-gradient(180deg, #051017, #0a1621 55%, #071118);
+	--app-demo-default-dark-panel-background: rgba(7, 18, 28, 0.78);
+	--app-demo-default-dark-panel-background-strong: rgba(9, 24, 37, 0.92);
+	--app-demo-default-dark-panel-alt: rgba(10, 33, 47, 0.82);
+	--app-demo-default-dark-text: #eef7fb;
+	--app-demo-default-dark-text-soft: #9db4c4;
+	--app-demo-default-dark-accent: #5eead4;
+	--app-demo-default-dark-accent-soft: rgba(94, 234, 212, 0.16);
+	--app-demo-default-dark-border: rgba(148, 190, 210, 0.18);
+	--app-demo-default-dark-shadow: 0 34px 70px rgba(2, 7, 14, 0.42);
+	--app-demo-default-dark-grid-surface: #0b1824;
+	--app-demo-default-dark-grid-surface-alt: #0f2231;
+	--app-demo-default-dark-grid-hover: #143247;
+	--app-demo-default-dark-grid-header: #112434;
+	--app-demo-default-dark-grid-group: #0f3140;
+	--app-demo-default-dark-grid-border: rgba(148, 190, 210, 0.18);
+	--app-demo-default-dark-grid-text: #ebf5f9;
+	--app-demo-default-dark-grid-muted: #89a1b2;
+	--app-demo-default-dark-grid-accent: #67e8f9;
+	--app-demo-default-dark-logo-fill: #f5fbff;
+	--app-demo-default-dark-logo-detail: rgba(94, 234, 212, 0.9);
+	--app-demo-default-dark-logo-backdrop-start: #0c1c27;
+	--app-demo-default-dark-logo-backdrop-end: #123544;
+	--app-demo-light-page-background:
+		radial-gradient(circle at top, rgba(110, 231, 183, 0.16), transparent 30%),
+		linear-gradient(180deg, #f8fafc, #eef2ff 55%, #f8fafc);
+	--app-demo-light-panel-background: rgba(255, 255, 255, 0.8);
+	--app-demo-light-panel-background-strong: rgba(255, 255, 255, 0.92);
+	--app-demo-light-panel-alt: rgba(240, 249, 255, 0.88);
+	--app-demo-light-text: #08273d;
+	--app-demo-light-text-soft: #426072;
+	--app-demo-light-accent: #0f766e;
+	--app-demo-light-accent-soft: rgba(15, 118, 110, 0.12);
+	--app-demo-light-border: rgba(8, 39, 61, 0.1);
+	--app-demo-light-shadow: 0 28px 60px rgba(15, 23, 42, 0.12);
+	--app-demo-light-grid-surface: #ffffff;
+	--app-demo-light-grid-surface-alt: #f7f7f8;
+	--app-demo-light-grid-hover: #eef4ff;
+	--app-demo-light-grid-header: #f3f4f6;
+	--app-demo-light-grid-group: #eceff3;
+	--app-demo-light-grid-border: #d4d4d8;
+	--app-demo-light-grid-text: #111827;
+	--app-demo-light-grid-muted: #6b7280;
+	--app-demo-light-grid-accent: #2563eb;
+	--app-demo-light-logo-fill: #071d2b;
+	--app-demo-light-logo-detail: rgba(34, 166, 153, 0.9);
+	--app-demo-light-logo-backdrop-start: #f5fffd;
+	--app-demo-light-logo-backdrop-end: #d8f5f0;
+	--app-demo-wire-dark-page-background:
+		repeating-linear-gradient(180deg, rgba(69, 255, 180, 0.05) 0 2px, transparent 2px 5px),
+		linear-gradient(180deg, #030605, #07110b 52%, #040907);
+	--app-demo-wire-dark-panel-background: rgba(5, 10, 8, 0.86);
+	--app-demo-wire-dark-panel-background-strong: rgba(6, 12, 9, 0.96);
+	--app-demo-wire-dark-panel-alt: rgba(8, 18, 12, 0.92);
+	--app-demo-wire-dark-text: #bfffd8;
+	--app-demo-wire-dark-text-soft: #6dc89a;
+	--app-demo-wire-dark-accent: #5dff9a;
+	--app-demo-wire-dark-accent-soft: rgba(93, 255, 154, 0.12);
+	--app-demo-wire-dark-border: rgba(93, 255, 154, 0.28);
+	--app-demo-wire-dark-shadow: 0 0 0 1px rgba(93, 255, 154, 0.18), 0 20px 42px rgba(0, 0, 0, 0.45);
+	--app-demo-wire-dark-grid-surface: #07100b;
+	--app-demo-wire-dark-grid-surface-alt: #0b1710;
+	--app-demo-wire-dark-grid-hover: #0f2617;
+	--app-demo-wire-dark-grid-header: #0a150f;
+	--app-demo-wire-dark-grid-group: #0d1e14;
+	--app-demo-wire-dark-grid-border: rgba(93, 255, 154, 0.24);
+	--app-demo-wire-dark-grid-text: #c7ffdc;
+	--app-demo-wire-dark-grid-muted: #79c89c;
+	--app-demo-wire-dark-grid-accent: #5dff9a;
+	--app-demo-wire-dark-logo-fill: transparent;
+	--app-demo-wire-dark-logo-detail: #5dff9a;
+	--app-demo-wire-dark-logo-backdrop-start: #07100b;
+	--app-demo-wire-dark-logo-backdrop-end: #0a1a11;
+	--app-demo-wire-light-page-background:
+		repeating-linear-gradient(180deg, rgba(12, 76, 50, 0.05) 0 2px, transparent 2px 5px),
+		linear-gradient(180deg, #f6fff9, #ebfff3 55%, #f8fffb);
+	--app-demo-wire-light-panel-background: rgba(250, 255, 251, 0.9);
+	--app-demo-wire-light-panel-background-strong: rgba(255, 255, 255, 0.97);
+	--app-demo-wire-light-panel-alt: rgba(240, 255, 246, 0.96);
+	--app-demo-wire-light-text: #103622;
+	--app-demo-wire-light-text-soft: #42755a;
+	--app-demo-wire-light-accent: #14804a;
+	--app-demo-wire-light-accent-soft: rgba(20, 128, 74, 0.1);
+	--app-demo-wire-light-border: rgba(20, 128, 74, 0.18);
+	--app-demo-wire-light-shadow: 0 0 0 1px rgba(20, 128, 74, 0.08), 0 22px 48px rgba(16, 54, 34, 0.12);
+	--app-demo-wire-light-grid-surface: #fbfffc;
+	--app-demo-wire-light-grid-surface-alt: #f3fff6;
+	--app-demo-wire-light-grid-hover: #e5fbea;
+	--app-demo-wire-light-grid-header: #edfdf1;
+	--app-demo-wire-light-grid-group: #e7f8ea;
+	--app-demo-wire-light-grid-border: rgba(20, 128, 74, 0.18);
+	--app-demo-wire-light-grid-text: #113723;
+	--app-demo-wire-light-grid-muted: #4c7d64;
+	--app-demo-wire-light-grid-accent: #14804a;
+	--app-demo-wire-light-logo-fill: transparent;
+	--app-demo-wire-light-logo-detail: #14804a;
+	--app-demo-wire-light-logo-backdrop-start: #f6fff9;
+	--app-demo-wire-light-logo-backdrop-end: #e0f7e8;
+	display: block;
+	min-height: 100vh;
+	background: var(--demo-page-background);
+	color: var(--ink-strong);
+	font-family: var(--theme-font-family);
+	transition: background 180ms ease, color 180ms ease;
+
+	--app-ui-grid-border-color: var(--grid-border);
+	--app-ui-grid-header-background: var(--grid-header);
+	--app-ui-grid-row-odd: var(--grid-surface);
+	--app-ui-grid-row-even: var(--grid-surface-alt);
+	--app-ui-grid-row-hover: var(--grid-hover);
+	--app-ui-grid-cell-color: var(--grid-text);
+	--app-ui-grid-muted-color: var(--grid-muted);
+	--app-ui-grid-surface: var(--grid-surface);
+	--app-ui-grid-radius: 8px;
+	--app-ui-grid-shadow: none;
+	--app-ui-grid-header-weight: 700;
+	--app-ui-grid-accent: var(--grid-accent);
+	--app-ui-grid-group-background: var(--grid-group);
+
+	--ui-grid-border-color: var(--app-ui-grid-border-color);
+	--ui-grid-header-background: var(--app-ui-grid-header-background);
+	--ui-grid-row-odd: var(--app-ui-grid-row-odd);
+	--ui-grid-row-even: var(--app-ui-grid-row-even);
+	--ui-grid-row-hover: var(--app-ui-grid-row-hover);
+	--ui-grid-cell-color: var(--app-ui-grid-cell-color);
+	--ui-grid-muted-color: var(--app-ui-grid-muted-color);
+	--ui-grid-surface: var(--app-ui-grid-surface);
+	--ui-grid-radius: var(--app-ui-grid-radius);
+	--ui-grid-shadow: var(--app-ui-grid-shadow);
+	--ui-grid-header-weight: var(--app-ui-grid-header-weight);
+	--ui-grid-accent: var(--app-ui-grid-accent);
+	--ui-grid-group-background: var(--app-ui-grid-group-background);
+}
+
+:host([data-color-mode='dark'][data-visual-mode='default']) {
+	--theme-font-family: var(--app-demo-font-sans);
+	--demo-page-background: var(--app-demo-default-dark-page-background);
+	--panel-surface: var(--app-demo-default-dark-panel-background);
+	--panel-surface-strong: var(--app-demo-default-dark-panel-background-strong);
+	--panel-surface-alt: var(--app-demo-default-dark-panel-alt);
+	--ink-strong: var(--app-demo-default-dark-text);
+	--ink-soft: var(--app-demo-default-dark-text-soft);
+	--teal-strong: var(--app-demo-default-dark-accent);
+	--teal-soft: var(--app-demo-default-dark-accent-soft);
+	--card-border: var(--app-demo-default-dark-border);
+	--card-shadow: var(--app-demo-default-dark-shadow);
+	--grid-surface: var(--app-demo-default-dark-grid-surface);
+	--grid-surface-alt: var(--app-demo-default-dark-grid-surface-alt);
+	--grid-hover: var(--app-demo-default-dark-grid-hover);
+	--grid-header: var(--app-demo-default-dark-grid-header);
+	--grid-group: var(--app-demo-default-dark-grid-group);
+	--grid-border: var(--app-demo-default-dark-grid-border);
+	--grid-text: var(--app-demo-default-dark-grid-text);
+	--grid-muted: var(--app-demo-default-dark-grid-muted);
+	--grid-accent: var(--app-demo-default-dark-grid-accent);
+	--logo-fill: var(--app-demo-default-dark-logo-fill);
+	--logo-detail: var(--app-demo-default-dark-logo-detail);
+	--logo-backdrop-start: var(--app-demo-default-dark-logo-backdrop-start);
+	--logo-backdrop-end: var(--app-demo-default-dark-logo-backdrop-end);
+	--theme-radius: 28px;
+	--theme-card-filter: blur(18px);
+	--theme-switch-radius: 999px;
+}
+
+:host([data-color-mode='light'][data-visual-mode='default']) {
+	--theme-font-family: var(--app-demo-font-sans);
+	--demo-page-background: var(--app-demo-light-page-background);
+	--panel-surface: var(--app-demo-light-panel-background);
+	--panel-surface-strong: var(--app-demo-light-panel-background-strong);
+	--panel-surface-alt: var(--app-demo-light-panel-alt);
+	--ink-strong: var(--app-demo-light-text);
+	--ink-soft: var(--app-demo-light-text-soft);
+	--teal-strong: var(--app-demo-light-accent);
+	--teal-soft: var(--app-demo-light-accent-soft);
+	--card-border: var(--app-demo-light-border);
+	--card-shadow: var(--app-demo-light-shadow);
+	--grid-surface: var(--app-demo-light-grid-surface);
+	--grid-surface-alt: var(--app-demo-light-grid-surface-alt);
+	--grid-hover: var(--app-demo-light-grid-hover);
+	--grid-header: var(--app-demo-light-grid-header);
+	--grid-group: var(--app-demo-light-grid-group);
+	--grid-border: var(--app-demo-light-grid-border);
+	--grid-text: var(--app-demo-light-grid-text);
+	--grid-muted: var(--app-demo-light-grid-muted);
+	--grid-accent: var(--app-demo-light-grid-accent);
+	--logo-fill: var(--app-demo-light-logo-fill);
+	--logo-detail: var(--app-demo-light-logo-detail);
+	--logo-backdrop-start: var(--app-demo-light-logo-backdrop-start);
+	--logo-backdrop-end: var(--app-demo-light-logo-backdrop-end);
+	--theme-radius: 28px;
+	--theme-card-filter: blur(14px);
+	--theme-switch-radius: 999px;
+}
+
+:host([data-color-mode='dark'][data-visual-mode='wireframe']) {
+	--theme-font-family: var(--app-demo-font-mono);
+	--demo-page-background: var(--app-demo-wire-dark-page-background);
+	--panel-surface: var(--app-demo-wire-dark-panel-background);
+	--panel-surface-strong: var(--app-demo-wire-dark-panel-background-strong);
+	--panel-surface-alt: var(--app-demo-wire-dark-panel-alt);
+	--ink-strong: var(--app-demo-wire-dark-text);
+	--ink-soft: var(--app-demo-wire-dark-text-soft);
+	--teal-strong: var(--app-demo-wire-dark-accent);
+	--teal-soft: var(--app-demo-wire-dark-accent-soft);
+	--card-border: var(--app-demo-wire-dark-border);
+	--card-shadow: var(--app-demo-wire-dark-shadow);
+	--grid-surface: var(--app-demo-wire-dark-grid-surface);
+	--grid-surface-alt: var(--app-demo-wire-dark-grid-surface-alt);
+	--grid-hover: var(--app-demo-wire-dark-grid-hover);
+	--grid-header: var(--app-demo-wire-dark-grid-header);
+	--grid-group: var(--app-demo-wire-dark-grid-group);
+	--grid-border: var(--app-demo-wire-dark-grid-border);
+	--grid-text: var(--app-demo-wire-dark-grid-text);
+	--grid-muted: var(--app-demo-wire-dark-grid-muted);
+	--grid-accent: var(--app-demo-wire-dark-grid-accent);
+	--logo-fill: var(--app-demo-wire-dark-logo-fill);
+	--logo-detail: var(--app-demo-wire-dark-logo-detail);
+	--logo-backdrop-start: var(--app-demo-wire-dark-logo-backdrop-start);
+	--logo-backdrop-end: var(--app-demo-wire-dark-logo-backdrop-end);
+	--theme-radius: 0px;
+	--theme-card-filter: none;
+	--theme-switch-radius: 4px;
+}
+
+:host([data-color-mode='light'][data-visual-mode='wireframe']) {
+	--theme-font-family: var(--app-demo-font-mono);
+	--demo-page-background: var(--app-demo-wire-light-page-background);
+	--panel-surface: var(--app-demo-wire-light-panel-background);
+	--panel-surface-strong: var(--app-demo-wire-light-panel-background-strong);
+	--panel-surface-alt: var(--app-demo-wire-light-panel-alt);
+	--ink-strong: var(--app-demo-wire-light-text);
+	--ink-soft: var(--app-demo-wire-light-text-soft);
+	--teal-strong: var(--app-demo-wire-light-accent);
+	--teal-soft: var(--app-demo-wire-light-accent-soft);
+	--card-border: var(--app-demo-wire-light-border);
+	--card-shadow: var(--app-demo-wire-light-shadow);
+	--grid-surface: var(--app-demo-wire-light-grid-surface);
+	--grid-surface-alt: var(--app-demo-wire-light-grid-surface-alt);
+	--grid-hover: var(--app-demo-wire-light-grid-hover);
+	--grid-header: var(--app-demo-wire-light-grid-header);
+	--grid-group: var(--app-demo-wire-light-grid-group);
+	--grid-border: var(--app-demo-wire-light-grid-border);
+	--grid-text: var(--app-demo-wire-light-grid-text);
+	--grid-muted: var(--app-demo-wire-light-grid-muted);
+	--grid-accent: var(--app-demo-wire-light-grid-accent);
+	--logo-fill: var(--app-demo-wire-light-logo-fill);
+	--logo-detail: var(--app-demo-wire-light-logo-detail);
+	--logo-backdrop-start: var(--app-demo-wire-light-logo-backdrop-start);
+	--logo-backdrop-end: var(--app-demo-wire-light-logo-backdrop-end);
+	--theme-radius: 0px;
+	--theme-card-filter: none;
+	--theme-switch-radius: 4px;
+}
+
+.app-nav {
+	position: sticky;
+	top: 0;
+	z-index: 100;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: 0.65rem clamp(1rem, 3vw, 2rem);
+	background: color-mix(in srgb, var(--panel-surface-strong, rgba(9, 24, 37, 0.92)) 85%, transparent);
+	backdrop-filter: blur(16px) saturate(1.4);
+	border-bottom: 1px solid var(--card-border, rgba(148, 190, 210, 0.18));
+	transition: background 180ms ease, border-color 180ms ease;
+}
+
+.nav-brand {
+	display: flex;
+	align-items: center;
+	gap: 0.45rem;
+	text-decoration: none;
+	font-weight: 900;
+	font-size: 1.1rem;
+	color: var(--ink-strong);
+	letter-spacing: -0.01em;
+	white-space: nowrap;
+}
+
+.nav-brand-icon {
+	font-size: 1.3rem;
+	color: var(--teal-strong);
+}
+
+.nav-links {
+	display: flex;
+	align-items: center;
+	gap: 0.15rem;
+	margin-left: auto;
+}
+
+.nav-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+	padding: 0.45rem 0.8rem;
+	border-radius: var(--theme-switch-radius, 999px);
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 0.88rem;
+	color: var(--ink-soft);
+	transition: color 140ms ease, background 140ms ease;
+}
+
+.nav-link:hover {
+	color: var(--ink-strong);
+	background: color-mix(in srgb, var(--teal-strong) 10%, transparent);
+}
+
+.nav-link-active {
+	color: var(--teal-strong);
+	background: color-mix(in srgb, var(--teal-strong) 14%, transparent);
+}
+
+.nav-link-external {
+	width: 0.72rem;
+	height: 0.72rem;
+	opacity: 0.6;
+}
+
+.nav-theme-toggles {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	margin-left: 0.5rem;
+	padding-left: 0.75rem;
+	border-left: 1px solid var(--card-border);
+}
+
+.nav-theme-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	padding: 0;
+	border: 1px solid color-mix(in srgb, var(--ink-strong) 12%, transparent);
+	border-radius: var(--theme-switch-radius, 999px);
+	background: transparent;
+	color: var(--ink-soft);
+	cursor: pointer;
+	transition: color 140ms ease, background 140ms ease, border-color 140ms ease;
+}
+
+.nav-theme-btn:hover {
+	color: var(--ink-strong);
+	background: color-mix(in srgb, var(--teal-strong) 10%, transparent);
+}
+
+.nav-theme-btn-active {
+	color: var(--teal-strong);
+	border-color: color-mix(in srgb, var(--teal-strong) 35%, transparent);
+	background: color-mix(in srgb, var(--teal-strong) 12%, transparent);
+}
+
+.nav-theme-btn svg {
+	width: 1rem;
+	height: 1rem;
+}
+
+.nav-theme-label {
+	font-size: 0.75rem;
+	font-weight: 700;
+	color: var(--ink-soft);
+	white-space: nowrap;
+	display: none;
+}
+
+.app-content {
+	min-height: calc(100vh - 3.5rem);
+}
+
+@media (min-width: 640px) {
+	.nav-theme-label {
+		display: inline;
+	}
+}
+
+@media (max-width: 640px) {
+	.app-nav {
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+
+	.nav-links {
+		order: 3;
+		width: 100%;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+		padding-bottom: 0.15rem;
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}
+
+	.nav-link {
+		white-space: nowrap;
+		flex-shrink: 0;
+	}
+}

@@ -1,0 +1,58 @@
+// Frame styles
+// Auto-extracted from grid.core.styles.scss
+
+.grid-frame {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100%;
+  min-height: 0;
+  border-radius: var(--ui-grid-radius);
+  background: var(--ui-grid-surface);
+  border: 1px solid var(--ui-grid-border-color);
+  box-shadow: var(--ui-grid-shadow);
+  overflow: hidden;
+}
+
+.metrics-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--ui-grid-metrics-gap);
+}
+
+.metrics-strip article {
+  padding: var(--ui-grid-metric-card-padding-block) var(--ui-grid-metric-card-padding-inline);
+  border-radius: var(--ui-grid-radius);
+  background: var(--ui-grid-surface);
+  border: 1px solid var(--ui-grid-border-color);
+  display: grid;
+}
+
+.metrics-strip strong {
+  font-size: var(--ui-grid-metric-value-font-size);
+}
+
+.metrics-strip span {
+  color: var(--ui-grid-muted-color);
+}
+
+.grid-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ui-grid-toolbar-gap);
+  padding: var(--ui-grid-toolbar-padding-block) var(--ui-grid-toolbar-padding-inline);
+  align-items: center;
+  background: var(--ui-grid-header-background);
+  border-bottom: 1px solid var(--ui-grid-border-color);
+}
+
+.grid-toolbar div {
+  display: flex;
+  gap: var(--ui-grid-toolbar-inline-gap);
+  align-items: baseline;
+}
+
+.grid-toolbar p {
+  margin: 0;
+  color: var(--ui-grid-muted-color);
+}
+

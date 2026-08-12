@@ -1,0 +1,175 @@
+// Row-selection styles. Ports the visual hooks from ui.grid.selection.less
+// while respecting the new grid's CSS architecture.
+//
+// Default tints are derived from the theme's accent + surface, so the
+// selected row reads correctly in both light and dark modes (previously
+// tinted against a hardcoded white, which made selected rows eye-searingly
+// light on dark themes while leaving the text color unchanged).
+
+.ui-grid-row-selected,
+.body-cell.ui-grid-row-selected {
+  background: var(
+    --ui-grid-row-selected-bg,
+    var(
+      --app-ui-grid-row-selected-bg,
+      color-mix(
+        in srgb,
+        var(--ui-grid-accent, #2563eb) 22%,
+        var(--ui-grid-surface, #ffffff)
+      )
+    )
+  );
+  color: var(
+    --ui-grid-row-selected-color,
+    var(--app-ui-grid-row-selected-color, var(--ui-grid-cell-color))
+  );
+}
+
+.body-cell.ui-grid-row-selected.body-cell-odd {
+  background: var(
+    --ui-grid-row-selected-bg-odd,
+    var(
+      --app-ui-grid-row-selected-bg-odd,
+      color-mix(
+        in srgb,
+        var(--ui-grid-accent, #2563eb) 26%,
+        var(--ui-grid-surface, #ffffff)
+      )
+    )
+  );
+}
+
+.ui-grid-row-focused,
+.body-cell.ui-grid-row-focused {
+  outline: 1px dashed var(--ui-grid-accent, #2563eb);
+  outline-offset: -1px;
+}
+
+// Selection row-header column lives inside the normal body/header cell
+// wrappers. Strip padding through the wrapper chain so the checkbox has the
+// full cell width to center itself in — otherwise the cell-shell's
+// padding-inline-start / cell-content's default padding squish the box.
+.body-cell[data-column="selectionRowHeaderCol"],
+.header-cell[data-column="selectionRowHeaderCol"],
+.filter-cell[data-column="selectionRowHeaderCol"] {
+  padding: 0 !important;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.body-cell[data-column="selectionRowHeaderCol"] > .cell-shell,
+.body-cell[data-column="selectionRowHeaderCol"] > .cell-shell > .cell-content {
+  padding: 0 !important;
+  padding-inline-start: 0 !important;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Filter row's selection cell is an empty spacer div (not a real
+// ui-grid-filter-cell), matching the old grid which never emitted a filter
+// slot for this column. Clear the filter-cell chrome so the track reads as
+// blank space — but preserve the bottom border that separates the filter
+// row from the body.
+.filter-cell[data-column="selectionRowHeaderCol"] {
+  padding: 0;
+  background: var(--_ui-grid-header-background, var(--ui-grid-header-background, transparent));
+  border-bottom: 1px solid
+    var(--_ui-grid-border-color, var(--ui-grid-border-color, transparent));
+}
+
+// The checkbox "button" span. Sits flush in the cell and paints a visible
+// box sized like a native checkbox. Uses the accent color for the unchecked
+// border so the box is always visible regardless of theme.
+.ui-grid-selection-row-header-buttons {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.ui-grid-selection-checkbox {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  // Unchecked border uses currentColor — which inherits the grid's cell
+  // text color at whatever level the checkbox renders. By definition the
+  // cell text contrasts with the cell background in any theme, so the box
+  // is always visible without needing theme-specific overrides.
+  border: 2px solid currentColor;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--ui-grid-cell-color, currentColor);
+  position: relative;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+  opacity: 0.7;
+}
+
+.ui-grid-selection-row-header-buttons:hover .ui-grid-selection-checkbox {
+  opacity: 1;
+  color: var(--ui-grid-accent, var(--_ui-grid-accent, #2563eb));
+}
+
+.ui-grid-selection-checkbox-checked {
+  background: var(--ui-grid-accent, var(--_ui-grid-accent, #2563eb));
+  color: var(--ui-grid-accent, var(--_ui-grid-accent, #2563eb));
+  border-color: var(--ui-grid-accent, var(--_ui-grid-accent, #2563eb));
+  opacity: 1;
+}
+
+// Checkmark glyph inside a checked box. Painted with the grid surface
+// color so it always contrasts with the accent fill — on light themes
+// that's a white check on blue, on dark themes a dark check on cyan.
+.ui-grid-selection-checkbox-checked::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 0;
+  width: 5px;
+  height: 9px;
+  border: 2px solid var(--ui-grid-surface, var(--_ui-grid-surface, #ffffff));
+  border-top: 0;
+  border-left: 0;
+  transform: rotate(45deg);
+}
+
+.ui-grid-selection-checkbox-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.ui-grid-selection-select-all {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.ui-grid-selection-select-all:focus-visible {
+  outline: 2px solid var(--_ui-grid-accent, var(--ui-grid-accent, #2563eb));
+  outline-offset: -2px;
+}
+
+// Disable text highlighting on the body viewport when row selection is
+// enabled. Click-drag is used for multi-row selection, so browser text
+// selection would conflict and produce a jarring UX.
+.grid-body-viewport:has([data-column="selectionRowHeaderCol"]) {
+  user-select: none;
+  -webkit-user-select: none;
+}

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+echo "[pre-commit] Running Rust formatting on staged files"
+staged_rs="$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.rs$' || true)"
+
+if [[ -n "$staged_rs" ]]; then
+  # macOS ships bash 3.x, so avoid mapfile and split on newlines.
+  IFS=$'\n' read -r -d '' -a staged_rs_array < <(printf '%s\0' "$staged_rs")
+  cargo fmt --all -- "${staged_rs_array[@]}"
+  git add -- "${staged_rs_array[@]}"
+else
+  echo "[pre-commit] No staged Rust files to format"
+fi
+
+echo "[pre-commit] Running clippy"
+cargo clippy --workspace --all-targets -- -D warnings

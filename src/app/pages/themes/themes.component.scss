@@ -1,0 +1,103 @@
+.themes-page {
+	width: min(1100px, calc(100% - 2rem));
+	margin: 0 auto;
+	padding: clamp(1.25rem, 2vw, 2rem);
+	color: var(--ink-strong);
+}
+
+.themes-header {
+	margin-bottom: 2rem;
+}
+
+.themes-eyebrow {
+	margin: 0 0 0.35rem;
+	text-transform: uppercase;
+	letter-spacing: 0.18em;
+	font-size: 0.76rem;
+	font-weight: 800;
+	color: var(--teal-strong);
+}
+
+.themes-header h1 {
+	margin: 0 0 0.75rem;
+	font-size: clamp(1.8rem, 3vw, 2.5rem);
+	line-height: 1.1;
+}
+
+.themes-lead {
+	margin: 0;
+	font-size: 1.05rem;
+	color: var(--ink-soft);
+	line-height: 1.7;
+	max-width: 52rem;
+}
+
+.themes-lead code {
+	padding: 0.14rem 0.4rem;
+	border-radius: 4px;
+	background: color-mix(in srgb, var(--ink-strong) 8%, transparent);
+	font-family: 'IBM Plex Mono', monospace;
+	font-size: 0.88em;
+	font-weight: 600;
+	color: var(--teal-strong);
+}
+
+.themes-section {
+	margin-top: 2.5rem;
+}
+
+.themes-section h2 {
+	margin: 0 0 0.75rem;
+	font-size: 1.25rem;
+}
+
+.themes-section p {
+	margin: 0 0 1rem;
+	color: var(--ink-soft);
+	line-height: 1.7;
+}
+
+.themes-section code {
+	padding: 0.14rem 0.4rem;
+	border-radius: 4px;
+	background: color-mix(in srgb, var(--ink-strong) 8%, transparent);
+	font-family: 'IBM Plex Mono', monospace;
+	font-size: 0.88em;
+	font-weight: 600;
+	color: var(--teal-strong);
+}
+
+.themes-grid-demo {
+	border: 1px solid var(--card-border);
+	border-radius: var(--theme-radius);
+	overflow: hidden;
+	background: var(--panel-surface);
+	--app-ui-grid-radius: 0;
+	--app-ui-grid-shadow: none;
+	--ui-grid-radius: 0;
+	--ui-grid-shadow: none;
+}
+
+.themes-table {
+	width: 100%;
+	margin: 0.75rem 0 1.5rem;
+	border-collapse: collapse;
+	font-size: 0.88rem;
+}
+
+.themes-table th,
+.themes-table td {
+	padding: 0.6rem 0.75rem;
+	text-align: left;
+	border-bottom: 1px solid var(--card-border);
+	color: var(--ink-soft);
+}
+
+.themes-table th {
+	font-weight: 800;
+	font-size: 0.72rem;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: var(--teal-strong);
+	background: color-mix(in srgb, var(--panel-surface-strong) 60%, transparent);
+}

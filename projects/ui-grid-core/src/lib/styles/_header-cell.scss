@@ -1,0 +1,290 @@
+// Header Cell styles
+// Auto-extracted from grid.core.styles.scss
+
+.header-cell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--ui-grid-header-cell-gap);
+  padding: var(--ui-grid-header-cell-padding-block) var(--ui-grid-header-cell-padding-inline);
+  border-bottom: 1px solid var(--ui-grid-border-color);
+  background: var(--ui-grid-header-background);
+  font-weight: var(--ui-grid-header-weight);
+  align-items: center;
+  position: relative;
+}
+
+.header-cell.is-active {
+  background: var(--ui-grid-header-cell-background-active);
+}
+
+// HTML5 drag/drop column-move visuals. The vanilla element uses the native
+// dragstart/dragover lifecycle (rather than CDK drag-and-drop), so it applies
+// `.is-dragging` to the source header while the drag is in flight and
+// `.is-drag-target` to whichever header the cursor is over — matching the
+// React wrapper's own drag-state classes so the column reorder UX looks
+// identical across every wrapper.
+.header-cell[draggable='true'] {
+  cursor: grab;
+}
+
+.header-cell.is-dragging {
+  opacity: 0.6;
+}
+
+.header-cell.is-drag-target {
+  background: color-mix(
+    in srgb,
+    var(--ui-grid-accent) 9%,
+    var(--ui-grid-header-background)
+  );
+  border: 1px dashed
+    color-mix(in srgb, var(--ui-grid-accent) 45%, var(--ui-grid-border-color));
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--ui-grid-accent) 18%, transparent);
+}
+
+.header-cell.is-pin-menu-open {
+  z-index: var(--ui-grid-pin-menu-open-z-index);
+}
+
+.header-cell.is-pinned,
+.filter-cell.is-pinned,
+.body-cell.is-pinned {
+  position: sticky;
+  z-index: var(--ui-grid-pinned-cell-z-index);
+  background: var(--ui-grid-surface);
+}
+
+.header-cell.is-pinned {
+  background: var(--ui-grid-header-background);
+}
+
+.body-cell.is-pinned.body-cell-odd {
+  background: var(--ui-grid-row-odd);
+}
+
+.body-cell.is-pinned:not(.body-cell-odd) {
+  background: var(--ui-grid-row-even);
+}
+
+.header-cell.is-pinned-left-last,
+.filter-cell.is-pinned-left-last,
+.body-cell.is-pinned-left-last {
+  box-shadow: var(--ui-grid-pinned-divider-shadow-left);
+  clip-path: var(--ui-grid-pinned-divider-clip-left);
+}
+
+.header-cell.is-pinned-right-first,
+.filter-cell.is-pinned-right-first,
+.body-cell.is-pinned-right-first {
+  box-shadow: var(--ui-grid-pinned-divider-shadow-right);
+  clip-path: var(--ui-grid-pinned-divider-clip-right);
+}
+
+.header-label {
+  min-width: 0;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  hyphens: none;
+}
+
+.header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-grid-header-actions-gap);
+  justify-self: end;
+}
+
+.column-resizer {
+  position: absolute;
+  top: 0;
+  right: -4px;
+  width: 8px;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: col-resize;
+  z-index: 5;
+}
+
+.column-resizer::after {
+  content: '';
+  position: absolute;
+  top: 20%;
+  bottom: 20%;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--_ui-grid-border-color) 80%, transparent);
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.header-cell:hover .column-resizer::after,
+.column-resizer:focus-visible::after {
+  opacity: 1;
+}
+
+.pin-control {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  justify-items: center;
+  min-width: var(--ui-grid-control-size);
+  overflow: hidden;
+}
+
+.header-action,
+.chip-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-grid-control-size);
+  height: var(--ui-grid-control-size);
+  display: flex;
+  border: 0;
+  background: var(--ui-grid-control-background);
+  padding: 0;
+  font: inherit;
+  border-radius: var(--ui-grid-control-radius);
+  cursor: pointer;
+}
+
+.header-action-disabled {
+  cursor: default;
+}
+
+.header-action svg,
+.chip-action svg {
+  width: var(--ui-grid-control-icon-size);
+  height: var(--ui-grid-control-icon-size);
+  fill: currentColor;
+}
+
+.header-action {
+  color: var(--ui-grid-control-color);
+  border: 1px solid var(--ui-grid-control-border-color);
+}
+
+.header-cell.is-active .header-action {
+  color: var(--ui-grid-control-color-active);
+  border-color: var(--ui-grid-control-border-color-active);
+}
+
+.chip-action {
+  border: 1px solid var(--ui-grid-control-border-color);
+  color: var(--ui-grid-control-color);
+}
+
+.chip-action-active {
+  background: var(--ui-grid-control-background-active);
+  border-color: var(--ui-grid-control-border-color-active);
+  color: var(--ui-grid-control-color-active);
+}
+
+.pin-trigger {
+  grid-area: 1 / 1;
+  transform-origin: center;
+  transition:
+    width var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    height var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    opacity var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    transform var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    border-color var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    background-color var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    color var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing);
+}
+
+.pin-menu {
+  grid-area: 1 / 1;
+  z-index: var(--ui-grid-pin-menu-z-index);
+  display: grid;
+  grid-auto-rows: var(--ui-grid-pin-menu-action-size);
+  gap: var(--ui-grid-pin-menu-gap);
+  padding: var(--ui-grid-pin-menu-padding);
+  border: 1px solid var(--ui-grid-border-color);
+  border-radius: var(--ui-grid-pin-menu-radius);
+  background: var(--ui-grid-surface);
+  box-shadow: var(--ui-grid-pin-menu-shadow);
+  justify-items: center;
+  align-items: center;
+  width: var(--ui-grid-control-size);
+  max-height: var(--ui-grid-pin-control-collapsed-size);
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(var(--ui-grid-pin-menu-scale-closed));
+  transform-origin: center;
+  transition:
+    max-height var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    opacity var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    transform var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    padding var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    border-color var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing),
+    box-shadow var(--ui-grid-pin-control-transition-duration)
+      var(--ui-grid-pin-control-transition-easing);
+}
+
+.pin-control-open {
+  align-items: start;
+}
+
+.pin-control-open .pin-trigger {
+  width: var(--ui-grid-pin-control-collapsed-size);
+  height: var(--ui-grid-pin-control-collapsed-size);
+  opacity: 0;
+  transform: scale(0.72);
+  pointer-events: none;
+}
+
+.pin-control-open .pin-menu {
+  max-height: calc(
+    (var(--ui-grid-pin-menu-action-size) * 2) + var(--ui-grid-pin-menu-gap) +
+      (var(--ui-grid-pin-menu-padding) * 2)
+  );
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+.pin-menu-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-grid-pin-menu-action-size);
+  height: var(--ui-grid-pin-menu-action-size);
+  border: 0;
+  border-radius: var(--ui-grid-control-radius);
+  background: transparent;
+  color: var(--ui-grid-control-color);
+  cursor: pointer;
+}
+
+.pin-menu-action:hover,
+.pin-menu-action:focus-visible {
+  outline: 0;
+  background: var(--ui-grid-control-background-active);
+  color: var(--ui-grid-control-color-active);
+}
+
+.pin-menu-action svg {
+  width: var(--ui-grid-control-icon-size);
+  height: var(--ui-grid-control-icon-size);
+  fill: currentColor;
+}
+

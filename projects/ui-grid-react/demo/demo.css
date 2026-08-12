@@ -1,0 +1,122 @@
+.react-demo-shell {
+  display: grid;
+  gap: 1rem;
+  color: var(--ui-grid-cell-color);
+}
+
+.react-demo-shell__header {
+  display: grid;
+  gap: 1rem;
+}
+
+.react-demo-shell__header h2,
+.react-demo-shell__header p,
+.react-demo-shell__toolbar p {
+  margin: 0;
+}
+
+.react-demo-shell__eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ui-grid-accent);
+}
+
+.react-demo-shell__header p,
+.react-demo-shell__metrics span,
+.react-demo-shell__toolbar p,
+.react-demo-shell__stats small {
+  color: var(--ui-grid-muted-color);
+}
+
+.react-demo-shell__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.react-demo-shell__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.7rem 1.1rem;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--ui-grid-accent) 40%, transparent);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--ui-grid-accent) 86%, black),
+    color-mix(in srgb, var(--ui-grid-accent) 66%, black)
+  );
+  color: white;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.14);
+}
+
+.react-demo-shell__button-secondary {
+  background: var(--ui-grid-surface);
+  color: var(--ui-grid-cell-color);
+  border-color: var(--ui-grid-border-color);
+  box-shadow: none;
+}
+
+.react-demo-shell__stats,
+.react-demo-shell__metrics article,
+.react-demo-shell__toolbar {
+  border: 1px solid var(--ui-grid-border-color);
+  border-radius: var(--ui-grid-radius);
+  background: var(--ui-grid-surface);
+}
+
+.react-demo-shell__stats {
+  display: inline-grid;
+  min-width: 7rem;
+  padding: 0.8rem 1rem;
+}
+
+.react-demo-shell__stats span {
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.react-demo-shell__metrics {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+}
+
+.react-demo-shell__metrics article {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.9rem 1rem;
+}
+
+.react-demo-shell__metrics strong {
+  font-size: 1.45rem;
+  line-height: 1.1;
+}
+
+.react-demo-shell__toolbar {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+}
+
+.react-demo-shell__toolbar strong {
+  margin-right: 0.4rem;
+}
+
+@media (max-width: 720px) {
+  .react-demo-shell__actions {
+    align-items: stretch;
+  }
+
+  .react-demo-shell__button,
+  .react-demo-shell__button-secondary {
+    width: 100%;
+  }
+}

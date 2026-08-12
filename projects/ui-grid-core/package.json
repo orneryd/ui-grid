@@ -1,0 +1,36 @@
+{
+  "name": "@ornery/ui-grid-core",
+  "version": "1.0.8",
+  "description": "Framework-neutral UI Grid core runtime, models, styling, and WASM bridge",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./src/lib/styles/*": "./src/lib/styles/*",
+    "./src/lib/grid.core.styles": "./src/lib/grid.core.styles.scss"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "devDependencies": {
+    "esbuild-sass-plugin": "^3.7.0",
+    "sass": "^1.101.0",
+    "tsup": "^8.5.1",
+    "typescript": "~6.0.3",
+    "vitest": "^4.1.9"
+  },
+  "scripts": {
+    "generate-css": "node generate-core-css.mjs",
+    "prebuild": "node generate-core-css.mjs",
+    "build": "tsup && tsc -p tsconfig.dts.json",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  }
+}

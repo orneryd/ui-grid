@@ -1,0 +1,56 @@
+<nav class="app-nav">
+  <a class="nav-brand" routerLink="/home">
+    <span class="nav-brand-icon" aria-hidden="true">&#9638;</span>
+    UI Grid
+  </a>
+
+  <div class="nav-links">
+    <a class="nav-link" routerLink="/home" routerLinkActive="nav-link-active"
+      [routerLinkActiveOptions]="{ exact: true }">Demo</a>
+    <a class="nav-link" routerLink="/react" routerLinkActive="nav-link-active">React</a>
+    <a class="nav-link" routerLink="/web-components" routerLinkActive="nav-link-active">Web Components</a>
+    <a class="nav-link" routerLink="/rust" routerLinkActive="nav-link-active">Rust</a>
+    <a class="nav-link" routerLink="/docs" routerLinkActive="nav-link-active">Docs</a>
+    <a class="nav-link" routerLink="/themes" routerLinkActive="nav-link-active">Themes</a>
+    <a class="nav-link" [href]="repoUrl" target="_blank" rel="noreferrer noopener">
+      GitHub
+      <svg class="nav-link-external" viewBox="0 0 12 12" aria-hidden="true">
+        <path d="M3.5 1H1v10h10V8.5M7 1h4v4M11 1L5.5 6.5" fill="none" stroke="currentColor" stroke-width="1.2" />
+      </svg>
+    </a>
+  </div>
+
+  <div class="nav-theme-toggles">
+    <button type="button" class="nav-theme-btn" [class.nav-theme-btn-active]="isDarkMode()" (click)="toggleColorMode()"
+      [attr.aria-label]="isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'"
+      [attr.title]="isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'">
+      @if (isDarkMode()) {
+      <svg viewBox="0 0 20 20" aria-hidden="true">
+        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" fill="currentColor" />
+      </svg>
+      } @else {
+      <svg viewBox="0 0 20 20" aria-hidden="true">
+        <circle cx="10" cy="10" r="4" fill="currentColor" />
+        <path
+          d="M10 1v2m0 14v2m9-9h-2M3 10H1m14.07-5.07l-1.42 1.42M6.35 13.65l-1.42 1.42m0-11.14l1.42 1.42m7.3 7.3l1.42 1.42"
+          stroke="currentColor" stroke-width="1.5" fill="none" />
+      </svg>
+      }
+    </button>
+    <button type="button" class="nav-theme-btn" [class.nav-theme-btn-active]="isWireframeMode()"
+      (click)="toggleVisualMode()"
+      [attr.aria-label]="isWireframeMode() ? 'Switch to studio theme' : 'Switch to wireframe theme'"
+      [attr.title]="isWireframeMode() ? 'Switch to studio theme' : 'Switch to wireframe theme'">
+      <svg viewBox="0 0 20 20" aria-hidden="true">
+        <rect x="2" y="2" width="16" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.5" />
+        <line x1="2" y1="7" x2="18" y2="7" stroke="currentColor" stroke-width="1.2" />
+        <line x1="7" y1="7" x2="7" y2="18" stroke="currentColor" stroke-width="1.2" />
+      </svg>
+    </button>
+    <span class="nav-theme-label">{{ activeThemeName() }}</span>
+  </div>
+</nav>
+
+<main class="app-content">
+  <router-outlet />
+</main>

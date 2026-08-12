@@ -1,0 +1,110 @@
+// Body Cell styles
+// Auto-extracted from grid.core.styles.scss
+
+.body-cell {
+  padding: var(--ui-grid-body-cell-padding-block) var(--ui-grid-body-cell-padding-inline);
+  border-bottom: 1px solid var(--ui-grid-border-color);
+  color: var(--ui-grid-cell-color);
+  background: var(--ui-grid-row-even);
+  outline: 0;
+}
+
+.body-cell.body-cell-odd {
+  background: var(--ui-grid-row-odd);
+}
+
+.cell-shell {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-grid-cell-shell-gap);
+  min-width: 0;
+}
+
+.cell-value {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.row-toggle {
+  border: 1px solid var(--ui-grid-border-color);
+  background: var(--ui-grid-surface);
+  color: var(--ui-grid-cell-color);
+  width: var(--ui-grid-row-toggle-size);
+  height: var(--ui-grid-row-toggle-size);
+  border-radius: var(--ui-grid-row-toggle-radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: 0 0 auto;
+  padding: 0;
+  font: inherit;
+}
+
+// Both expand and tree toggles sit BEFORE .cell-content so the disclosure
+// chevron is on the leading edge of the primary cell, in front of the row
+// label. Tree indentation also reads left-to-right, which keeps the two
+// toggle styles visually consistent.
+
+.toggle-icon {
+  width: var(--ui-grid-toggle-icon-size);
+  height: var(--ui-grid-toggle-icon-size);
+  fill: currentColor;
+  pointer-events: none;
+}
+
+.group-disclosure-icon {
+  width: var(--ui-grid-group-disclosure-icon-size);
+  height: var(--ui-grid-group-disclosure-icon-size);
+}
+
+.pagination-icon {
+  width: var(--ui-grid-pagination-icon-size);
+  height: var(--ui-grid-pagination-icon-size);
+  fill: currentColor;
+}
+
+.expandable-row {
+  padding: var(--ui-grid-expandable-row-padding-block) var(--ui-grid-expandable-row-padding-inline);
+  border-bottom: 1px solid var(--ui-grid-border-color);
+  background: var(--ui-grid-expandable-row-background);
+}
+
+.body-grid > .body-cell:hover:not(.row-focused):not(.cell-focused):not(.cell-editing) {
+  background: var(--ui-grid-row-hover);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ui-grid-accent) 10%, transparent);
+}
+
+.body-cell.row-focused,
+.body-grid > .body-cell.row-focused {
+  background: var(--ui-grid-row-focus-background);
+}
+
+.body-cell.cell-focused,
+.body-grid > .body-cell.cell-focused {
+  background: var(--ui-grid-cell-focus-background);
+  box-shadow: var(--ui-grid-cell-focus-ring);
+}
+
+.body-cell.cell-editing,
+.body-grid > .body-cell.cell-editing {
+  background: var(--ui-grid-cell-editing-background);
+}
+
+.cell-editor {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  border: 1px solid var(--ui-grid-cell-editor-border-color);
+  border-radius: var(--ui-grid-cell-editor-radius);
+  background: var(--ui-grid-surface);
+  color: var(--ui-grid-cell-color);
+  padding: var(--ui-grid-cell-editor-padding-block) var(--ui-grid-cell-editor-padding-inline);
+  font: inherit;
+}
+
+.cell-editor:focus {
+  outline: var(--ui-grid-cell-editor-focus-outline);
+}
+

@@ -1,0 +1,39 @@
+// Pagination shadow-scoped styles — composed entirely from core mixins.
+@use "@ornery/ui-grid-core/src/lib/styles/pagination" as pg;
+@use "@ornery/ui-grid-core/src/lib/styles/utilities" as util;
+
+:host {
+  @include pg.host-shadow;
+}
+
+p {
+  @include pg.range-text;
+}
+
+.pagination-controls {
+  @include pg.controls;
+}
+
+.pagination-button {
+  @include pg.button-shadow;
+}
+
+.pagination-button:disabled {
+  @include pg.button-disabled;
+}
+
+.pagination-icon {
+  @include pg.icon;
+}
+
+.pagination-size {
+  @include pg.size-label;
+}
+
+.pagination-size select {
+  @include pg.size-select-shadow;
+}
+
+.sr-only {
+  @include util.sr-only;
+}

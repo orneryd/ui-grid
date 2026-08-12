@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap');
+@import '../projects/ui-grid-react/src/ui-grid.css';
+
+:root {
+	color-scheme: dark;
+	font-family: 'Plus Jakarta Sans', sans-serif;
+	background:
+		radial-gradient(circle at top, rgba(20, 184, 166, 0.18), transparent 30%),
+		linear-gradient(180deg, #051017, #0a1621 55%, #071118);
+	color: #eef7fb;
+}
+
+html,
+body {
+	margin: 0;
+	min-height: 100%;
+}
+
+body {
+	min-height: 100vh;
+	background: inherit;
+	color: inherit;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+button,
+input {
+	font: inherit;
+}
+/* You can add global styles to this file, and also import other style files */

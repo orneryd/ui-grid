@@ -1,0 +1,89 @@
+.docs-layout {
+	display: grid;
+	grid-template-columns: 240px 1fr;
+	gap: 2rem;
+	width: min(1380px, calc(100% - 2rem));
+	margin: 0 auto;
+	padding: clamp(1.25rem, 2vw, 2rem);
+	min-height: calc(100vh - 3.5rem);
+}
+
+.docs-sidebar {
+	position: sticky;
+	top: 4.5rem;
+	align-self: start;
+	display: grid;
+	gap: 0.2rem;
+	padding: 1rem 0;
+}
+
+.docs-sidebar-title {
+	margin: 0 0 0.75rem;
+	padding: 0 0.75rem;
+	font-size: 0.72rem;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: 0.14em;
+	color: var(--teal-strong);
+}
+
+.docs-nav-item {
+	display: block;
+	padding: 0.55rem 0.75rem;
+	border-radius: calc(var(--theme-switch-radius, 999px) / 2);
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 0.88rem;
+	color: var(--ink-soft);
+	transition: color 140ms ease, background 140ms ease;
+}
+
+.docs-nav-item:hover {
+	color: var(--ink-strong);
+	background: color-mix(in srgb, var(--teal-strong) 8%, transparent);
+}
+
+.docs-nav-item-active {
+	color: var(--teal-strong);
+	background: color-mix(in srgb, var(--teal-strong) 14%, transparent);
+}
+
+.docs-content {
+	min-width: 0;
+	padding: 1rem 0;
+}
+
+@media (max-width: 768px) {
+	.docs-layout {
+		grid-template-columns: 1fr;
+		gap: 1rem;
+		width: min(100%, calc(100% - 1rem));
+	}
+
+	.docs-sidebar {
+		position: static;
+		display: flex;
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+		gap: 0.25rem;
+		padding: 0 0 0.75rem;
+		border-bottom: 1px solid var(--card-border);
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}
+
+	.docs-sidebar-title {
+		display: none;
+	}
+
+	.docs-nav-item {
+		white-space: nowrap;
+		flex-shrink: 0;
+		padding: 0.45rem 0.65rem;
+		font-size: 0.82rem;
+	}
+}

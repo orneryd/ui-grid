@@ -1,0 +1,19 @@
+// Empty State styles
+// Auto-extracted from grid.core.styles.scss
+
+.empty-state {
+  display: grid;
+  place-items: center;
+  gap: var(--ui-grid-empty-state-gap);
+  min-height: var(--ui-grid-empty-state-min-height);
+  text-align: center;
+  padding: var(--ui-grid-empty-state-padding);
+  color: var(--ui-grid-muted-color);
+  background: var(--ui-grid-surface);
+}
+
+.empty-state p,
+.empty-state strong {
+  margin: 0;
+}
+

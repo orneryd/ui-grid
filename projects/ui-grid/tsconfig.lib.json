@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/ui-grid-package",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "paths": {
+      "@ornery/ui-grid-core": ["projects/ui-grid-core/src/index.ts"],
+      "@ornery/ui-grid-vanilla": ["projects/ui-grid-vanilla/src/index.ts"]
+    },
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": []
+  },
+  "include": ["src/public-api.ts", "../ui-grid-vanilla/src/scss.d.ts"]
+}

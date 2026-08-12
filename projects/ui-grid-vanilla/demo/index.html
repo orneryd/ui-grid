@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UI Grid Vanilla Demo</title>
+    <style>
+      :root {
+        font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+        color: #14213d;
+        background:
+          radial-gradient(circle at top left, rgba(244, 162, 97, 0.28), transparent 28%),
+          radial-gradient(circle at bottom right, rgba(42, 157, 143, 0.24), transparent 32%),
+          #f7f3eb;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+      }
+
+      .page {
+        display: grid;
+        gap: 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .hero {
+        padding: 1.5rem 1.75rem;
+        border: 1px solid rgba(20, 33, 61, 0.12);
+        border-radius: 1.25rem;
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 24px 80px rgba(20, 33, 61, 0.08);
+      }
+
+      h1 {
+        margin: 0 0 0.5rem;
+        font-size: clamp(2rem, 4vw, 3.5rem);
+        line-height: 0.95;
+      }
+
+      p {
+        margin: 0;
+        max-width: 65ch;
+        line-height: 1.5;
+      }
+
+      #app {
+        min-height: 640px;
+      }
+
+      .grid-demo-shell {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .grid-demo-header {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .grid-demo-eyebrow {
+        margin: 0 0 0.35rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #2a9d8f;
+      }
+
+      .grid-demo-header h2,
+      .grid-demo-header p,
+      .grid-demo-toolbar p {
+        margin: 0;
+      }
+
+      .grid-demo-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+      }
+
+      .grid-demo-button {
+        border: 1px solid rgba(20, 33, 61, 0.12);
+        border-radius: 999px;
+        background: linear-gradient(135deg, #143a52, #1b5f7a);
+        color: #f7f3eb;
+        padding: 0.75rem 1.2rem;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 700;
+        box-shadow: 0 12px 24px rgba(20, 33, 61, 0.12);
+      }
+
+      .grid-demo-button-secondary {
+        background: rgba(255, 255, 255, 0.9);
+        color: #14213d;
+        box-shadow: none;
+      }
+
+      .grid-demo-stats,
+      .grid-demo-metrics article,
+      .grid-demo-toolbar {
+        border: 1px solid rgba(20, 33, 61, 0.12);
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.82);
+      }
+
+      .grid-demo-stats {
+        display: grid;
+        min-width: 7rem;
+        padding: 0.8rem 1rem;
+      }
+
+      .grid-demo-stats span {
+        font-size: 1.9rem;
+        font-weight: 800;
+        line-height: 1;
+      }
+
+      .grid-demo-stats small,
+      .grid-demo-metrics span,
+      .grid-demo-toolbar,
+      .grid-demo-header p {
+        color: color-mix(in srgb, #14213d 72%, #2a9d8f 28%);
+      }
+
+      .grid-demo-metrics {
+        display: grid;
+        gap: 0.85rem;
+        grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+      }
+
+      .grid-demo-metrics article {
+        display: grid;
+        gap: 0.2rem;
+        padding: 0.9rem 1rem;
+      }
+
+      .grid-demo-metrics strong {
+        font-size: 1.45rem;
+        line-height: 1.1;
+      }
+
+      .grid-demo-toolbar {
+        display: grid;
+        gap: 0.4rem;
+        padding: 0.9rem 1rem;
+      }
+
+      .shell {
+        --ui-grid-surface: rgba(255, 255, 255, 0.88);
+        --ui-grid-header-background: #143a52;
+        --ui-grid-header-color: #f7f3eb;
+        --ui-grid-accent: #e76f51;
+        --ui-grid-cell-color: #14213d;
+        --ui-grid-border-color: rgba(20, 33, 61, 0.16);
+        --ui-grid-row-hover: rgba(231, 111, 81, 0.08);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page shell">
+      <section class="hero">
+        <h1>Vanilla + Rust/WASM UI Grid</h1>
+        <p>
+          This page mounts the Rust-backed custom element directly, without Angular or React host code.
+          It is the baseline integration target for future Rust-framework wrappers.
+        </p>
+      </section>
+      <section class="grid-demo-shell">
+        <header class="grid-demo-header">
+          <div>
+            <p class="grid-demo-eyebrow">Vanilla package demo</p>
+            <h2>UI Grid Vanilla Demo</h2>
+            <p>
+              Familiar <code>gridOptions</code> and <code>onRegisterApi</code>, rebuilt as a
+              framework-neutral custom element with the Rust-backed pipeline, grouping, sorting,
+              filtering, Excel-style column resizing, and virtualization.
+            </p>
+          </div>
+          <div class="grid-demo-actions">
+            <button id="benchmark-button" type="button" class="grid-demo-button">Benchmark</button>
+            <button id="export-button" type="button" class="grid-demo-button grid-demo-button-secondary">Export CSV</button>
+            <div class="grid-demo-stats">
+              <span id="visible-rows-value">0</span>
+              <small>visible rows</small>
+            </div>
+          </div>
+        </header>
+
+        <section class="grid-demo-metrics" aria-label="Vanilla grid metrics">
+          <article>
+            <strong>On</strong>
+            <span>virtualization</span>
+          </article>
+          <article>
+            <strong>1</strong>
+            <span>group columns</span>
+          </article>
+          <article>
+            <strong id="benchmark-avg-value">—</strong>
+            <span>benchmark avg</span>
+          </article>
+        </section>
+
+        <div class="grid-demo-toolbar">
+          <div><strong id="visible-rows-inline">0</strong> of <span id="total-rows-value">0</span> rows</div>
+          <p>
+            <code>gridOptions</code> compatibility layer: sorting, filtering, grouping, column resizing,
+            templating, and virtualized rendering.
+          </p>
+        </div>
+
+        <section id="app"></section>
+      </section>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+  </html>

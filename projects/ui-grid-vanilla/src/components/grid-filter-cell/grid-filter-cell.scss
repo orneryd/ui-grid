@@ -1,0 +1,14 @@
+// Filter cell shadow-scoped styles — composed entirely from core mixins.
+@use "@ornery/ui-grid-core/src/lib/styles/filter-cell" as fc;
+
+:host {
+  @include fc.host-shadow;
+}
+
+input {
+  @include fc.input-shadow;
+}
+
+input:focus {
+  @include fc.input-focus;
+}

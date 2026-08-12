@@ -1,0 +1,84 @@
+name: Publish React package
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch, tag, or commit to publish
+        required: true
+        default: main
+      version:
+        description: Public version to publish
+        required: true
+        default: 0.1.0
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 26.4.0
+          registry-url: https://registry.npmjs.org
+          scope: '@ornery'
+          always-auth: true
+          cache: npm
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@1.95.0
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        uses: taiki-e/install-action@v2
+        with:
+          tool: wasm-pack
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Verify core version is published
+        run: |
+          VERSION="${{ inputs.version }}"
+          for attempt in $(seq 1 20); do
+            if npm view "@ornery/ui-grid-core@$VERSION" version >/dev/null 2>&1; then
+              echo "Found @ornery/ui-grid-core@$VERSION on npm"
+              exit 0
+            fi
+
+            echo "Waiting for @ornery/ui-grid-core@$VERSION to appear on npm (attempt $attempt/20)"
+            sleep 15
+          done
+
+          echo "@ornery/ui-grid-core@$VERSION was not available on npm in time" >&2
+          exit 1
+
+      - name: Build the Vanilla package (for type resolution)
+        run: npm run build:vanilla
+
+      - name: Build the React package
+        run: npm run build --prefix projects/ui-grid-react
+
+      - name: Set the package version
+        run: |
+          VERSION="${{ inputs.version }}"
+
+          cd projects/ui-grid-react
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          if [ "$CURRENT_VERSION" != "$VERSION" ]; then
+            npm version "$VERSION" --no-git-tag-version
+          else
+            echo "Package version already set to $VERSION"
+          fi
+
+      - name: Publish to npm
+        run: npm publish ./projects/ui-grid-react --access public --registry=https://registry.npmjs.org
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

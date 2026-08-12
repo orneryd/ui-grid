@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/ci.yml'
+      - 'projects/ui-grid/**'
+      - 'projects/ui-grid-core/**'
+      - 'src/main.element.ts'
+      - 'src/app/grid-library-coverage.spec.ts'
+      - 'angular.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
+      - 'tsconfig.app.json'
+      - 'tsconfig.spec.json'
+      - 'CHANGELOG.md'
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 26.4.0
+          cache: npm
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@1.95.0
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        uses: taiki-e/install-action@v2
+        with:
+          tool: wasm-pack
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build the Angular app
+        run: npm run build
+
+      - name: Build the Angular library package
+        run: npm run build:library
+
+      - name: Run the Angular test suite
+        run: npm run test:angular -- --watch=false --coverage --coverage-reporters lcovonly
+
+      - name: Run the React test suite
+        run: npm run test:react
+
+      - name: Publish coverage to Coveralls
+        uses: coverallsapp/github-action@v2.3.7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          file: coverage/uiGrid/lcov.info

@@ -1,0 +1,44 @@
+name: CI React
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/ci-react.yml'
+      - 'projects/ui-grid-react/**'
+      - 'projects/ui-grid-core/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 26.4.0
+          cache: npm
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@1.95.0
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        uses: taiki-e/install-action@v2
+        with:
+          tool: wasm-pack
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run the React test suite
+        run: npm run test:react

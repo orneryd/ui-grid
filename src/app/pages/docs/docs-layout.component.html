@@ -1,0 +1,45 @@
+<div class="docs-layout">
+  <nav class="docs-sidebar" aria-label="Documentation navigation">
+    <h2 class="docs-sidebar-title">Documentation</h2>
+    @for (topic of topics; track topic.id) {
+      <a
+        class="docs-nav-item"
+        [routerLink]="['/docs', topic.id]"
+        [class.docs-nav-item-active]="activeTopic() === topic.id">
+        {{ topic.label }}
+      </a>
+    }
+  </nav>
+
+  <article class="docs-content">
+    @switch (activeTopic()) {
+      @case ('getting-started') { <app-docs-getting-started /> }
+      @case ('features') { <app-docs-features /> }
+      @case ('theming') { <app-docs-theming-topic /> }
+      @case ('api-reference') { <app-docs-api-reference /> }
+      @case ('cell-editing') { <app-docs-cell-editing /> }
+      @case ('row-edit') { <app-docs-row-edit /> }
+      @case ('validate') { <app-docs-validate /> }
+      @case ('selection') { <app-docs-selection /> }
+      @case ('tree-view') { <app-docs-tree-view /> }
+      @case ('expandable-rows') { <app-docs-expandable-rows /> }
+      @case ('pagination') { <app-docs-pagination /> }
+      @case ('pinning') { <app-docs-pinning /> }
+      @case ('column-moving') { <app-docs-column-moving /> }
+      @case ('infinite-scroll') { <app-docs-infinite-scroll /> }
+      @case ('save-state') { <app-docs-save-state /> }
+      @case ('keyboard-navigation') { <app-docs-keyboard-navigation /> }
+      @case ('exporter') { <app-docs-exporter /> }
+      @case ('importer') { <app-docs-importer /> }
+      @case ('custom-builds') { <app-docs-custom-builds /> }
+      @case ('web-component') { <app-docs-web-component /> }
+      @case ('custom-components') { <app-docs-custom-components /> }
+      @case ('i18n') { <app-docs-i18n /> }
+      @case ('accessibility') { <app-docs-accessibility /> }
+      @case ('react') { <app-docs-react /> }
+      @case ('rust') { <app-docs-rust /> }
+      @case ('rust-egui') { <app-docs-rust-egui /> }
+      @default { <app-docs-getting-started /> }
+    }
+  </article>
+</div>

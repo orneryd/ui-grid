@@ -1,0 +1,49 @@
+// Group Row — mixins only, no output.
+// Consumers decide the selectors (class-based for grid shell, :host for shadow DOM).
+
+@mixin host {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-grid-group-row-gap);
+  border: 0;
+  width: 100%;
+  padding: var(--ui-grid-group-row-padding-block) var(--ui-grid-group-row-padding-inline);
+  background: var(--ui-grid-group-background);
+  border-bottom: 1px solid var(--ui-grid-border-color);
+  color: var(--ui-grid-cell-color);
+  cursor: pointer;
+  text-align: left;
+}
+
+@mixin host-shadow {
+  box-sizing: border-box;
+  @include host;
+}
+
+@mixin muted-text {
+  color: var(--ui-grid-muted-color);
+}
+
+@mixin toggle-icon {
+  width: var(--ui-grid-toggle-icon-size);
+  height: var(--ui-grid-toggle-icon-size);
+  fill: currentColor;
+  pointer-events: none;
+}
+
+@mixin disclosure-icon {
+  width: var(--ui-grid-group-disclosure-icon-size);
+  height: var(--ui-grid-group-disclosure-icon-size);
+}
+
+/// Emit class-based rules for use inside the grid shell shadow DOM.
+@mixin rules {
+  .group-row {
+    @include host;
+  }
+
+  .group-row span,
+  .group-row small {
+    @include muted-text;
+  }
+}

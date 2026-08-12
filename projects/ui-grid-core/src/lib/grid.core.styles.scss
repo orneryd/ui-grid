@@ -1,0 +1,27 @@
+// Grid Core Styles — composed from partials.
+// Each partial can be imported individually for selective use.
+// This file imports everything for full grid styling.
+
+@use 'styles/tokens';
+@use 'styles/inherit';
+@use 'styles/shell';
+@use 'styles/frame';
+@use 'styles/grid-table';
+@use 'styles/header-cell';
+@use 'styles/filter-cell';
+@use 'styles/body-cell';
+@use 'styles/group-row';
+@use 'styles/virtualization';
+@use 'styles/alignment';
+@use 'styles/empty-state';
+@use 'styles/pagination';
+@use 'styles/utilities';
+@use 'styles/status-pill';
+@use 'styles/selection';
+@use 'styles/row-edit';
+@use 'styles/validate';
+
+// Mixin-only partials: emit class-based rules.
+@include filter-cell.rules;
+@include group-row.rules;
+@include pagination.rules;

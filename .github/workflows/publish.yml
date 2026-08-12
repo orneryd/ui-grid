@@ -1,0 +1,365 @@
+name: Publish Web Suite
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch, tag, or commit to publish
+        required: true
+        default: main
+      version:
+        description: Public version to publish
+        required: true
+        default: 0.1.0
+
+jobs:
+  resolve-release:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.release.outputs.version }}
+      ref: ${{ steps.release.outputs.ref }}
+    steps:
+      - name: Resolve release inputs
+        id: release
+        run: |
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+            REF="${{ inputs.ref }}"
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+            REF="${GITHUB_REF}"
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "ref=$REF" >> "$GITHUB_OUTPUT"
+
+  publish-core:
+    needs: resolve-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.resolve-release.outputs.ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 26.4.0
+          registry-url: https://registry.npmjs.org
+          scope: '@ornery'
+          always-auth: true
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build the Core package
+        run: npm run build --prefix projects/ui-grid-core
+
+      - name: Set the core package version
+        run: |
+          VERSION="${{ needs.resolve-release.outputs.version }}"
+
+          cd projects/ui-grid-core
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          if [ "$CURRENT_VERSION" != "$VERSION" ]; then
+            npm version "$VERSION" --no-git-tag-version
+          else
+            echo "Package version already set to $VERSION"
+          fi
+
+      - name: Verify core publish manifest
+        run: |
+          cd projects/ui-grid-core
+          node - <<'NODE'
+          const pkg = require('./package.json');
+          const peerDeps = Object.keys(pkg.peerDependencies ?? {});
+          const deps = Object.keys(pkg.dependencies ?? {});
+          const optionalDeps = Object.keys(pkg.optionalDependencies ?? {});
+          const forbidden = [...peerDeps, ...deps, ...optionalDeps].filter((name) => name === 'react' || name === 'react-dom' || name.startsWith('@angular/'));
+          if (forbidden.length > 0) {
+            throw new Error(`ui-grid-core publish manifest unexpectedly references framework packages: ${forbidden.join(', ')}`);
+          }
+          console.log('ui-grid-core publish manifest contains no React or Angular runtime, peer, or optional dependencies');
+          NODE
+
+      - name: Publish core to npm
+        run: |
+          VERSION="${{ needs.resolve-release.outputs.version }}"
+          if npm view "@ornery/ui-grid-core@$VERSION" version >/dev/null 2>&1; then
+            echo "@ornery/ui-grid-core@$VERSION already published, skipping"
+          else
+            npm publish ./projects/ui-grid-core --access public --registry=https://registry.npmjs.org
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-react:
+    needs: [resolve-release, publish-core, publish-vanilla]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.resolve-release.outputs.ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 26.4.0
+          registry-url: https://registry.npmjs.org
+          scope: '@ornery'
+          always-auth: true
+          cache: npm
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@1.95.0
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        uses: taiki-e/install-action@v2
+        with:
+          tool: wasm-pack
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Verify core version is published
+        run: |
+          VERSION="${{ needs.resolve-release.outputs.version }}"
+          for attempt in $(seq 1 20); do
+            if npm view "@ornery/ui-grid-core@$VERSION" version >/dev/null 2>&1; then
+              echo "Found @ornery/ui-grid-core@$VERSION on npm"
+              exit 0
+            fi
+
+            echo "Waiting for @ornery/ui-grid-core@$VERSION to appear on npm (attempt $attempt/20)"
+            sleep 15
+          done
+
+          echo "@ornery/ui-grid-core@$VERSION was not available on npm in time" >&2
+          exit 1
+
+      - name: Verify vanilla version is published
+        run: |
+          VERSION="${{ needs.resolve-release.outputs.version }}"
+          for attempt in $(seq 1 20); do
+            if npm view "@ornery/ui-grid-vanilla@$VERSION" version >/dev/null 2>&1; then
+              echo "Found @ornery/ui-grid-vanilla@$VERSION on npm"
+              exit 0
+            fi
+
+            echo "Waiting for @ornery/ui-grid-vanilla@$VERSION to appear on npm (attempt $attempt/20)"
+            sleep 15
+          done
+
+          echo "@ornery/ui-grid-vanilla@$VERSION was not available on npm in time" >&2
+          exit 1
+
+      - name: Build the Vanilla package (for type resolution)
+        run: npm run build:vanilla
+
+      - name: Build the React package
+        run: npm run build --prefix projects/ui-grid-react
+
+      - name: Set the React package version
+        run: |
+          VERSION="${{ needs.resolve-release.outputs.version }}"
+
+          cd projects/ui-grid-react
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          if [ "$CURRENT_VERSION" != "$VERSION" ]; then
+            npm version "$VERSION" --no-git-tag-version
+          else
+            echo "Package version already set to $VERSION"
+          fi
+
+      - name: Publish React to npm
+        run: |
+          VERSION="${{ needs.resolve-release.outputs.version }}"
+          if npm view "@ornery/ui-grid-react@$VERSION" version >/dev/null 2>&1; then
+            echo "@ornery/ui-grid-react@$VERSION already published, skipping"
+          else
+            npm publish ./projects/ui-grid-react --access public --registry=https://registry.npmjs.org
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-vanilla:
+    needs: [resolve-release, publish-core]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.resolve-release.outputs.ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 26.4.0
+          registry-url: https://registry.npmjs.org
+          scope: '@ornery'
+          always-auth: true
+          cache: npm
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@1.95.0
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        uses: taiki-e/install-action@v2
+        with:
+          tool: wasm-pack
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Verify core version is published
+        run: |
+          VERSION="${{ needs.resolve-release.outputs.version }}"
+          for attempt in $(seq 1 20); do
+            if npm view "@ornery/ui-grid-core@$VERSION" version >/dev/null 2>&1; then
+              echo "Found @ornery/ui-grid-core@$VERSION on npm"
+              exit 0
+            fi
+
+            echo "Waiting for @ornery/ui-grid-core@$VERSION to appear on npm (attempt $attempt/20)"
+            sleep 15
+          done
+
+          echo "@ornery/ui-grid-core@$VERSION was not available on npm in time" >&2
+          exit 1
+
+      - name: Build the Vanilla package
+        run: npm run build:vanilla
+
+      - name: Set the Vanilla package version
+        run: |
+          VERSION="${{ needs.resolve-release.outputs.version }}"
+
+          cd projects/ui-grid-vanilla
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          if [ "$CURRENT_VERSION" != "$VERSION" ]; then
+            npm version "$VERSION" --no-git-tag-version
+          else
+            echo "Package version already set to $VERSION"
+          fi
+
+      - name: Verify publish manifest
+        run: |
+          cd projects/ui-grid-vanilla
+          node - <<'NODE'
+          const pkg = require('./package.json');
+          const coreVersion = pkg.dependencies?.['@ornery/ui-grid-core'];
+          if (!coreVersion || coreVersion.startsWith('file:')) {
+            throw new Error(`Expected a publishable @ornery/ui-grid-core dependency, got ${coreVersion ?? 'missing'}`);
+          }
+          console.log(`Vanilla will publish with @ornery/ui-grid-core ${coreVersion}`);
+          NODE
+
+      - name: Publish Vanilla to npm
+        run: |
+          VERSION="${{ needs.resolve-release.outputs.version }}"
+          if npm view "@ornery/ui-grid-vanilla@$VERSION" version >/dev/null 2>&1; then
+            echo "@ornery/ui-grid-vanilla@$VERSION already published, skipping"
+          else
+            npm publish ./projects/ui-grid-vanilla --access public --registry=https://registry.npmjs.org
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-angular:
+    needs: [resolve-release, publish-core, publish-vanilla]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.resolve-release.outputs.ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 26.4.0
+          registry-url: https://registry.npmjs.org
+          scope: '@ornery'
+          always-auth: true
+          cache: npm
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@1.95.0
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        uses: taiki-e/install-action@v2
+        with:
+          tool: wasm-pack
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Verify core version is published
+        run: |
+          VERSION="${{ needs.resolve-release.outputs.version }}"
+          for attempt in $(seq 1 20); do
+            if npm view "@ornery/ui-grid-core@$VERSION" version >/dev/null 2>&1; then
+              echo "Found @ornery/ui-grid-core@$VERSION on npm"
+              exit 0
+            fi
+
+            echo "Waiting for @ornery/ui-grid-core@$VERSION to appear on npm (attempt $attempt/20)"
+            sleep 15
+          done
+
+          echo "@ornery/ui-grid-core@$VERSION was not available on npm in time" >&2
+          exit 1
+
+      - name: Verify vanilla version is published
+        run: |
+          VERSION="${{ needs.resolve-release.outputs.version }}"
+          for attempt in $(seq 1 20); do
+            if npm view "@ornery/ui-grid-vanilla@$VERSION" version >/dev/null 2>&1; then
+              echo "Found @ornery/ui-grid-vanilla@$VERSION on npm"
+              exit 0
+            fi
+
+            echo "Waiting for @ornery/ui-grid-vanilla@$VERSION to appear on npm (attempt $attempt/20)"
+            sleep 15
+          done
+
+          echo "@ornery/ui-grid-vanilla@$VERSION was not available on npm in time" >&2
+          exit 1
+
+      - name: Build the Angular library
+        run: npm run build:library
+
+      - name: Set the Angular package version
+        run: |
+          VERSION="${{ needs.resolve-release.outputs.version }}"
+
+          cd dist/ui-grid
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          if [ "$CURRENT_VERSION" != "$VERSION" ]; then
+            npm version "$VERSION" --no-git-tag-version
+          else
+            echo "Package version already set to $VERSION"
+          fi
+
+      - name: Publish Angular to npm
+        run: |
+          VERSION="${{ needs.resolve-release.outputs.version }}"
+          if npm view "@ornery/ui-grid@$VERSION" version >/dev/null 2>&1; then
+            echo "@ornery/ui-grid@$VERSION already published, skipping"
+          else
+            npm publish ./dist/ui-grid --access public --registry=https://registry.npmjs.org
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

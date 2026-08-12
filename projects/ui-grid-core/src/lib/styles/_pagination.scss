@@ -1,0 +1,105 @@
+// Pagination — mixins only, no output.
+// Consumers decide the selectors (class-based for grid shell, :host for shadow DOM).
+
+@mixin host {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-grid-pagination-gap);
+  padding: var(--ui-grid-pagination-padding-block) var(--ui-grid-pagination-padding-inline);
+  border-top: 1px solid var(--ui-grid-border-color);
+  background: var(--ui-grid-header-background);
+}
+
+@mixin host-shadow {
+  box-sizing: border-box;
+  @include host;
+}
+
+@mixin range-text {
+  margin: 0;
+  color: var(--ui-grid-muted-color);
+}
+
+@mixin controls {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-grid-pagination-controls-gap);
+  flex-wrap: wrap;
+}
+
+@mixin button {
+  padding: var(--ui-grid-pagination-button-padding-block)
+    var(--ui-grid-pagination-button-padding-inline);
+}
+
+@mixin button-shadow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--ui-grid-border-color);
+  border-radius: var(--ui-grid-radius);
+  background: var(--ui-grid-surface);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  @include button;
+}
+
+@mixin button-disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+@mixin icon {
+  width: var(--ui-grid-pagination-icon-size);
+  height: var(--ui-grid-pagination-icon-size);
+  fill: currentColor;
+}
+
+@mixin size-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-grid-pagination-size-gap);
+}
+
+@mixin size-select {
+  border: 1px solid var(--ui-grid-border-color);
+  border-radius: var(--ui-grid-radius);
+  background: var(--ui-grid-surface);
+  padding: var(--ui-grid-pagination-select-padding-block)
+    var(--ui-grid-pagination-select-padding-inline);
+  font: inherit;
+}
+
+@mixin size-select-shadow {
+  color: inherit;
+  @include size-select;
+}
+
+/// Emit class-based rules for use inside the grid shell shadow DOM.
+@mixin rules {
+  .pagination-bar {
+    @include host;
+  }
+
+  .pagination-bar p {
+    @include range-text;
+  }
+
+  .pagination-controls {
+    @include controls;
+  }
+
+  .pagination-button {
+    @include button;
+  }
+
+  .pagination-size {
+    @include size-label;
+  }
+
+  .pagination-size select {
+    @include size-select;
+  }
+}

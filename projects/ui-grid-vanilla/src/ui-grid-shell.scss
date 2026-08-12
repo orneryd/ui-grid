@@ -1,0 +1,25 @@
+// Grid shell — imports all core partials for the main grid layout.
+// Partials with only mixins require an explicit @include to emit rules.
+@use "@ornery/ui-grid-core/src/lib/styles/tokens";
+@use "@ornery/ui-grid-core/src/lib/styles/inherit";
+@use "@ornery/ui-grid-core/src/lib/styles/shell";
+@use "@ornery/ui-grid-core/src/lib/styles/frame";
+@use "@ornery/ui-grid-core/src/lib/styles/grid-table";
+@use "@ornery/ui-grid-core/src/lib/styles/header-cell";
+@use "@ornery/ui-grid-core/src/lib/styles/filter-cell";
+@use "@ornery/ui-grid-core/src/lib/styles/body-cell";
+@use "@ornery/ui-grid-core/src/lib/styles/group-row";
+@use "@ornery/ui-grid-core/src/lib/styles/virtualization";
+@use "@ornery/ui-grid-core/src/lib/styles/alignment";
+@use "@ornery/ui-grid-core/src/lib/styles/empty-state";
+@use "@ornery/ui-grid-core/src/lib/styles/pagination";
+@use "@ornery/ui-grid-core/src/lib/styles/utilities";
+@use "@ornery/ui-grid-core/src/lib/styles/status-pill";
+@use "@ornery/ui-grid-core/src/lib/styles/selection";
+@use "@ornery/ui-grid-core/src/lib/styles/row-edit";
+@use "@ornery/ui-grid-core/src/lib/styles/validate";
+
+// Mixin-only partials: emit class-based rules for the grid shell shadow DOM.
+@include filter-cell.rules;
+@include group-row.rules;
+@include pagination.rules;

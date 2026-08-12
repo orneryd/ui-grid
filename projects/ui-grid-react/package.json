@@ -1,0 +1,49 @@
+{
+  "name": "@ornery/ui-grid-react",
+  "version": "1.0.8",
+  "description": "React wrapper for @ornery/ui-grid-core",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./styles": "./dist/ui-grid.css"
+  },
+  "peerDependencies": {
+    "@ornery/ui-grid-core": "1.0.8",
+    "@ornery/ui-grid-vanilla": "1.0.8",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@ornery/ui-grid-core": "file:../ui-grid-core",
+    "@ornery/ui-grid-vanilla": "file:../ui-grid-vanilla",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "jsdom": "^29.1.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tsup": "^8.5.1",
+    "typescript": "~6.0.3",
+    "vite": "^8.1.2",
+    "vitest": "^4.1.9"
+  },
+  "scripts": {
+    "start": "vite serve demo --config demo/vite.config.ts",
+    "build": "tsup src/index.ts --format esm,cjs --tsconfig tsconfig.build.json --external react --external react-dom --external @ornery/ui-grid-core --external @ornery/ui-grid-vanilla && tsc -p tsconfig.dts.json && node -e \"require('fs').copyFileSync('src/ui-grid.css','dist/ui-grid.css')\"",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
+  }
+}

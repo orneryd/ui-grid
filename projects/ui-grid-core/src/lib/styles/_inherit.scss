@@ -1,0 +1,154 @@
+// Inherit styles
+// Auto-extracted from grid.core.styles.scss
+
+:host *,
+:host *::before,
+:host *::after {
+  --ui-grid-border-color: var(--_ui-grid-border-color);
+  --ui-grid-header-background: var(--_ui-grid-header-background);
+  --ui-grid-row-odd: var(--_ui-grid-row-odd);
+  --ui-grid-row-even: var(--_ui-grid-row-even);
+  --ui-grid-row-hover: var(--_ui-grid-row-hover);
+  --ui-grid-row-focus-background: var(--_ui-grid-row-focus-background);
+  --ui-grid-cell-color: var(--_ui-grid-cell-color);
+  --ui-grid-muted-color: var(--_ui-grid-muted-color);
+  --ui-grid-surface: var(--_ui-grid-surface);
+  --ui-grid-radius: var(--_ui-grid-radius);
+  --ui-grid-shadow: var(--_ui-grid-shadow);
+  --ui-grid-header-weight: var(--_ui-grid-header-weight);
+  --ui-grid-accent: var(--_ui-grid-accent);
+  --ui-grid-group-background: var(--_ui-grid-group-background);
+  --ui-grid-status-active-bg: var(--_ui-grid-status-active-bg);
+  --ui-grid-status-active-color: var(--_ui-grid-status-active-color);
+  --ui-grid-status-expansion-bg: var(--_ui-grid-status-expansion-bg);
+  --ui-grid-status-expansion-color: var(--_ui-grid-status-expansion-color);
+  --ui-grid-status-enterprise-bg: var(--_ui-grid-status-enterprise-bg);
+  --ui-grid-status-enterprise-color: var(--_ui-grid-status-enterprise-color);
+  --ui-grid-status-pilot-bg: var(--_ui-grid-status-pilot-bg);
+  --ui-grid-status-pilot-color: var(--_ui-grid-status-pilot-color);
+  --ui-grid-shell-gap: var(--_ui-grid-shell-gap);
+  --ui-grid-hero-gap: var(--_ui-grid-hero-gap);
+  --ui-grid-hero-padding-block: var(--_ui-grid-hero-padding-block);
+  --ui-grid-eyebrow-margin-block-end: var(--_ui-grid-eyebrow-margin-block-end);
+  --ui-grid-eyebrow-letter-spacing: var(--_ui-grid-eyebrow-letter-spacing);
+  --ui-grid-eyebrow-font-size: var(--_ui-grid-eyebrow-font-size);
+  --ui-grid-hero-title-font-size: var(--_ui-grid-hero-title-font-size);
+  --ui-grid-hero-title-line-height: var(--_ui-grid-hero-title-line-height);
+  --ui-grid-hero-deck-max-width: var(--_ui-grid-hero-deck-max-width);
+  --ui-grid-hero-deck-margin-block-start: var(--_ui-grid-hero-deck-margin-block-start);
+  --ui-grid-hero-actions-gap: var(--_ui-grid-hero-actions-gap);
+  --ui-grid-action-radius: var(--_ui-grid-action-radius);
+  --ui-grid-action-padding-block: var(--_ui-grid-action-padding-block);
+  --ui-grid-action-padding-inline: var(--_ui-grid-action-padding-inline);
+  --ui-grid-stats-card-min-width: var(--_ui-grid-stats-card-min-width);
+  --ui-grid-stats-card-padding-block: var(--_ui-grid-stats-card-padding-block);
+  --ui-grid-stats-card-padding-inline: var(--_ui-grid-stats-card-padding-inline);
+  --ui-grid-stats-card-value-font-size: var(--_ui-grid-stats-card-value-font-size);
+  --ui-grid-metrics-gap: var(--_ui-grid-metrics-gap);
+  --ui-grid-metric-card-padding-block: var(--_ui-grid-metric-card-padding-block);
+  --ui-grid-metric-card-padding-inline: var(--_ui-grid-metric-card-padding-inline);
+  --ui-grid-metric-value-font-size: var(--_ui-grid-metric-value-font-size);
+  --ui-grid-toolbar-gap: var(--_ui-grid-toolbar-gap);
+  --ui-grid-toolbar-padding-block: var(--_ui-grid-toolbar-padding-block);
+  --ui-grid-toolbar-padding-inline: var(--_ui-grid-toolbar-padding-inline);
+  --ui-grid-toolbar-inline-gap: var(--_ui-grid-toolbar-inline-gap);
+  --ui-grid-overflow-x: var(--_ui-grid-overflow-x);
+  --ui-grid-overflow-y: var(--_ui-grid-overflow-y);
+  --ui-grid-header-z-index: var(--_ui-grid-header-z-index);
+  --ui-grid-pinned-cell-z-index: var(--_ui-grid-pinned-cell-z-index);
+  --ui-grid-pin-menu-open-z-index: var(--_ui-grid-pin-menu-open-z-index);
+  --ui-grid-pin-menu-z-index: var(--_ui-grid-pin-menu-z-index);
+  --ui-grid-header-cell-gap: var(--_ui-grid-header-cell-gap);
+  --ui-grid-header-cell-padding-block: var(--_ui-grid-header-cell-padding-block);
+  --ui-grid-header-cell-padding-inline: var(--_ui-grid-header-cell-padding-inline);
+  --ui-grid-header-cell-background-active: var(--_ui-grid-header-cell-background-active);
+  --ui-grid-pinned-divider-shadow-left: var(--_ui-grid-pinned-divider-shadow-left);
+  --ui-grid-pinned-divider-shadow-right: var(--_ui-grid-pinned-divider-shadow-right);
+  --ui-grid-pinned-divider-clip-left: var(--_ui-grid-pinned-divider-clip-left);
+  --ui-grid-pinned-divider-clip-right: var(--_ui-grid-pinned-divider-clip-right);
+  --ui-grid-header-actions-gap: var(--_ui-grid-header-actions-gap);
+  --ui-grid-control-size: var(--_ui-grid-control-size);
+  --ui-grid-control-radius: var(--_ui-grid-control-radius);
+  --ui-grid-control-icon-size: var(--_ui-grid-control-icon-size);
+  --ui-grid-control-background: var(--_ui-grid-control-background);
+  --ui-grid-control-border-color: var(--_ui-grid-control-border-color);
+  --ui-grid-control-color: var(--_ui-grid-control-color);
+  --ui-grid-control-background-active: var(--_ui-grid-control-background-active);
+  --ui-grid-control-border-color-active: var(--_ui-grid-control-border-color-active);
+  --ui-grid-control-color-active: var(--_ui-grid-control-color-active);
+  --ui-grid-pin-menu-offset-block-start: var(--_ui-grid-pin-menu-offset-block-start);
+  --ui-grid-pin-menu-gap: var(--_ui-grid-pin-menu-gap);
+  --ui-grid-pin-menu-padding: var(--_ui-grid-pin-menu-padding);
+  --ui-grid-pin-menu-radius: var(--_ui-grid-pin-menu-radius);
+  --ui-grid-pin-menu-shadow: var(--_ui-grid-pin-menu-shadow);
+  --ui-grid-pin-menu-action-size: var(--_ui-grid-pin-menu-action-size);
+  --ui-grid-pin-control-collapsed-size: var(--_ui-grid-pin-control-collapsed-size);
+  --ui-grid-pin-control-transition-duration: var(--_ui-grid-pin-control-transition-duration);
+  --ui-grid-pin-control-transition-easing: var(--_ui-grid-pin-control-transition-easing);
+  --ui-grid-pin-menu-scale-closed: var(--_ui-grid-pin-menu-scale-closed);
+  --ui-grid-filter-cell-padding-block-start: var(--_ui-grid-filter-cell-padding-block-start);
+  --ui-grid-filter-cell-padding-block-end: var(--_ui-grid-filter-cell-padding-block-end);
+  --ui-grid-filter-cell-padding-inline: var(--_ui-grid-filter-cell-padding-inline);
+  --ui-grid-filter-input-padding-block: var(--_ui-grid-filter-input-padding-block);
+  --ui-grid-filter-input-padding-inline: var(--_ui-grid-filter-input-padding-inline);
+  --ui-grid-filter-input-focus-outline: var(--_ui-grid-filter-input-focus-outline);
+  --ui-grid-body-cell-padding-block: var(--_ui-grid-body-cell-padding-block);
+  --ui-grid-body-cell-padding-inline: var(--_ui-grid-body-cell-padding-inline);
+  --ui-grid-cell-shell-gap: var(--_ui-grid-cell-shell-gap);
+  --ui-grid-row-toggle-size: var(--_ui-grid-row-toggle-size);
+  --ui-grid-row-toggle-radius: var(--_ui-grid-row-toggle-radius);
+  --ui-grid-toggle-icon-size: var(--_ui-grid-toggle-icon-size);
+  --ui-grid-group-disclosure-icon-size: var(--_ui-grid-group-disclosure-icon-size);
+  --ui-grid-pagination-icon-size: var(--_ui-grid-pagination-icon-size);
+  --ui-grid-expandable-row-padding-block: var(--_ui-grid-expandable-row-padding-block);
+  --ui-grid-expandable-row-padding-inline: var(--_ui-grid-expandable-row-padding-inline);
+  --ui-grid-expandable-row-background: var(--_ui-grid-expandable-row-background);
+  --ui-grid-cell-focus-background: var(--_ui-grid-cell-focus-background);
+  --ui-grid-cell-focus-ring: var(--_ui-grid-cell-focus-ring);
+  --ui-grid-cell-editing-background: var(--_ui-grid-cell-editing-background);
+  --ui-grid-cell-editor-border-color: var(--_ui-grid-cell-editor-border-color);
+  --ui-grid-cell-editor-radius: var(--_ui-grid-cell-editor-radius);
+  --ui-grid-cell-editor-padding-block: var(--_ui-grid-cell-editor-padding-block);
+  --ui-grid-cell-editor-padding-inline: var(--_ui-grid-cell-editor-padding-inline);
+  --ui-grid-cell-editor-focus-outline: var(--_ui-grid-cell-editor-focus-outline);
+  --ui-grid-group-row-gap: var(--_ui-grid-group-row-gap);
+  --ui-grid-group-row-padding-block: var(--_ui-grid-group-row-padding-block);
+  --ui-grid-group-row-padding-inline: var(--_ui-grid-group-row-padding-inline);
+  --ui-grid-drag-preview-shadow: var(--_ui-grid-drag-preview-shadow);
+  --ui-grid-drag-preview-radius: var(--_ui-grid-drag-preview-radius);
+  --ui-grid-drag-placeholder-opacity: var(--_ui-grid-drag-placeholder-opacity);
+  --ui-grid-drag-placeholder-background: var(--_ui-grid-drag-placeholder-background);
+  --ui-grid-drag-placeholder-border: var(--_ui-grid-drag-placeholder-border);
+  --ui-grid-drag-placeholder-shadow: var(--_ui-grid-drag-placeholder-shadow);
+  --ui-grid-empty-state-gap: var(--_ui-grid-empty-state-gap);
+  --ui-grid-empty-state-min-height: var(--_ui-grid-empty-state-min-height);
+  --ui-grid-empty-state-padding: var(--_ui-grid-empty-state-padding);
+  --ui-grid-pagination-gap: var(--_ui-grid-pagination-gap);
+  --ui-grid-pagination-padding-block: var(--_ui-grid-pagination-padding-block);
+  --ui-grid-pagination-padding-inline: var(--_ui-grid-pagination-padding-inline);
+  --ui-grid-pagination-controls-gap: var(--_ui-grid-pagination-controls-gap);
+  --ui-grid-pagination-size-gap: var(--_ui-grid-pagination-size-gap);
+  --ui-grid-pagination-button-padding-block: var(--_ui-grid-pagination-button-padding-block);
+  --ui-grid-pagination-button-padding-inline: var(--_ui-grid-pagination-button-padding-inline);
+  --ui-grid-pagination-select-padding-block: var(--_ui-grid-pagination-select-padding-block);
+  --ui-grid-pagination-select-padding-inline: var(--_ui-grid-pagination-select-padding-inline);
+  --ui-grid-status-pill-padding-block: var(--_ui-grid-status-pill-padding-block);
+  --ui-grid-status-pill-padding-inline: var(--_ui-grid-status-pill-padding-inline);
+  --ui-grid-status-pill-radius: var(--_ui-grid-status-pill-radius);
+  --ui-grid-status-pill-font-size: var(--_ui-grid-status-pill-font-size);
+  --ui-grid-status-pill-default-bg: var(--_ui-grid-status-pill-default-bg);
+  box-sizing: border-box;
+}
+
+// Isolate the grid host so sibling repaints (e.g. button hover transforms
+// in the surrounding page) don't invalidate the grid's sticky filter
+// strip. Without isolation, browsers can fold the host into a parent
+// compositor layer and repaint it whenever a neighbouring element gains
+// a new layer; that's what produced the filter-row flicker on hover in
+// the React/vanilla demo pages while Angular (whose host happens to
+// already establish a stacking context via component view encapsulation)
+// stayed flicker-free.
+:host {
+  isolation: isolate;
+  contain: layout paint;
+}

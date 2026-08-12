@@ -1,0 +1,61 @@
+// Filter Cell — mixins only, no output.
+// Consumers decide the selectors (class-based for grid shell, :host for shadow DOM).
+
+@mixin host {
+  padding: var(--ui-grid-filter-cell-padding-block-start) var(--ui-grid-filter-cell-padding-inline)
+    var(--ui-grid-filter-cell-padding-block-end);
+  border-bottom: 1px solid var(--ui-grid-border-color);
+  background: var(--ui-grid-header-background);
+}
+
+@mixin host-shadow {
+  display: block;
+  box-sizing: border-box;
+  @include host;
+}
+
+@mixin input {
+  width: 100%;
+  // Native <input> carries a default `size="20"` attribute that gives it an
+  // intrinsic min-content / max-content width of ~20ch, so `min-width: auto`
+  // leaks that ~180px into the filter sub-grid's `min-width: max-content`
+  // calculation, forcing the filter tracks wider than the header/body tracks
+  // when columns use fractional widths (e.g. the default `minmax(11rem, 1fr)`).
+  // Collapsing the intrinsic min lets `1fr` resolve identically in all three
+  // sub-grids.
+  min-width: 0;
+  // `width: 100%` without border-box lets the input's horizontal padding
+  // overflow the cell — also desyncs the filter strip from header + body.
+  box-sizing: border-box;
+  border: 1px solid var(--ui-grid-border-color);
+  border-radius: var(--ui-grid-radius);
+  background: var(--ui-grid-surface);
+  padding: var(--ui-grid-filter-input-padding-block) var(--ui-grid-filter-input-padding-inline);
+  font: inherit;
+}
+
+@mixin input-shadow {
+  box-sizing: border-box;
+  color: inherit;
+  @include input;
+}
+
+@mixin input-focus {
+  outline: var(--ui-grid-filter-input-focus-outline);
+  border-color: var(--ui-grid-accent);
+}
+
+/// Emit class-based rules for use inside the grid shell shadow DOM.
+@mixin rules {
+  .filter-cell {
+    @include host;
+  }
+
+  .filter-cell input {
+    @include input;
+  }
+
+  .filter-cell input:focus {
+    @include input-focus;
+  }
+}

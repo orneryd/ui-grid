@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true,
+    "paths": {
+      "@ornery/ui-grid-core": ["../ui-grid-core/src/index.ts"]
+    }
+  },
+  "include": ["src", "demo"]
+}

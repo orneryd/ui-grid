@@ -1,0 +1,539 @@
+// Tokens styles
+// Auto-extracted from grid.core.styles.scss
+
+:host {
+  /* Foundation */
+  --_ui-grid-border-color: var(--ui-grid-border-color, var(--app-ui-grid-border-color, #d4d4d8));
+  --_ui-grid-header-background: var(
+    --ui-grid-header-background,
+    var(--app-ui-grid-header-background, #f3f4f6)
+  );
+  --_ui-grid-row-odd: var(--ui-grid-row-odd, var(--app-ui-grid-row-odd, #fcfcfd));
+  --_ui-grid-row-even: var(--ui-grid-row-even, var(--app-ui-grid-row-even, #f7f7f8));
+  --_ui-grid-row-hover: var(
+    --ui-grid-row-hover,
+    var(
+      --app-ui-grid-row-hover,
+      color-mix(in srgb, var(--_ui-grid-accent) 4%, var(--_ui-grid-surface))
+    )
+  );
+  --_ui-grid-row-focus-background: var(
+    --ui-grid-row-focus-background,
+    var(
+      --app-ui-grid-row-focus-background,
+      color-mix(in srgb, var(--_ui-grid-accent) 9%, var(--_ui-grid-surface))
+    )
+  );
+  --_ui-grid-cell-color: var(--ui-grid-cell-color, var(--app-ui-grid-cell-color, #111827));
+  --_ui-grid-muted-color: var(--ui-grid-muted-color, var(--app-ui-grid-muted-color, #6b7280));
+  --_ui-grid-surface: var(--ui-grid-surface, var(--app-ui-grid-surface, #ffffff));
+  --_ui-grid-radius: var(--ui-grid-radius, var(--app-ui-grid-radius, 4px));
+  --_ui-grid-shadow: var(
+    --ui-grid-shadow,
+    var(--app-ui-grid-shadow, 0 10px 24px rgba(15, 23, 42, 0.08))
+  );
+  --_ui-grid-header-weight: var(--ui-grid-header-weight, var(--app-ui-grid-header-weight, 700));
+  --_ui-grid-accent: var(--ui-grid-accent, var(--app-ui-grid-accent, #2563eb));
+  --_ui-grid-group-background: var(
+    --ui-grid-group-background,
+    var(--app-ui-grid-group-background, #eceff3)
+  );
+  --_ui-grid-status-active-bg: var(
+    --ui-grid-status-active-bg,
+    var(--app-ui-grid-status-active-bg, rgba(22, 163, 74, 0.14))
+  );
+  --_ui-grid-status-active-color: var(
+    --ui-grid-status-active-color,
+    var(--app-ui-grid-status-active-color, #166534)
+  );
+  --_ui-grid-status-expansion-bg: var(
+    --ui-grid-status-expansion-bg,
+    var(--app-ui-grid-status-expansion-bg, rgba(37, 99, 235, 0.14))
+  );
+  --_ui-grid-status-expansion-color: var(
+    --ui-grid-status-expansion-color,
+    var(--app-ui-grid-status-expansion-color, #1d4ed8)
+  );
+  --_ui-grid-status-enterprise-bg: var(
+    --ui-grid-status-enterprise-bg,
+    var(--app-ui-grid-status-enterprise-bg, rgba(15, 118, 110, 0.14))
+  );
+  --_ui-grid-status-enterprise-color: var(
+    --ui-grid-status-enterprise-color,
+    var(--app-ui-grid-status-enterprise-color, #115e59)
+  );
+  --_ui-grid-status-pilot-bg: var(
+    --ui-grid-status-pilot-bg,
+    var(--app-ui-grid-status-pilot-bg, rgba(234, 88, 12, 0.14))
+  );
+  --_ui-grid-status-pilot-color: var(
+    --ui-grid-status-pilot-color,
+    var(--app-ui-grid-status-pilot-color, #c2410c)
+  );
+
+  /* Shell + hero */
+  --_ui-grid-shell-gap: var(--ui-grid-shell-gap, var(--app-ui-grid-shell-gap, 1.5rem));
+  --_ui-grid-hero-gap: var(--ui-grid-hero-gap, var(--app-ui-grid-hero-gap, 1.5rem));
+  --_ui-grid-hero-padding-block: var(
+    --ui-grid-hero-padding-block,
+    var(--app-ui-grid-hero-padding-block, 1rem)
+  );
+  --_ui-grid-eyebrow-margin-block-end: var(
+    --ui-grid-eyebrow-margin-block-end,
+    var(--app-ui-grid-eyebrow-margin-block-end, 0.5rem)
+  );
+  --_ui-grid-eyebrow-letter-spacing: var(
+    --ui-grid-eyebrow-letter-spacing,
+    var(--app-ui-grid-eyebrow-letter-spacing, 0.18em)
+  );
+  --_ui-grid-eyebrow-font-size: var(
+    --ui-grid-eyebrow-font-size,
+    var(--app-ui-grid-eyebrow-font-size, 0.72rem)
+  );
+  --_ui-grid-hero-title-font-size: var(
+    --ui-grid-hero-title-font-size,
+    var(--app-ui-grid-hero-title-font-size, clamp(1.4rem, 2vw, 2rem))
+  );
+  --_ui-grid-hero-title-line-height: var(
+    --ui-grid-hero-title-line-height,
+    var(--app-ui-grid-hero-title-line-height, 1.1)
+  );
+  --_ui-grid-hero-deck-max-width: var(
+    --ui-grid-hero-deck-max-width,
+    var(--app-ui-grid-hero-deck-max-width, 56ch)
+  );
+  --_ui-grid-hero-deck-margin-block-start: var(
+    --ui-grid-hero-deck-margin-block-start,
+    var(--app-ui-grid-hero-deck-margin-block-start, 0.75rem)
+  );
+  --_ui-grid-hero-actions-gap: var(
+    --ui-grid-hero-actions-gap,
+    var(--app-ui-grid-hero-actions-gap, 1rem)
+  );
+  --_ui-grid-action-radius: var(--ui-grid-action-radius, var(--app-ui-grid-action-radius, 999px));
+  --_ui-grid-action-padding-block: var(
+    --ui-grid-action-padding-block,
+    var(--app-ui-grid-action-padding-block, 0.8rem)
+  );
+  --_ui-grid-action-padding-inline: var(
+    --ui-grid-action-padding-inline,
+    var(--app-ui-grid-action-padding-inline, 1.1rem)
+  );
+  --_ui-grid-stats-card-min-width: var(
+    --ui-grid-stats-card-min-width,
+    var(--app-ui-grid-stats-card-min-width, 8rem)
+  );
+  --_ui-grid-stats-card-padding-block: var(
+    --ui-grid-stats-card-padding-block,
+    var(--app-ui-grid-stats-card-padding-block, 0.85rem)
+  );
+  --_ui-grid-stats-card-padding-inline: var(
+    --ui-grid-stats-card-padding-inline,
+    var(--app-ui-grid-stats-card-padding-inline, 1rem)
+  );
+  --_ui-grid-stats-card-value-font-size: var(
+    --ui-grid-stats-card-value-font-size,
+    var(--app-ui-grid-stats-card-value-font-size, 1.9rem)
+  );
+
+  /* Frame + metrics + toolbar */
+  --_ui-grid-metrics-gap: var(--ui-grid-metrics-gap, var(--app-ui-grid-metrics-gap, 1rem));
+  --_ui-grid-metric-card-padding-block: var(
+    --ui-grid-metric-card-padding-block,
+    var(--app-ui-grid-metric-card-padding-block, 1rem)
+  );
+  --_ui-grid-metric-card-padding-inline: var(
+    --ui-grid-metric-card-padding-inline,
+    var(--app-ui-grid-metric-card-padding-inline, 1.1rem)
+  );
+  --_ui-grid-metric-value-font-size: var(
+    --ui-grid-metric-value-font-size,
+    var(--app-ui-grid-metric-value-font-size, 1.3rem)
+  );
+  --_ui-grid-toolbar-gap: var(--ui-grid-toolbar-gap, var(--app-ui-grid-toolbar-gap, 1rem));
+  --_ui-grid-toolbar-padding-block: var(
+    --ui-grid-toolbar-padding-block,
+    var(--app-ui-grid-toolbar-padding-block, 1rem)
+  );
+  --_ui-grid-toolbar-padding-inline: var(
+    --ui-grid-toolbar-padding-inline,
+    var(--app-ui-grid-toolbar-padding-inline, 1.25rem)
+  );
+  --_ui-grid-toolbar-inline-gap: var(
+    --ui-grid-toolbar-inline-gap,
+    var(--app-ui-grid-toolbar-inline-gap, 0.4rem)
+  );
+  --_ui-grid-overflow-x: var(--ui-grid-overflow-x, var(--app-ui-grid-overflow-x, auto));
+  --_ui-grid-overflow-y: var(--ui-grid-overflow-y, var(--app-ui-grid-overflow-y, auto));
+
+  /* Grid layering */
+  --_ui-grid-header-z-index: var(--ui-grid-header-z-index, var(--app-ui-grid-header-z-index, 3));
+  --_ui-grid-pinned-cell-z-index: var(
+    --ui-grid-pinned-cell-z-index,
+    var(--app-ui-grid-pinned-cell-z-index, 2)
+  );
+  --_ui-grid-pin-menu-open-z-index: var(
+    --ui-grid-pin-menu-open-z-index,
+    var(--app-ui-grid-pin-menu-open-z-index, 8)
+  );
+  --_ui-grid-pin-menu-z-index: var(--ui-grid-pin-menu-z-index, var(--app-ui-grid-pin-menu-z-index, 20));
+
+  /* Header + controls */
+  --_ui-grid-header-cell-gap: var(
+    --ui-grid-header-cell-gap,
+    var(--app-ui-grid-header-cell-gap, 0.75rem)
+  );
+  --_ui-grid-header-cell-padding-block: var(
+    --ui-grid-header-cell-padding-block,
+    var(--app-ui-grid-header-cell-padding-block, 0.85rem)
+  );
+  --_ui-grid-header-cell-padding-inline: var(
+    --ui-grid-header-cell-padding-inline,
+    var(--app-ui-grid-header-cell-padding-inline, 1rem)
+  );
+  --_ui-grid-header-cell-background-active: var(
+    --ui-grid-header-cell-background-active,
+    var(
+      --app-ui-grid-header-cell-background-active,
+      color-mix(in srgb, var(--_ui-grid-accent) 8%, var(--_ui-grid-header-background))
+    )
+  );
+  --_ui-grid-pinned-divider-shadow-left: var(
+    --ui-grid-pinned-divider-shadow-left,
+    var(
+      --app-ui-grid-pinned-divider-shadow-left,
+    2px 0 4px rgba(0, 0, 0, 0.06)
+    )
+  );
+  --_ui-grid-pinned-divider-shadow-right: var(
+    --ui-grid-pinned-divider-shadow-right,
+    var(
+      --app-ui-grid-pinned-divider-shadow-right,
+    -2px 0 4px rgba(0, 0, 0, 0.06)
+    )
+  );
+  --_ui-grid-pinned-divider-clip-left: var(
+    --ui-grid-pinned-divider-clip-left,
+    var(--app-ui-grid-pinned-divider-clip-left, inset(0 -4px 0 0))
+  );
+  --_ui-grid-pinned-divider-clip-right: var(
+    --ui-grid-pinned-divider-clip-right,
+    var(--app-ui-grid-pinned-divider-clip-right, inset(0 0 0 -4px))
+  );
+  --_ui-grid-header-actions-gap: var(
+    --ui-grid-header-actions-gap,
+    var(--app-ui-grid-header-actions-gap, 0.4rem)
+  );
+  --_ui-grid-control-size: var(--ui-grid-control-size, var(--app-ui-grid-control-size, 2rem));
+  --_ui-grid-control-radius: var(
+    --ui-grid-control-radius,
+    var(--app-ui-grid-control-radius, 999px)
+  );
+  --_ui-grid-control-icon-size: var(
+    --ui-grid-control-icon-size,
+    var(--app-ui-grid-control-icon-size, 1rem)
+  );
+  --_ui-grid-control-background: var(
+    --ui-grid-control-background,
+    var(--app-ui-grid-control-background, var(--_ui-grid-surface))
+  );
+  --_ui-grid-control-border-color: var(
+    --ui-grid-control-border-color,
+    var(--app-ui-grid-control-border-color, var(--_ui-grid-border-color))
+  );
+  --_ui-grid-control-color: var(
+    --ui-grid-control-color,
+    var(--app-ui-grid-control-color, var(--_ui-grid-muted-color))
+  );
+  --_ui-grid-control-background-active: var(
+    --ui-grid-control-background-active,
+    var(
+      --app-ui-grid-control-background-active,
+      color-mix(in srgb, var(--_ui-grid-accent) 12%, var(--_ui-grid-surface))
+    )
+  );
+  --_ui-grid-control-border-color-active: var(
+    --ui-grid-control-border-color-active,
+    var(
+      --app-ui-grid-control-border-color-active,
+      color-mix(in srgb, var(--_ui-grid-accent) 35%, var(--_ui-grid-border-color))
+    )
+  );
+  --_ui-grid-control-color-active: var(
+    --ui-grid-control-color-active,
+    var(--app-ui-grid-control-color-active, var(--_ui-grid-accent))
+  );
+
+  /* Pin menu */
+  --_ui-grid-pin-menu-offset-block-start: var(
+    --ui-grid-pin-menu-offset-block-start,
+    var(--app-ui-grid-pin-menu-offset-block-start, 0.35rem)
+  );
+  --_ui-grid-pin-menu-gap: var(--ui-grid-pin-menu-gap, var(--app-ui-grid-pin-menu-gap, 0.25rem));
+  --_ui-grid-pin-menu-padding: var(
+    --ui-grid-pin-menu-padding,
+    var(--app-ui-grid-pin-menu-padding, 0.25rem)
+  );
+  --_ui-grid-pin-menu-radius: var(--ui-grid-pin-menu-radius, var(--app-ui-grid-pin-menu-radius, 999px));
+  --_ui-grid-pin-menu-shadow: var(
+    --ui-grid-pin-menu-shadow,
+    var(
+      --app-ui-grid-pin-menu-shadow,
+      0 10px 24px color-mix(in srgb, var(--_ui-grid-cell-color) 10%, transparent)
+    )
+  );
+  --_ui-grid-pin-menu-action-size: var(
+    --ui-grid-pin-menu-action-size,
+    var(--app-ui-grid-pin-menu-action-size, 1.75rem)
+  );
+  --_ui-grid-pin-control-collapsed-size: var(
+    --ui-grid-pin-control-collapsed-size,
+    var(--app-ui-grid-pin-control-collapsed-size, 1px)
+  );
+  --_ui-grid-pin-control-transition-duration: var(
+    --ui-grid-pin-control-transition-duration,
+    var(--app-ui-grid-pin-control-transition-duration, 160ms)
+  );
+  --_ui-grid-pin-control-transition-easing: var(
+    --ui-grid-pin-control-transition-easing,
+    var(--app-ui-grid-pin-control-transition-easing, cubic-bezier(0.22, 1, 0.36, 1))
+  );
+  --_ui-grid-pin-menu-scale-closed: var(
+    --ui-grid-pin-menu-scale-closed,
+    var(--app-ui-grid-pin-menu-scale-closed, 0.72)
+  );
+
+  /* Filters */
+  --_ui-grid-filter-cell-padding-block-start: var(
+    --ui-grid-filter-cell-padding-block-start,
+    var(--app-ui-grid-filter-cell-padding-block-start, 0.75rem)
+  );
+  --_ui-grid-filter-cell-padding-block-end: var(
+    --ui-grid-filter-cell-padding-block-end,
+    var(--app-ui-grid-filter-cell-padding-block-end, 1rem)
+  );
+  --_ui-grid-filter-cell-padding-inline: var(
+    --ui-grid-filter-cell-padding-inline,
+    var(--app-ui-grid-filter-cell-padding-inline, 1rem)
+  );
+  --_ui-grid-filter-input-padding-block: var(
+    --ui-grid-filter-input-padding-block,
+    var(--app-ui-grid-filter-input-padding-block, 0.55rem)
+  );
+  --_ui-grid-filter-input-padding-inline: var(
+    --ui-grid-filter-input-padding-inline,
+    var(--app-ui-grid-filter-input-padding-inline, 0.7rem)
+  );
+  --_ui-grid-filter-input-focus-outline: var(
+    --ui-grid-filter-input-focus-outline,
+    var(
+      --app-ui-grid-filter-input-focus-outline,
+      2px solid color-mix(in srgb, var(--_ui-grid-accent) 18%, transparent)
+    )
+  );
+
+  /* Body + editing */
+  --_ui-grid-body-cell-padding-block: var(
+    --ui-grid-body-cell-padding-block,
+    var(--app-ui-grid-body-cell-padding-block, 0.95rem)
+  );
+  --_ui-grid-body-cell-padding-inline: var(
+    --ui-grid-body-cell-padding-inline,
+    var(--app-ui-grid-body-cell-padding-inline, 1rem)
+  );
+  --_ui-grid-cell-shell-gap: var(--ui-grid-cell-shell-gap, var(--app-ui-grid-cell-shell-gap, 0.55rem));
+  --_ui-grid-row-toggle-size: var(--ui-grid-row-toggle-size, var(--app-ui-grid-row-toggle-size, 1.55rem));
+  --_ui-grid-row-toggle-radius: var(
+    --ui-grid-row-toggle-radius,
+    var(--app-ui-grid-row-toggle-radius, 999px)
+  );
+  --_ui-grid-toggle-icon-size: var(
+    --ui-grid-toggle-icon-size,
+    var(--app-ui-grid-toggle-icon-size, 1.1rem)
+  );
+  --_ui-grid-group-disclosure-icon-size: var(
+    --ui-grid-group-disclosure-icon-size,
+    var(--app-ui-grid-group-disclosure-icon-size, 0.9rem)
+  );
+  --_ui-grid-pagination-icon-size: var(
+    --ui-grid-pagination-icon-size,
+    var(--app-ui-grid-pagination-icon-size, 1.2rem)
+  );
+  --_ui-grid-expandable-row-padding-block: var(
+    --ui-grid-expandable-row-padding-block,
+    var(--app-ui-grid-expandable-row-padding-block, 1rem)
+  );
+  --_ui-grid-expandable-row-padding-inline: var(
+    --ui-grid-expandable-row-padding-inline,
+    var(--app-ui-grid-expandable-row-padding-inline, 1.25rem)
+  );
+  --_ui-grid-expandable-row-background: var(
+    --ui-grid-expandable-row-background,
+    var(
+      --app-ui-grid-expandable-row-background,
+      color-mix(in srgb, var(--_ui-grid-accent) 4%, var(--_ui-grid-surface))
+    )
+  );
+  --_ui-grid-cell-focus-background: var(
+    --ui-grid-cell-focus-background,
+    var(
+      --app-ui-grid-cell-focus-background,
+      color-mix(in srgb, var(--_ui-grid-accent) 14%, var(--_ui-grid-surface))
+    )
+  );
+  --_ui-grid-cell-focus-ring: var(
+    --ui-grid-cell-focus-ring,
+    var(
+      --app-ui-grid-cell-focus-ring,
+      inset 0 0 0 1px color-mix(in srgb, var(--_ui-grid-accent) 28%, transparent)
+    )
+  );
+  --_ui-grid-cell-editing-background: var(
+    --ui-grid-cell-editing-background,
+    var(
+      --app-ui-grid-cell-editing-background,
+      color-mix(in srgb, var(--_ui-grid-accent) 7%, var(--_ui-grid-surface))
+    )
+  );
+  --_ui-grid-cell-editor-border-color: var(
+    --ui-grid-cell-editor-border-color,
+    var(
+      --app-ui-grid-cell-editor-border-color,
+      color-mix(in srgb, var(--_ui-grid-accent) 45%, var(--_ui-grid-border-color))
+    )
+  );
+  --_ui-grid-cell-editor-radius: var(
+    --ui-grid-cell-editor-radius,
+    var(--app-ui-grid-cell-editor-radius, calc(var(--_ui-grid-radius) - 1px))
+  );
+  --_ui-grid-cell-editor-padding-block: var(
+    --ui-grid-cell-editor-padding-block,
+    var(--app-ui-grid-cell-editor-padding-block, 0.45rem)
+  );
+  --_ui-grid-cell-editor-padding-inline: var(
+    --ui-grid-cell-editor-padding-inline,
+    var(--app-ui-grid-cell-editor-padding-inline, 0.55rem)
+  );
+  --_ui-grid-cell-editor-focus-outline: var(
+    --ui-grid-cell-editor-focus-outline,
+    var(
+      --app-ui-grid-cell-editor-focus-outline,
+      2px solid color-mix(in srgb, var(--_ui-grid-accent) 18%, transparent)
+    )
+  );
+
+  /* Groups + drag */
+  --_ui-grid-group-row-gap: var(--ui-grid-group-row-gap, var(--app-ui-grid-group-row-gap, 0.9rem));
+  --_ui-grid-group-row-padding-block: var(
+    --ui-grid-group-row-padding-block,
+    var(--app-ui-grid-group-row-padding-block, 0.9rem)
+  );
+  --_ui-grid-group-row-padding-inline: var(
+    --ui-grid-group-row-padding-inline,
+    var(--app-ui-grid-group-row-padding-inline, 1rem)
+  );
+  --_ui-grid-drag-preview-shadow: var(
+    --ui-grid-drag-preview-shadow,
+    var(--app-ui-grid-drag-preview-shadow, 0 12px 30px rgba(15, 23, 42, 0.16))
+  );
+  --_ui-grid-drag-preview-radius: var(
+    --ui-grid-drag-preview-radius,
+    var(--app-ui-grid-drag-preview-radius, 0.9rem)
+  );
+  --_ui-grid-drag-placeholder-opacity: var(
+    --ui-grid-drag-placeholder-opacity,
+    var(--app-ui-grid-drag-placeholder-opacity, 0.3)
+  );
+  --_ui-grid-drag-placeholder-background: var(
+    --ui-grid-drag-placeholder-background,
+    var(
+      --app-ui-grid-drag-placeholder-background,
+      color-mix(in srgb, var(--_ui-grid-accent) 9%, var(--_ui-grid-header-background))
+    )
+  );
+  --_ui-grid-drag-placeholder-border: var(
+    --ui-grid-drag-placeholder-border,
+    var(
+      --app-ui-grid-drag-placeholder-border,
+      1px dashed color-mix(in srgb, var(--_ui-grid-accent) 45%, var(--_ui-grid-border-color))
+    )
+  );
+  --_ui-grid-drag-placeholder-shadow: var(
+    --ui-grid-drag-placeholder-shadow,
+    var(
+      --app-ui-grid-drag-placeholder-shadow,
+      inset 0 0 0 1px color-mix(in srgb, var(--_ui-grid-accent) 18%, transparent)
+    )
+  );
+
+  /* Empty + pagination */
+  --_ui-grid-empty-state-gap: var(
+    --ui-grid-empty-state-gap,
+    var(--app-ui-grid-empty-state-gap, 0.35rem)
+  );
+  --_ui-grid-empty-state-min-height: var(
+    --ui-grid-empty-state-min-height,
+    var(--app-ui-grid-empty-state-min-height, 16rem)
+  );
+  --_ui-grid-empty-state-padding: var(
+    --ui-grid-empty-state-padding,
+    var(--app-ui-grid-empty-state-padding, 2rem)
+  );
+  --_ui-grid-pagination-gap: var(--ui-grid-pagination-gap, var(--app-ui-grid-pagination-gap, 1rem));
+  --_ui-grid-pagination-padding-block: var(
+    --ui-grid-pagination-padding-block,
+    var(--app-ui-grid-pagination-padding-block, 0.85rem)
+  );
+  --_ui-grid-pagination-padding-inline: var(
+    --ui-grid-pagination-padding-inline,
+    var(--app-ui-grid-pagination-padding-inline, 1.25rem)
+  );
+  --_ui-grid-pagination-controls-gap: var(
+    --ui-grid-pagination-controls-gap,
+    var(--app-ui-grid-pagination-controls-gap, 0.75rem)
+  );
+  --_ui-grid-pagination-size-gap: var(
+    --ui-grid-pagination-size-gap,
+    var(--app-ui-grid-pagination-size-gap, 0.4rem)
+  );
+  --_ui-grid-pagination-button-padding-block: var(
+    --ui-grid-pagination-button-padding-block,
+    var(--app-ui-grid-pagination-button-padding-block, 0.45rem)
+  );
+  --_ui-grid-pagination-button-padding-inline: var(
+    --ui-grid-pagination-button-padding-inline,
+    var(--app-ui-grid-pagination-button-padding-inline, 0.8rem)
+  );
+  --_ui-grid-pagination-select-padding-block: var(
+    --ui-grid-pagination-select-padding-block,
+    var(--app-ui-grid-pagination-select-padding-block, 0.35rem)
+  );
+  --_ui-grid-pagination-select-padding-inline: var(
+    --ui-grid-pagination-select-padding-inline,
+    var(--app-ui-grid-pagination-select-padding-inline, 0.55rem)
+  );
+
+  /* Status pill */
+  --_ui-grid-status-pill-padding-block: var(
+    --ui-grid-status-pill-padding-block,
+    var(--app-ui-grid-status-pill-padding-block, 0.2rem)
+  );
+  --_ui-grid-status-pill-padding-inline: var(
+    --ui-grid-status-pill-padding-inline,
+    var(--app-ui-grid-status-pill-padding-inline, 0.55rem)
+  );
+  --_ui-grid-status-pill-radius: var(
+    --ui-grid-status-pill-radius,
+    var(--app-ui-grid-status-pill-radius, 999px)
+  );
+  --_ui-grid-status-pill-font-size: var(
+    --ui-grid-status-pill-font-size,
+    var(--app-ui-grid-status-pill-font-size, 0.85rem)
+  );
+  --_ui-grid-status-pill-default-bg: var(
+    --ui-grid-status-pill-default-bg,
+    var(--app-ui-grid-status-pill-default-bg, rgba(15, 23, 42, 0.07))
+  );
+  display: block;
+  color: var(--_ui-grid-cell-color);
+}

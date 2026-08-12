@@ -1,0 +1,190 @@
+<main class="web-components-shell">
+    <header class="page-hero">
+        <div class="page-copy">
+            <p class="eyebrow">Universal Support</p>
+            <h1>Vanilla web component</h1>
+            <p class="page-summary">
+                This page imports <code>@ornery/ui-grid-vanilla</code> directly and mirrors the Angular harness
+                surface with expandable, tree, templated, and pinning scenarios.
+            </p>
+            <p class="page-links">
+                <a routerLink="/home" class="demo-link">Angular Demo</a>
+                <a routerLink="/react" class="demo-link demo-link-secondary">React Demo</a>
+                <a routerLink="/rust" class="demo-link demo-link-secondary">Rust</a>
+                <a routerLink="/docs/web-component" class="demo-link demo-link-secondary">Docs</a>
+            </p>
+        </div>
+        <div class="page-actions">
+            <button type="button" class="demo-button" (click)="captureState()">Capture State</button>
+            <button type="button" class="demo-button demo-button-secondary" (click)="restoreState()">
+                Restore State
+            </button>
+            <button type="button" class="demo-button demo-button-secondary" (click)="resetDemo()">
+                Reset Demo
+            </button>
+        </div>
+    </header>
+
+    <section class="demo-panel">
+        <div class="panel-header">
+            <div>
+                <h2>100K Rows Demo</h2>
+                <p>
+                    Same primary dataset and options as Angular home: sorting, filtering, grouping,
+                    column moving, column resizing, virtualization, and inline editing.
+                </p>
+            </div>
+        </div>
+        <section class="web-primary-shell">
+            <header class="web-primary-shell__header">
+                <div>
+                    <p class="web-primary-shell__eyebrow">Vanilla package demo</p>
+                    <h3>UI Grid Modernized (Web Component)</h3>
+                    <p>
+                        Familiar <code>gridOptions</code> and <code>onRegisterApi</code>, rebuilt as a
+                        framework-neutral custom element with grouping, sorting, filtering, Excel-style
+                        resize handles, and virtualization.
+                    </p>
+                </div>
+                <div class="web-primary-shell__actions">
+                    <button type="button" class="demo-button" (click)="runBenchmark()">Benchmark</button>
+                    <button type="button" class="demo-button demo-button-secondary" (click)="exportCsv()">
+                        Export CSV
+                    </button>
+                    <div class="web-primary-shell__stats">
+                        <span>{{ visibleRowCount() }}</span>
+                        <small>visible rows</small>
+                    </div>
+                </div>
+            </header>
+
+            <section class="web-primary-shell__metrics" aria-label="Web components grid metrics">
+                <article>
+                    <strong>On</strong>
+                    <span>virtualization</span>
+                </article>
+                <article>
+                    <strong>1</strong>
+                    <span>group columns</span>
+                </article>
+                <article>
+                    <strong>{{ selectedRowCount() }}</strong>
+                    <span>selected rows</span>
+                </article>
+                <article>
+                    <strong>{{ benchmarkResult()?.averageMs?.toFixed(2) || '—' }}</strong>
+                    <span>benchmark avg</span>
+                </article>
+            </section>
+
+            <div class="web-primary-shell__toolbar">
+                <div>
+                    <strong>{{ visibleRowCount() }}</strong>
+                    <span>of {{ totalRows() }} rows</span>
+                </div>
+                <p>
+                    <code>gridOptions</code> compatibility layer: sorting, filtering, grouping, column moving,
+                    column resizing, templating, and virtualized rendering.
+                </p>
+            </div>
+
+            @if (primaryGridActive()) {
+                <ui-grid-element
+                    #primaryGrid
+                    [attr.grid-id]="primaryConfig().id"
+                    [attr.title]="primaryConfig().title"
+                    [attr.empty-message]="primaryConfig().emptyMessage"
+                    [attr.row-height]="primaryConfig().rowHeight"
+                    [attr.virtualization-threshold]="primaryConfig().virtualizationThreshold"
+                    [attr.grouping]="primaryConfig().groupingJson ?? null"
+                    [attr.column-defs]="primaryConfig().columnDefsJson"
+                    enable-sorting
+                    enable-filtering
+                    enable-grouping
+                    enable-column-moving
+                    enable-column-resizing
+                    enable-virtualization
+                    enable-cell-edit-on-focus
+                    enable-row-selection
+                    enable-full-row-selection>
+                </ui-grid-element>
+            }
+        </section>
+    </section>
+
+    <section class="demo-panel state-panel">
+        <div>
+            <h2>Saved State</h2>
+            <p>Use the element's imperative <code>getState()</code> / <code>setState()</code> API on the primary 100K
+                demo.</p>
+        </div>
+        <pre>{{ savedStateJson() }}</pre>
+    </section>
+
+    <section class="demo-panel usage-panel">
+        <div class="panel-header">
+            <div>
+                <h2>Web Component Demo Code</h2>
+                <p>These snippets match the two live examples on this page: the primary grid and the pinning harness.</p>
+            </div>
+        </div>
+        <div class="code-grid">
+            <app-code-block lang="html" [code]="webComponentPrimarySnippet()" />
+            <app-code-block lang="html" [code]="webComponentScenarioSnippet()" />
+        </div>
+    </section>
+
+    <section class="demo-panel">
+        <div class="panel-header">
+            <div>
+                <h2>Scenario Harness</h2>
+                <p>
+                    Same four scenarios as Angular: expandable, tree, templated, and pinning.
+                </p>
+            </div>
+        </div>
+        <div class="scenario-switch" role="tablist" aria-label="Web components demo scenarios">
+            @for (scenario of scenarios; track scenario.value) {
+            <button type="button" class="scenario-button" [class.scenario-button-active]="mode() === scenario.value"
+                [attr.aria-selected]="mode() === scenario.value" (click)="setMode(scenario.value)">
+                {{ scenario.label }}
+            </button>
+            }
+        </div>
+        @if (demoGridActive()) {
+            <ui-grid-element
+                #demoGrid
+                [attr.grid-id]="demoConfig().id"
+                [attr.title]="demoConfig().title"
+                [attr.empty-message]="demoConfig().emptyMessage"
+                [attr.row-height]="demoConfig().rowHeight"
+                [attr.virtualization-threshold]="demoConfig().virtualizationThreshold"
+                [attr.tree-children-field]="demoConfig().treeChildrenField ?? null"
+                [attr.tree-indent]="demoConfig().treeIndent ?? null"
+                [attr.expandable-row-height]="demoConfig().expandableRowHeight ?? null"
+                [attr.column-defs]="demoConfig().columnDefsJson"
+                [attr.data]="demoConfig().dataJson"
+                [attr.enable-sorting]="demoConfig().enableSorting ? '' : null"
+                [attr.enable-filtering]="demoConfig().enableFiltering ? '' : null"
+                [attr.enable-grouping]="demoConfig().enableGrouping ? '' : null"
+                [attr.enable-column-moving]="demoConfig().enableColumnMoving ? '' : null"
+                [attr.enable-column-resizing]="demoConfig().enableColumnResizing ? '' : null"
+                [attr.enable-virtualization]="demoConfig().enableVirtualization ? '' : null"
+                [attr.enable-cell-edit-on-focus]="demoConfig().enableCellEditOnFocus ? '' : null"
+                [attr.enable-pinning]="demoConfig().enablePinning ? '' : null"
+                [attr.enable-expandable]="demoConfig().enableExpandable ? '' : null"
+                [attr.enable-tree-view]="demoConfig().enableTreeView ? '' : null"
+                [attr.show-tree-expand-no-children]="demoConfig().showTreeExpandNoChildren ? '' : null"
+                [attr.enable-pagination]="demoConfig().enablePagination ? '' : null"
+                [attr.enable-pagination-controls]="demoConfig().enablePaginationControls ? '' : null"
+                [attr.pagination-page-size]="demoConfig().paginationPageSize ?? null"
+                [attr.pagination-page-sizes]="demoConfig().paginationPageSizesJson ?? null"
+                [attr.enable-infinite-scroll]="demoConfig().enableInfiniteScroll === undefined ? null : (demoConfig().enableInfiniteScroll ? 'true' : 'false')"
+                [attr.infinite-scroll-up]="demoConfig().infiniteScrollUp ? '' : null"
+                [attr.infinite-scroll-down]="demoConfig().infiniteScrollDown ? '' : null"
+                [attr.infinite-scroll-rows-from-end]="demoConfig().infiniteScrollRowsFromEnd ?? null"
+                [attr.enable-row-selection]="demoConfig().enableRowSelection ? '' : null">
+            </ui-grid-element>
+        }
+    </section>
+</main>

@@ -1,0 +1,76 @@
+// Shell styles
+// Auto-extracted from grid.core.styles.scss
+
+.grid-shell {
+  display: grid;
+  gap: var(--ui-grid-shell-gap);
+}
+
+.grid-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ui-grid-hero-gap);
+  align-items: end;
+  padding: var(--ui-grid-hero-padding-block) 0;
+  color: var(--ui-grid-cell-color);
+}
+
+.eyebrow {
+  margin: 0 0 var(--ui-grid-eyebrow-margin-block-end);
+  text-transform: uppercase;
+  letter-spacing: var(--ui-grid-eyebrow-letter-spacing);
+  font-size: var(--ui-grid-eyebrow-font-size);
+  color: var(--ui-grid-muted-color);
+}
+
+h1 {
+  margin: 0;
+  font-size: var(--ui-grid-hero-title-font-size);
+  line-height: var(--ui-grid-hero-title-line-height);
+}
+
+.deck {
+  max-width: var(--ui-grid-hero-deck-max-width);
+  margin: var(--ui-grid-hero-deck-margin-block-start) 0 0;
+  color: var(--ui-grid-muted-color);
+}
+
+.hero-actions {
+  display: flex;
+  gap: var(--ui-grid-hero-actions-gap);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.action {
+  border: 0;
+  border-radius: var(--ui-grid-action-radius);
+  padding: var(--ui-grid-action-padding-block) var(--ui-grid-action-padding-inline);
+  font: inherit;
+  cursor: pointer;
+}
+
+.action-secondary {
+  background: var(--ui-grid-surface);
+  color: var(--ui-grid-cell-color);
+  border: 1px solid var(--ui-grid-border-color);
+}
+
+.stats-card {
+  min-width: var(--ui-grid-stats-card-min-width);
+  padding: var(--ui-grid-stats-card-padding-block) var(--ui-grid-stats-card-padding-inline);
+  border-radius: var(--ui-grid-radius);
+  background: var(--ui-grid-surface);
+  border: 1px solid var(--ui-grid-border-color);
+  display: grid;
+}
+
+.stats-card span {
+  font-size: var(--ui-grid-stats-card-value-font-size);
+  font-weight: 700;
+}
+
+.stats-card small {
+  color: var(--ui-grid-muted-color);
+}
+

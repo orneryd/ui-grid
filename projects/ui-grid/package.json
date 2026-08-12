@@ -1,0 +1,21 @@
+{
+  "name": "@ornery/ui-grid",
+  "version": "1.0.8",
+  "description": "Angular data-grid component wrapping the vanilla web component",
+  "private": false,
+  "sideEffects": false,
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "dependencies": {
+    "@ornery/ui-grid-core": "1.0.8",
+    "@ornery/ui-grid-vanilla": "1.0.8",
+    "tslib": "^2.8.1"
+  },
+  "peerDependencies": {
+    "@angular/common": ">=17.3.0",
+    "@angular/core": ">=17.3.0",
+    "rxjs": "^6.5.3 || ^7.4.0"
+  }
+}

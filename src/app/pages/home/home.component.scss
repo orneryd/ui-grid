@@ -1,0 +1,512 @@
+.app-shell {
+  --app-ui-grid-status-active-bg: color-mix(in srgb, #2ecc71 18%, var(--grid-surface));
+  --app-ui-grid-status-active-color: color-mix(in srgb, #9cfcc4 78%, var(--grid-text));
+  --app-ui-grid-status-expansion-bg: color-mix(
+    in srgb,
+    var(--grid-accent) 22%,
+    var(--grid-surface)
+  );
+  --app-ui-grid-status-expansion-color: color-mix(
+    in srgb,
+    var(--grid-accent) 78%,
+    var(--grid-text)
+  );
+  --app-ui-grid-status-enterprise-bg: color-mix(in srgb, #20c997 20%, var(--grid-surface));
+  --app-ui-grid-status-enterprise-color: color-mix(in srgb, #6ef7d2 74%, var(--grid-text));
+  --app-ui-grid-status-pilot-bg: color-mix(in srgb, #ffb454 22%, var(--grid-surface));
+  --app-ui-grid-status-pilot-color: color-mix(in srgb, #ffe4a8 82%, var(--grid-text));
+  --ui-grid-status-active-bg: var(--app-ui-grid-status-active-bg);
+  --ui-grid-status-active-color: var(--app-ui-grid-status-active-color);
+  --ui-grid-status-expansion-bg: var(--app-ui-grid-status-expansion-bg);
+  --ui-grid-status-expansion-color: var(--app-ui-grid-status-expansion-color);
+  --ui-grid-status-enterprise-bg: var(--app-ui-grid-status-enterprise-bg);
+  --ui-grid-status-enterprise-color: var(--app-ui-grid-status-enterprise-color);
+  --ui-grid-status-pilot-bg: var(--app-ui-grid-status-pilot-bg);
+  --ui-grid-status-pilot-color: var(--app-ui-grid-status-pilot-color);
+  min-height: 100vh;
+  width: min(1380px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: clamp(1rem, 2vw, 2rem);
+  display: grid;
+  gap: clamp(1.25rem, 2vw, 2rem);
+  color: var(--ink-strong);
+  transition: color 180ms ease;
+}
+
+.demo-header {
+  display: block;
+}
+
+.hero-panel,
+.grid-stage,
+.state-panel,
+.harness-stage {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  border-radius: var(--theme-radius);
+  background: var(--panel-surface);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: var(--theme-card-filter);
+}
+
+.hero-panel {
+  padding: clamp(1rem, 1.5vw, 1.75rem);
+  background:
+    radial-gradient(
+      circle at top right,
+      color-mix(in srgb, var(--teal-strong) 20%, transparent),
+      transparent 32%
+    ),
+    linear-gradient(145deg, var(--panel-surface-strong), var(--panel-surface-alt));
+  display: grid;
+  gap: 1rem;
+}
+
+.hero-copy {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 54rem;
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--teal-strong);
+}
+
+.hero-copy h1 {
+  margin: 0;
+  color: var(--ink-strong);
+  line-height: 1;
+  font-size: clamp(1.8rem, 3.5vw, 2.75rem);
+}
+
+.hero-accent {
+  background: linear-gradient(135deg, var(--teal-strong), var(--grid-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-summary {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--ink-strong) 72%, var(--teal-strong) 28%);
+}
+
+.hero-summary code {
+  padding: 0.16rem 0.42rem;
+  border-radius: calc(var(--theme-switch-radius) + 2px);
+  background: color-mix(in srgb, var(--ink-strong) 8%, transparent);
+  font-size: 0.95em;
+  font-weight: 700;
+  color: var(--ink-strong);
+}
+
+.hero-cta {
+  margin: 0;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cta-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 1rem;
+  border-radius: var(--theme-switch-radius);
+  font-weight: 800;
+  text-decoration: none;
+  font-size: 0.88rem;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.cta-link:hover {
+  transform: translateY(-1px);
+}
+
+.cta-link:not(.cta-link-secondary) {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--teal-strong) 85%, black),
+    color-mix(in srgb, var(--teal-strong) 65%, black)
+  );
+  color: #051017;
+  border: 1px solid color-mix(in srgb, var(--teal-strong) 40%, transparent);
+  box-shadow: 0 12px 24px rgba(8, 39, 61, 0.18);
+}
+
+.cta-link-secondary {
+  background: color-mix(in srgb, var(--teal-strong) 14%, var(--panel-surface-strong));
+  color: var(--teal-strong);
+  border: 1px solid color-mix(in srgb, var(--teal-strong) 25%, transparent);
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.26rem 0.7rem;
+  border-radius: var(--theme-switch-radius);
+  font-size: 0.83rem;
+  font-weight: 700;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.status-pill-active {
+  background: var(--ui-grid-status-active-bg);
+  color: var(--ui-grid-status-active-color);
+}
+
+.status-pill-expansion {
+  background: var(--ui-grid-status-expansion-bg);
+  color: var(--ui-grid-status-expansion-color);
+}
+
+.status-pill-enterprise {
+  background: var(--ui-grid-status-enterprise-bg);
+  color: var(--ui-grid-status-enterprise-color);
+}
+
+.status-pill-pilot {
+  background: var(--ui-grid-status-pilot-bg);
+  color: var(--ui-grid-status-pilot-color);
+}
+
+.grid-stage,
+.state-panel,
+.harness-stage {
+  padding: clamp(0.85rem, 1.5vw, 1.25rem);
+}
+
+.section-switch {
+  display: inline-flex;
+  gap: 0.5rem;
+  padding: 0.35rem;
+  border: 1px solid color-mix(in srgb, var(--ink-strong) 12%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--panel-surface-strong) 84%, white);
+  width: fit-content;
+}
+
+.section-button {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: color-mix(in srgb, var(--ink-strong) 74%, var(--teal-strong) 26%);
+  padding: 0.65rem 1rem;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.section-button-active {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--teal-strong) 85%, black),
+    color-mix(in srgb, var(--teal-strong) 65%, black)
+  );
+  color: #051017;
+}
+
+.angular-demo-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.angular-demo-shell__header {
+  display: grid;
+  gap: 1rem;
+}
+
+.angular-demo-shell__header h2,
+.angular-demo-shell__header p {
+  margin: 0;
+}
+
+.angular-demo-shell__eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal-strong);
+}
+
+.angular-demo-shell__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.angular-demo-shell__stats {
+  display: inline-grid;
+  min-width: 7rem;
+  padding: 0.8rem 1rem;
+  border-radius: calc(var(--theme-radius) - 6px);
+  border: 1px solid color-mix(in srgb, var(--ink-strong) 12%, transparent);
+  background: color-mix(in srgb, var(--panel-surface-strong) 82%, white);
+}
+
+.angular-demo-shell__stats span {
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.angular-demo-shell__stats small {
+  margin-top: 0.25rem;
+  color: color-mix(in srgb, var(--ink-strong) 65%, var(--teal-strong) 35%);
+}
+
+.angular-demo-shell__metrics {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+}
+
+.angular-demo-shell__metrics article {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.9rem 1rem;
+  border-radius: calc(var(--theme-radius) - 6px);
+  border: 1px solid color-mix(in srgb, var(--ink-strong) 12%, transparent);
+  background: color-mix(in srgb, var(--panel-surface-strong) 84%, white);
+}
+
+.angular-demo-shell__metrics strong {
+  font-size: 1.45rem;
+  line-height: 1.1;
+}
+
+.angular-demo-shell__metrics span,
+.angular-demo-shell__toolbar p,
+.angular-demo-shell__header p {
+  color: color-mix(in srgb, var(--ink-strong) 74%, var(--teal-strong) 26%);
+}
+
+.angular-demo-shell__toolbar {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  border-radius: calc(var(--theme-radius) - 6px);
+  border: 1px solid color-mix(in srgb, var(--ink-strong) 12%, transparent);
+  background: color-mix(in srgb, var(--panel-surface-strong) 88%, white);
+}
+
+.angular-demo-shell__toolbar strong {
+  margin-right: 0.4rem;
+}
+
+.angular-demo-shell__toolbar p {
+  margin: 0;
+}
+
+.angular-demo-shell--element {
+  --ui-grid-border-color: color-mix(in srgb, var(--teal-strong) 14%, var(--card-border));
+}
+
+.angular-element-shell__difference {
+  margin-top: 0.65rem;
+}
+
+.angular-element-shell__difference a {
+  color: var(--teal-strong);
+  font-weight: 700;
+}
+
+.angular-element-grid {
+  display: block;
+}
+
+.angular-element-grid--scenario {
+  margin-top: 1rem;
+}
+
+.state-panel {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.code-grid {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.state-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+}
+
+.state-header h2,
+.state-header p {
+  margin: 0;
+}
+
+.state-header p {
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--ink-strong) 74%, var(--teal-strong) 26%);
+}
+
+.state-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.state-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--theme-switch-radius);
+  padding: 0.6rem 1rem;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--teal-strong) 85%, black),
+    color-mix(in srgb, var(--teal-strong) 65%, black)
+  );
+  color: #051017;
+  border: 1px solid color-mix(in srgb, var(--teal-strong) 40%, transparent);
+  box-shadow: 0 12px 24px rgba(8, 39, 61, 0.18);
+}
+
+.state-button:hover {
+  transform: translateY(-1px);
+}
+
+.state-button-secondary {
+  background: color-mix(in srgb, var(--teal-strong) 14%, var(--panel-surface-strong));
+  color: var(--teal-strong);
+  border: 1px solid color-mix(in srgb, var(--teal-strong) 25%, transparent);
+  box-shadow: none;
+}
+
+.state-panel pre {
+  margin: 0;
+  padding: 1rem;
+  border-radius: calc(var(--theme-radius) - 6px);
+  border: 1px solid color-mix(in srgb, var(--ink-strong) 14%, transparent);
+  background: color-mix(in srgb, var(--panel-surface-strong) 82%, black 18%);
+  color: var(--ink-strong);
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  white-space: pre;
+  word-break: normal;
+  overflow-wrap: normal;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+.browser-harness {
+  display: grid;
+  gap: 1rem;
+}
+
+.browser-harness__header {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--ink-strong) 12%, transparent);
+  border-radius: 1rem;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--panel-surface-strong) 84%, white), transparent);
+}
+
+.browser-harness__eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal-strong);
+}
+
+.browser-harness__header h2,
+.browser-harness__header p {
+  margin: 0;
+}
+
+.browser-harness__modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.browser-harness__mode {
+  border: 1px solid color-mix(in srgb, var(--ink-strong) 12%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--panel-surface-strong) 88%, white);
+  color: color-mix(in srgb, var(--ink-strong) 78%, var(--teal-strong) 22%);
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+.browser-harness__mode-active {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--teal-strong) 85%, black),
+    color-mix(in srgb, var(--teal-strong) 65%, black)
+  );
+  color: #051017;
+}
+
+.browser-harness__mode-trading {
+  background: color-mix(in srgb, #22c55e 14%, var(--panel-surface-strong));
+  color: color-mix(in srgb, #22c55e 80%, currentColor);
+  border-color: color-mix(in srgb, #22c55e 30%, transparent);
+}
+
+.browser-harness__mode-trading.browser-harness__mode-active {
+  background: color-mix(in srgb, #22c55e 85%, black);
+  color: #051a0e;
+}
+
+@media (max-width: 960px) {
+  .app-shell {
+    width: min(100%, calc(100% - 1rem));
+    padding: 0.5rem;
+  }
+
+  .hero-copy h1 {
+    max-width: none;
+  }
+
+  .state-header {
+    display: grid;
+  }
+
+  .section-switch {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .section-button {
+    flex: 1 1 0;
+  }
+
+  .state-panel pre {
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+}
