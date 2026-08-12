@@ -33,20 +33,11 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
+      - name: Synchronize release versions
+        run: npm run version:sync -- "${{ inputs.version }}"
+
       - name: Build the Core package
         run: npm run build --prefix projects/ui-grid-core
-
-      - name: Set the package version
-        run: |
-          VERSION="${{ inputs.version }}"
-
-          cd projects/ui-grid-core
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-          if [ "$CURRENT_VERSION" != "$VERSION" ]; then
-            npm version "$VERSION" --no-git-tag-version
-          else
-            echo "Package version already set to $VERSION"
-          fi
 
       - name: Verify publish manifest
         run: |

@@ -19,6 +19,9 @@
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
+  "overrides": {
+    "esbuild": "0.28.1"
+  },
   "devDependencies": {
     "esbuild-sass-plugin": "^3.7.0",
     "sass": "^1.101.0",

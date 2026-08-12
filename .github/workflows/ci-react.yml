@@ -8,6 +8,8 @@ on:
       - '.github/workflows/ci-react.yml'
       - 'projects/ui-grid-react/**'
       - 'projects/ui-grid-core/**'
+      - 'projects/ui-grid-vanilla/**'
+      - 'scripts/materialize-wasm.mjs'
       - 'package.json'
       - 'package-lock.json'
       - 'tsconfig.json'

@@ -33,8 +33,8 @@
     "@babel/core": "8.0.1",
     "esbuild": "0.28.1",
     "piscina": "5.2.0",
-    "undici": "8.5.0",
-    "vite": "8.1.2"
+    "undici": "8.10.0",
+    "vite": "8.2.0"
   },
   "dependencies": {
     "@angular/common": "^22.0.5",

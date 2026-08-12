@@ -6,6 +6,9 @@
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
+  "overrides": {
+    "esbuild": "0.28.1"
+  },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",

@@ -49,20 +49,11 @@ jobs:
           echo "@ornery/ui-grid-core@$VERSION was not available on npm in time" >&2
           exit 1
 
+      - name: Synchronize release versions
+        run: npm run version:sync -- "${{ inputs.version }}"
+
       - name: Build the Vanilla package
         run: npm run build:vanilla
-
-      - name: Set the package version
-        run: |
-          VERSION="${{ inputs.version }}"
-
-          cd projects/ui-grid-vanilla
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-          if [ "$CURRENT_VERSION" != "$VERSION" ]; then
-            npm version "$VERSION" --no-git-tag-version
-          else
-            echo "Package version already set to $VERSION"
-          fi
 
       - name: Verify publish manifest
         run: |
