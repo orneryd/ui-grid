@@ -1,5 +1,41 @@
 # Changelog
 
+## v5.0.0 — 2026-08-12
+
+`v5.0.0` is the first release from the transferred `orneryd/ui-grid` repository. It replaces the legacy AngularJS code on `main` with the modern web suite previously developed in `orneryd/uiGrid`. The final legacy release remains available as `v4.12.7`, and its source is preserved on the `angular-1-archive` branch.
+
+### Breaking
+
+- **Modern web suite replaces the AngularJS package line** — `main` now contains the framework-neutral TypeScript core, Vanilla Web Component, React wrapper, and Angular wrapper. Applications using the legacy AngularJS grid must remain on `v4.12.7` or migrate to the modern package APIs.
+- **Web packages move to major version 5** — `@ornery/ui-grid`, `@ornery/ui-grid-core`, `@ornery/ui-grid-react`, and `@ornery/ui-grid-vanilla` are released together at `5.0.0`. Internal package dependencies are synchronized to the same version during publishing.
+- **Rust and native development moved to `orneryd/uiGrid`** — Rust crates, the WASM implementation, egui, C/C++, and native adapters are no longer built or documented in this repository. Their source, releases, and documentation continue in the [Rust project](https://github.com/orneryd/uiGrid).
+
+### Added
+
+- **Modern framework packages** — added the TypeScript core, `<ui-grid-element>` Vanilla renderer, React portal wrapper, and Angular template wrapper as the supported web delivery targets.
+- **Published WASM runtime dependency** — the web suite now consumes the pinned public `@ornery/ui-grid-wasm@1.0.8` package produced by `orneryd/uiGrid`. A Node-only materialization step copies its bundler and browser exports into the existing runtime paths without requiring Rust, Cargo, or `wasm-pack`.
+- **Web-focused automation** — added independent Angular, React, and Vanilla CI workflows; GitHub Pages deployment for the demo and documentation site; and npm publishing workflows for each web package.
+- **Coordinated suite publishing** — pushing a `v*` tag resolves the public version, synchronizes all manifests and lockfiles, and publishes in dependency order: Core → Vanilla → React and Angular. Registry availability checks and already-published guards make retries safe.
+
+### Changed
+
+- **Repository ownership and URLs** — source, badges, documentation links, CI, Pages, and npm metadata now target `orneryd/ui-grid`. The live documentation site is available at <https://orneryd.github.io/ui-grid/>.
+- **Web-only documentation** — removed Rust-, egui-, C ABI-, and LVGL-specific guides and demo routes. Web documentation links to `orneryd/uiGrid` for implementation and native-adapter details.
+- **Node/npm release toolchain** — CI and publishing use Node 26.4.0 and npm 11.17.0. Local development requires a Node version supported by Angular 22; Node 22.23.2 or newer is recommended.
+- **Public npm resolution** — all lockfiles resolve exclusively through `registry.npmjs.org`, and repository npm configuration prevents private corporate registry URLs from leaking into committed lockfiles. `NPM_TOKEN` is used only by publish steps; public installs require no credentials.
+- **Release-safe package metadata** — version synchronization now updates every web manifest, lockfile, internal dependency, and peer dependency before packages are built, ensuring generated Angular metadata and published tarballs reference the matching `5.0.0` suite.
+
+### Security
+
+- **Dependency advisory cleanup** — refreshed root and package-local lockfiles to resolve all reported Dependabot advisories, including Angular SSR, Immutable.js, PostCSS, Vite, `ws`, `undici`, Hono, `@hono/node-server`, `tar`, `brace-expansion`, `fast-uri`, and `ip-address` findings.
+- **Patched build tooling** — package-level overrides pin esbuild `0.28.1`, while root overrides pin patched releases of esbuild, Vite, undici, Babel, and Piscina. All four independently audited lockfiles report zero known vulnerabilities at release time.
+
+### Fixed
+
+- **Portable clean installs** — removed private JFrog artifact URLs that caused `npm ci --legacy-peer-deps` to fail with `E401` on GitHub-hosted runners. Clean unauthenticated installs now use the public npm registry.
+- **GitHub Pages deployment** — configured Pages to deploy from GitHub Actions with the `/ui-grid/` base path and the standard `github-pages` environment.
+- **Release build ordering** — publishing jobs wait for required internal packages to appear on npm before building dependents, preventing React, Vanilla, or Angular releases from resolving stale package versions.
+
 ## v1.0.8 — 2026-07-01
 
 ### Changed
