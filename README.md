@@ -5,11 +5,13 @@
 
 #### [Discord Community](https://discord.gg/Baz4w8ZWN)
 
-# UI Grid — Remastered
+# UI Grid — 5.x
 
 **The modern web data grid for Angular, React, and Web Components. Every feature is free and open source.**
 
 Rust, WASM implementation, egui, and native adapter source and documentation live in [orneryd/uiGrid](https://github.com/orneryd/uiGrid).
+
+v5.x + is in use by my other project, [NornicDB](https://github.com/orneryd/NornicDB), in the web ui components (It's a high-performance golang graph+vector database if you want to take a look)
 
 A from-scratch rewrite of the original by the original author. Same `gridOptions` / `columnDefs` / `onRegisterApi` api surface, modern Angular signals internals, and zero legacy baggage.
 
