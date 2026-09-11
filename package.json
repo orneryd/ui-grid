@@ -42,7 +42,7 @@
     "@angular/core": "^22.0.5",
     "@angular/forms": "^22.0.5",
     "@angular/platform-browser": "^22.0.5",
-    "@angular/platform-server": "^22.0.5",
+    "@angular/platform-server": "^22.1.4",
     "@angular/router": "^22.0.5",
     "@ornery/ui-grid-core": "file:projects/ui-grid-core",
     "@ornery/ui-grid-react": "file:projects/ui-grid-react",
