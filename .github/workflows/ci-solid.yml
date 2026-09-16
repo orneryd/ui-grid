@@ -1,0 +1,57 @@
+name: CI Solid
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/ci-solid.yml'
+      - '.github/workflows/publish-solid.yml'
+      - 'projects/ui-grid-solid/**'
+      - 'projects/ui-grid-core/**'
+      - 'projects/ui-grid-vanilla/**'
+      - 'scripts/build-solid.mjs'
+      - 'scripts/sync-versions.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/ci-solid.yml'
+      - '.github/workflows/publish-solid.yml'
+      - 'projects/ui-grid-solid/**'
+      - 'projects/ui-grid-core/**'
+      - 'projects/ui-grid-vanilla/**'
+      - 'scripts/build-solid.mjs'
+      - 'scripts/sync-versions.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 26.4.0
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            projects/ui-grid-solid/package-lock.json
+
+      - name: Install repository dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Install Solid adapter dependencies
+        run: npm ci --prefix projects/ui-grid-solid
+
+      - name: Build Solid adapter and internal dependencies
+        run: npm run build:solid
+
+      - name: Run Solid integration, SSR, hydration, package, and example checks
+        run: npm run test:solid

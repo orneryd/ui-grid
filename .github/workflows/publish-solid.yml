@@ -1,0 +1,76 @@
+name: Publish Solid package
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch, tag, or commit to publish
+        required: true
+        default: main
+      version:
+        description: Public version to publish
+        required: true
+        default: 0.1.0
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 26.4.0
+          registry-url: https://registry.npmjs.org
+          scope: '@ornery'
+          always-auth: true
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            projects/ui-grid-solid/package-lock.json
+
+      - name: Install repository dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Install Solid adapter dependencies
+        run: npm ci --prefix projects/ui-grid-solid
+
+      - name: Verify internal packages are published
+        run: |
+          VERSION="${{ inputs.version }}"
+          npm view "@ornery/ui-grid-core@$VERSION" version
+          npm view "@ornery/ui-grid-vanilla@$VERSION" version
+
+      - name: Build and test the Solid package
+        run: |
+          npm run build:solid
+          npm run test:solid
+
+      - name: Set and verify the publish manifest
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const path = './projects/ui-grid-solid/package.json';
+          const pkg = require(path);
+          pkg.version = process.env.VERSION;
+          for (const name of ['@ornery/ui-grid-core', '@ornery/ui-grid-vanilla']) {
+            pkg.peerDependencies[name] = process.env.VERSION;
+          }
+          fs.writeFileSync(path, `${JSON.stringify(pkg, null, 2)}\n`);
+          if (pkg.version !== process.env.VERSION) throw new Error('Package version was not updated');
+          for (const name of ['@ornery/ui-grid-core', '@ornery/ui-grid-vanilla']) {
+            if (pkg.peerDependencies[name] !== process.env.VERSION) throw new Error(`Invalid ${name} peer`);
+          }
+          NODE
+
+      - name: Publish to npm
+        run: npm publish ./projects/ui-grid-solid --access public --registry=https://registry.npmjs.org
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

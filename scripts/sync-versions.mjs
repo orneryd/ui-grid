@@ -16,6 +16,7 @@ const packageFiles = [
   'projects/ui-grid/package.json',
   'projects/ui-grid-core/package.json',
   'projects/ui-grid-react/package.json',
+  'projects/ui-grid-solid/package.json',
   'projects/ui-grid-vanilla/package.json',
 ];
 
@@ -24,6 +25,7 @@ const packageLockFiles = [
   'projects/ui-grid/package-lock.json',
   'projects/ui-grid-core/package-lock.json',
   'projects/ui-grid-react/package-lock.json',
+  'projects/ui-grid-solid/package-lock.json',
   'projects/ui-grid-vanilla/package-lock.json',
 ];
 
@@ -31,6 +33,7 @@ const internalPackages = [
   '@ornery/ui-grid',
   '@ornery/ui-grid-core',
   '@ornery/ui-grid-react',
+  '@ornery/ui-grid-solid',
   '@ornery/ui-grid-vanilla',
 ];
 

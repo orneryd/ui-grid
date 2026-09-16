@@ -3,6 +3,9 @@
   "version": "5.0.1",
   "scripts": {
     "ng": "ng",
+    "build:solid": "node scripts/build-solid.mjs",
+    "test:solid": "npm test --prefix projects/ui-grid-solid && npm run test:ssr --prefix projects/ui-grid-solid && npm run test:hydration --prefix projects/ui-grid-solid && npm run test:package --prefix projects/ui-grid-solid && npm run test:example --prefix projects/ui-grid-solid",
+    "start:solid": "cd projects/ui-grid-solid && vite demo --config vite.config.ts",
     "clean:start-cache": "rm -rf .angular/cache node_modules/.vite projects/ui-grid-vanilla/node_modules/.vite",
     "start": "npm run clean:start-cache && npm run prepare:wasm && npm run build:core && npm run build --prefix projects/ui-grid-vanilla && npm run build --prefix projects/ui-grid-react && (trap 'kill 0' INT TERM; npm run watch --prefix projects/ui-grid-vanilla & ng serve)",
     "start:react": "npm run start --prefix projects/ui-grid-react",

@@ -1,0 +1,44 @@
+{
+  "name": "@ornery/ui-grid-solid",
+  "version": "5.0.1",
+  "description": "SolidJS adapter for uiGrid's vanilla renderer",
+  "type": "module",
+  "files": ["dist", "src/UiGrid.tsx", "src/index.ts", "src/cellRenderers.ts", "src/headerRenderers.ts", "src/detailRenderer.ts", "src/cellEditors.ts"],
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "solid": "./src/index.ts",
+      "browser": "./dist/index.js",
+      "default": "./dist/server.js"
+    }
+  },
+  "publishConfig": { "access": "public" },
+  "peerDependencies": {
+    "@ornery/ui-grid-core": "5.0.1",
+    "@ornery/ui-grid-vanilla": "5.0.1",
+    "solid-js": ">=2.0.0-rc.4 <3",
+    "@solidjs/web": ">=2.0.0-rc.4 <3"
+  },
+  "devDependencies": {
+    "@ornery/ui-grid-core": "file:../ui-grid-core",
+    "@ornery/ui-grid-vanilla": "file:../ui-grid-vanilla",
+    "solid-js": "2.0.0-rc.4",
+    "@solidjs/web": "2.0.0-rc.4",
+    "vite-plugin-solid": "3.0.0-next.27",
+    "vite": "^8.2.0",
+    "vitest": "^4.1.9",
+    "typescript": "~6.0.3",
+    "happy-dom": "^20.0.0"
+  },
+  "scripts": {
+    "build": "vite build && vite build --ssr src/index.ts && tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "test:ssr": "node --test scripts/ssr.test.mjs",
+    "test:hydration": "node --conditions=browser --test scripts/hydration.test.mjs",
+    "test:package": "node scripts/package-consumer.test.mjs",
+    "test:example": "tsc -p examples/solid-start/tsconfig.json",
+    "start": "vite demo --config vite.config.ts"
+  }
+}

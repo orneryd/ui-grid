@@ -1,6 +1,6 @@
 # UI Grid — Agent Instructions
 
-Web data grid with a framework-neutral TypeScript core, Angular, React, and a vanilla web component. The compiled Rust/WASM core is consumed from `@ornery/ui-grid-wasm`.
+Web data grid with a framework-neutral TypeScript core, Angular, React, SolidJS, and a vanilla web component. The compiled Rust/WASM core is consumed from `@ornery/ui-grid-wasm`.
 
 ## Architecture
 
@@ -8,6 +8,7 @@ Web data grid with a framework-neutral TypeScript core, Angular, React, and a va
 projects/ui-grid-core/     Pure TypeScript engine (pipeline, sorting, filtering, grouping, etc.)
 projects/ui-grid-vanilla/  <ui-grid-element> custom element — the rendering engine
 projects/ui-grid-react/    React wrapper (mounts vanilla element, projects via portals)
+projects/ui-grid-solid/    SolidJS wrapper (mounts vanilla element, projects via Solid roots)
 projects/ui-grid/          Angular wrapper (mounts vanilla element, projects via ng-template)
 src/app/                   Angular demo/docs application
 ```
@@ -25,6 +26,8 @@ npm run build:pages          # GitHub Pages production build
 npm test                     # All test suites
 npm run test:angular         # Angular tests (vitest via ng)
 npm run test:react           # React tests (vitest)
+npm run build:solid          # Build core + vanilla + SolidJS adapter
+npm run test:solid           # SolidJS, SSR, hydration, package, and example tests
 npm run test:vanilla         # Vanilla tests (vitest)
 npm run prepare:wasm         # Materialize the pinned WASM npm package into dist/
 ```
@@ -34,7 +37,8 @@ npm run prepare:wasm         # Materialize the pinned WASM npm package into dist
 1. `@ornery/ui-grid-core` — no internal deps
 2. `@ornery/ui-grid-vanilla` — depends on core
 3. `@ornery/ui-grid-react` — depends on core + vanilla
-4. `@ornery/ui-grid` (Angular) — depends on core + vanilla
+4. `@ornery/ui-grid-solid` — depends on core + vanilla
+5. `@ornery/ui-grid` (Angular) — depends on core + vanilla
 
 Always build in this order. The `build:library` script handles this automatically.
 

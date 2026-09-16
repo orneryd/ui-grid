@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "@solidjs/web",
+    "paths": {
+      "@ornery/ui-grid-solid": ["../../src/index.ts"],
+      "@ornery/ui-grid-core": ["../../../ui-grid-core/src/index.ts"],
+      "@ornery/ui-grid-vanilla": ["../../../ui-grid-vanilla/src/index.ts"]
+    }
+  },
+  "include": ["src", "../../../ui-grid-vanilla/src/scss.d.ts"]
+}
