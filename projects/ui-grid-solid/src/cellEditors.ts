@@ -47,7 +47,8 @@ export function createCellEditorBridge(
   }
 
   function rowId(row: GridRecord): string {
-    return options.rowIdentity?.(row, options.data.indexOf(row)) ?? String(row['id']);
+    const index = options.data.indexOf(row);
+    return options.rowIdentity?.(row, index) ?? `${options.id}-${index}`;
   }
 
   function contextFor(row: GridRecord, columnName: string): GridCellTemplateContext | undefined {
