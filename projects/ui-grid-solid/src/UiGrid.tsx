@@ -108,11 +108,11 @@ export function UiGrid(props: UiGridProps): JSX.Element {
 
   const registerApi = (api: unknown) => untrack(() => {
     const source = api as UiGridApi;
-    cells?.registerApi(source);
-    headers?.registerApi(source);
-    details?.registerApi(source);
-    editors?.registerApi(source);
     const wrapped = wrapApi(source);
+    cells?.registerApi(wrapped);
+    headers?.registerApi(wrapped);
+    details?.registerApi(wrapped);
+    editors?.registerApi(wrapped);
     props.onRegisterApi?.(wrapped);
     props.options.onRegisterApi?.(wrapped);
   });

@@ -309,6 +309,28 @@ describe('UiGrid', () => {
     expect(api!.core.getVisibleRows().map((row) => row.entity['name'])).toEqual(['Alice', 'Bob']);
   });
 
+  it('refreshes projected cell contexts after sorting through a Solid header', async () => {
+    const data = [{ id: 1, name: 'Bob' }, { id: 2, name: 'Alice' }];
+    const { host } = mount(() => <UiGrid options={{
+      ...initial, data, enableSorting: true,
+    }} headerRenderers={{
+      name: (context) => <button>{context.value}</button>,
+    }} cellRenderers={{
+      name: (context) => <span>{String(context.value)}:{context.rowIndex}</span>,
+    }} />);
+    await vi.waitFor(() => {
+      expect(host.querySelector('[slot="cell-name-1"]')?.textContent).toBe('Bob:0');
+      expect(host.querySelector('[slot="cell-name-2"]')?.textContent).toBe('Alice:1');
+    }, { timeout: 10000 });
+
+    host.querySelector<HTMLButtonElement>('[slot="header-name"] button')!.click();
+
+    await vi.waitFor(() => {
+      expect(host.querySelector('[slot="cell-name-1"]')?.textContent).toBe('Bob:1');
+      expect(host.querySelector('[slot="cell-name-2"]')?.textContent).toBe('Alice:0');
+    });
+  });
+
   it('keeps header slots aligned across API moves and disposes hidden headers', async () => {
     let api: UiGridApi | undefined;
     let alive = 0;
