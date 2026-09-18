@@ -6,6 +6,7 @@ import {
   activeGridEngineBackend,
   buildGridRows,
   clearRustWasmGridEngine,
+  clearWasmCoreModule,
 } from '@ornery/ui-grid-core';
 import {
   defineStandaloneUiGridElement,
@@ -40,6 +41,7 @@ describe('mountVanillaUiGrid integration', () => {
 
   afterEach(() => {
     clearRustWasmGridEngine();
+    clearWasmCoreModule();
     document.body.innerHTML = '';
   });
 
@@ -181,6 +183,7 @@ describe('mountVanillaUiGrid integration', () => {
 
   it('lazy-loads the wasm engine once and refreshes through it when ready', async () => {
     const enableSpy = vi.spyOn(core, 'enableUiGridWasmEngine').mockImplementation(async () => {
+      core.registerWasmCoreModule({});
       core.registerRustWasmGridEngine({
         buildPipeline(context) {
           return {

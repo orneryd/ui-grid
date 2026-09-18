@@ -1,4 +1,4 @@
-import type { GridOptions } from '@ornery/ui-grid-core';
+import { registerUiGridWasmEngineFromModule, type GridOptions } from '@ornery/ui-grid-core';
 
 import {
   defineStandaloneUiGridElement,
@@ -41,6 +41,7 @@ export async function registerVanillaUiGridRustModule(
   input?: unknown,
 ): Promise<void> {
   await module.default(input);
+  registerUiGridWasmEngineFromModule(module);
 }
 
 export async function mountVanillaUiGrid(

@@ -38,6 +38,10 @@ export function setUiGridWasmAssetBase(assetBase: string | URL | null): void {
   configuredUiGridWasmAssetBase = assetBase ? normalizeUiGridWasmAssetBase(assetBase) : null;
 }
 
+export function getConfiguredUiGridWasmAssetBase(): string | null {
+  return configuredUiGridWasmAssetBase;
+}
+
 export function getUiGridWasmAssetBase(): string {
   return detectDefaultUiGridWasmAssetBase();
 }

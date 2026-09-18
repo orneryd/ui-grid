@@ -27,16 +27,6 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              },
-              {
-                "glob": "**/*",
-                "input": "dist/ui-grid-wasm",
-                "output": "dist/ui-grid-wasm"
-              },
-              {
-                "glob": "**/*",
-                "input": "dist/ui-grid-wasm-web",
-                "output": "dist/ui-grid-wasm-web"
               }
             ],
             "styles": ["src/styles.scss"]
@@ -76,16 +66,6 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              },
-              {
-                "glob": "**/*",
-                "input": "dist/ui-grid-wasm",
-                "output": "dist/ui-grid-wasm"
-              },
-              {
-                "glob": "**/*",
-                "input": "dist/ui-grid-wasm-web",
-                "output": "dist/ui-grid-wasm-web"
               }
             ],
             "styles": ["src/styles.scss"]

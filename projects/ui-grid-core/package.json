@@ -19,6 +19,9 @@
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
+  "dependencies": {
+    "@ornery/ui-grid-wasm": "1.0.8"
+  },
   "overrides": {
     "esbuild": "0.28.1"
   },

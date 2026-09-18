@@ -1,5 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { activeGridEngineBackend, clearRustWasmGridEngine, defaultGridEngine } from '@ornery/ui-grid-core';
+import {
+  activeGridEngineBackend,
+  clearRustWasmGridEngine,
+  clearWasmCoreModule,
+  defaultGridEngine,
+  isWasmReady,
+} from '@ornery/ui-grid-core';
 import { registerReactUiGridWasmEngineFromModule } from './rustWasmGridEngine';
 import { SORT_DIRECTIONS } from '@ornery/ui-grid-core';
 import type { BuildGridPipelineContext } from '@ornery/ui-grid-core';
@@ -31,6 +37,7 @@ function createContext(): BuildGridPipelineContext {
 describe('rustWasmGridEngine', () => {
   beforeEach(() => {
     clearRustWasmGridEngine();
+    clearWasmCoreModule();
   });
 
   it('does not install a wasm pipeline engine through the React helper', () => {
@@ -43,5 +50,6 @@ describe('rustWasmGridEngine', () => {
       'react-engine-spec-1',
     ]);
     expect(activeGridEngineBackend()).toBe('typescript');
+    expect(isWasmReady()).toBe(true);
   });
 });

@@ -1,8 +1,9 @@
-import { initWasmCore } from './grid.core';
+import { initWasmCore, registerWasmCoreModule } from './grid.core';
 
 type UiGridWasmModule = object;
 
-export function registerUiGridWasmEngineFromModule(_module: UiGridWasmModule): void {
+export function registerUiGridWasmEngineFromModule(module: UiGridWasmModule): void {
+  registerWasmCoreModule(module);
 }
 
 export async function enableUiGridWasmEngine(): Promise<void> {

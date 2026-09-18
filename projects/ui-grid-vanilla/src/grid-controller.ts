@@ -1,6 +1,5 @@
 import {
   SORT_DIRECTIONS,
-  activeGridEngineBackend,
   beginGridCellEditCommand,
   buildGridRows,
   buildGridCellContext,
@@ -17,6 +16,7 @@ import {
   expandAllGridRowsCommand,
   expandAllGridTreeRowsCommand,
   enableUiGridWasmEngine,
+  getWasmCoreInitializationState,
   findGridRowById as coreFindGridRowById,
   formatGridCellDisplayValue,
   getCellValue,
@@ -346,7 +346,6 @@ export class VanillaGridController {
   private visibleColumns: GridColumnDef[] = [];
   private apiRegistered = false;
   private disposed = false;
-  private wasmEngineInitRequested = false;
 
   private readonly subscribers = new Set<GridControllerSubscriber>();
 
@@ -1905,20 +1904,17 @@ export class VanillaGridController {
   }
 
   private maybeEnableWasmEngine(): void {
-    if (this.wasmEngineInitRequested || activeGridEngineBackend() === 'rust-wasm') {
+    if (getWasmCoreInitializationState() !== 'idle') {
       return;
     }
 
-    this.wasmEngineInitRequested = true;
     void enableUiGridWasmEngine()
       .then(() => {
         if (!this.disposed) {
           this.refresh();
         }
       })
-      .catch(() => {
-        this.wasmEngineInitRequested = false;
-      });
+      .catch(() => undefined);
   }
 
   private emit(): void {

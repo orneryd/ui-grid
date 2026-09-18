@@ -3,7 +3,7 @@
 - [ ] 1.1 Add a regression test that exercises automatic initialization from a
   consumer-style document base without a `dist/ui-grid-wasm-web` asset tree and
   verify the current loader fails for the reason reported in issue #7381.
-- [ ] 1.2 Add `@ornery/ui-grid-wasm` as a pinned runtime dependency of
+- [x] 1.2 Add `@ornery/ui-grid-wasm` as a pinned runtime dependency of
   `@ornery/ui-grid-core`, update the relevant lockfiles, and verify packed core
   metadata installs the dependency transitively.
 - [ ] 1.3 Add a release-package assertion that the compatibility `./wasm` export
@@ -12,16 +12,16 @@
 
 ## 2. Core WASM initialization lifecycle
 
-- [ ] 2.1 Replace default document-relative loading with a non-ignored dynamic
+- [x] 2.1 Replace default document-relative loading with a non-ignored dynamic
   import of the WASM package's bundler entry and verify a core loader test reaches
   ready state without requesting `dist/ui-grid-wasm-web`.
-- [ ] 2.2 Preserve explicit asset-base loading through the web-target module and
+- [x] 2.2 Preserve explicit asset-base loading through the web-target module and
   binary initializer, and verify configure, normalize, clear, and nested-base
   cases in unit tests.
-- [ ] 2.3 Centralize module installation, single-flight initialization, and
+- [x] 2.3 Centralize module installation, single-flight initialization, and
   terminal failure state in core; verify concurrent calls share one attempt and
   ordinary calls after failure do not start another request.
-- [ ] 2.4 Implement preinitialized-module registration and failed-state recovery;
+- [x] 2.4 Implement preinitialized-module registration and failed-state recovery;
   verify registration prevents network loading and new explicit configuration
   permits recovery after failure.
 - [ ] 2.5 Verify pending and failed initialization continue to execute
@@ -30,10 +30,10 @@
 
 ## 3. Framework integration
 
-- [ ] 3.1 Update vanilla automatic enablement to use the shared core lifecycle
+- [x] 3.1 Update vanilla automatic enablement to use the shared core lifecycle
   without refresh-driven retry loops and verify multiple mounted grids trigger a
   single initialization attempt.
-- [ ] 3.2 Replace the React-specific hard-coded loader and no-op registration
+- [x] 3.2 Replace the React-specific hard-coded loader and no-op registration
   helper with delegation to core, and verify its enablement, registration, and
   SSR tests pass.
 - [ ] 3.3 Remove demo-only WASM asset copying from the Angular application build

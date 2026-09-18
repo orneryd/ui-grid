@@ -31,7 +31,11 @@ import * as tsSorting from './grid.core.sorting';
 import * as tsState from './grid.core.state';
 import * as tsTree from './grid.core.tree';
 import * as tsViewmodel from './grid.core.viewmodel';
-import { getUiGridWasmBinaryPath, getUiGridWasmModulePath } from './ui-grid.wasm-path';
+import {
+  getConfiguredUiGridWasmAssetBase,
+  getUiGridWasmBinaryPath,
+  getUiGridWasmModulePath,
+} from './ui-grid.wasm-path';
 import {
   GridRow,
   type GridCellPosition,
@@ -299,7 +303,7 @@ type RowLabelsInput = {
   labels: Parameters<typeof tsViewmodel.gridExpandToggleLabelForRow>[1];
 };
 type UiGridWasmCoreModule = {
-  default(input?: string | URL | Request): Promise<unknown>;
+  default?(input?: string | URL | Request): Promise<unknown>;
   calculate_virtual_window_js(request: CalculateVirtualWindowRequest): CalculateVirtualWindowResult;
   get_effective_page_size_js(
     input: GetEffectivePageSizeInput,
@@ -543,6 +547,9 @@ const defaultWasmSerializationAuditOptions: WasmSerializationAuditOptions = {
 
 let wasmCore: UiGridWasmCoreModule | null = null;
 let wasmInitPromise: Promise<boolean> | null = null;
+let wasmInitSource: string | null = null;
+let wasmInitGeneration = 0;
+let wasmInitState: WasmCoreInitializationState = 'idle';
 let auditedWasmCore: UiGridWasmCoreModule | null = null;
 let auditedWasmCoreSource: UiGridWasmCoreModule | null = null;
 let wasmSerializationAuditOptions: WasmSerializationAuditOptions = {
@@ -550,29 +557,93 @@ let wasmSerializationAuditOptions: WasmSerializationAuditOptions = {
 };
 const warnedWasmAuditKeys = new Set<string>();
 
+export type WasmCoreInitializationState = 'idle' | 'loading' | 'ready' | 'failed';
+
+function currentWasmInitSource(): string {
+  return getConfiguredUiGridWasmAssetBase() ?? 'package';
+}
+
+async function loadWasmCoreModule(): Promise<UiGridWasmCoreModule> {
+  if (!getConfiguredUiGridWasmAssetBase()) {
+    return import('@ornery/ui-grid-wasm/bundler') as Promise<UiGridWasmCoreModule>;
+  }
+
+  const module = (await import(
+    /* @vite-ignore */ getUiGridWasmModulePath()
+  )) as UiGridWasmCoreModule;
+  if (typeof module.default !== 'function') {
+    throw new Error('UI Grid WASM web module does not export an initializer');
+  }
+  await module.default(getUiGridWasmBinaryPath());
+  return module;
+}
+
+export function registerWasmCoreModule(module: object): void {
+  wasmInitGeneration += 1;
+  wasmCore = module as UiGridWasmCoreModule;
+  auditedWasmCore = null;
+  auditedWasmCoreSource = null;
+  wasmInitSource = 'registered';
+  wasmInitState = 'ready';
+  wasmInitPromise = Promise.resolve(true);
+}
+
+export function clearWasmCoreModule(): void {
+  wasmInitGeneration += 1;
+  wasmCore = null;
+  auditedWasmCore = null;
+  auditedWasmCoreSource = null;
+  wasmInitPromise = null;
+  wasmInitSource = null;
+  wasmInitState = 'idle';
+}
+
 export async function initWasmCore(): Promise<boolean> {
   if (wasmCore) {
     return true;
   }
 
-  if (!wasmInitPromise) {
-    wasmInitPromise = import(/* @vite-ignore */ getUiGridWasmModulePath())
-      .then(async (module) => {
-        await module.default(getUiGridWasmBinaryPath());
-        wasmCore = module;
-        return true;
-      })
-      .catch(() => {
-        wasmInitPromise = null;
-        return false;
-      });
+  const source = currentWasmInitSource();
+  if (wasmInitPromise && wasmInitSource === source) {
+    return wasmInitPromise;
   }
+
+  const generation = ++wasmInitGeneration;
+  wasmInitSource = source;
+  wasmInitState = 'loading';
+  wasmInitPromise = loadWasmCoreModule()
+    .then((module) => {
+      if (generation !== wasmInitGeneration) {
+        return wasmCore !== null;
+      }
+      wasmCore = module;
+      auditedWasmCore = null;
+      auditedWasmCoreSource = null;
+      wasmInitState = 'ready';
+      return true;
+    })
+    .catch(() => {
+      if (generation === wasmInitGeneration) {
+        wasmInitState = 'failed';
+      }
+      return false;
+    });
 
   return wasmInitPromise;
 }
 
 export function isWasmReady(): boolean {
   return wasmCore !== null;
+}
+
+export function getWasmCoreInitializationState(): WasmCoreInitializationState {
+  if (wasmCore) {
+    return 'ready';
+  }
+  if (wasmInitSource !== currentWasmInitSource()) {
+    return 'idle';
+  }
+  return wasmInitState;
 }
 
 export function configureWasmSerializationAudit(

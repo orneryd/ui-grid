@@ -1,14 +1,14 @@
-const uiGridWasmModulePath = '../../../dist/ui-grid-wasm-web/ui_grid_wasm.js';
-const uiGridWasmBinaryPath = '/dist/ui-grid-wasm-web/ui_grid_wasm_bg.wasm';
+import {
+  enableUiGridWasmEngine,
+  registerUiGridWasmEngineFromModule,
+} from '@ornery/ui-grid-core';
 
-type UiGridWasmModule = {
-  default(input?: unknown): Promise<unknown>;
-};
+type UiGridWasmModule = object;
 
-export function registerReactUiGridWasmEngineFromModule(_module: UiGridWasmModule): void {
+export function registerReactUiGridWasmEngineFromModule(module: UiGridWasmModule): void {
+  registerUiGridWasmEngineFromModule(module);
 }
 
 export async function enableReactUiGridWasmEngine(): Promise<void> {
-  const module = await import(/* @vite-ignore */ uiGridWasmModulePath);
-  await module.default(uiGridWasmBinaryPath);
+  await enableUiGridWasmEngine();
 }

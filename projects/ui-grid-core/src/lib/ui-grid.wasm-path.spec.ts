@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import {
   getUiGridWasmAssetBase,
   getUiGridWasmBinaryPath,
+  getConfiguredUiGridWasmAssetBase,
   getUiGridWasmModulePath,
   setUiGridWasmAssetBase,
 } from './ui-grid.wasm-path';
@@ -29,6 +30,7 @@ describe('ui-grid.wasm-path', () => {
     });
 
     expect(getUiGridWasmAssetBase()).toBe('https://example.com/uiGrid/');
+    expect(getConfiguredUiGridWasmAssetBase()).toBeNull();
     expect(getUiGridWasmModulePath()).toBe('https://example.com/uiGrid/dist/ui-grid-wasm-web/ui_grid_wasm.js');
     expect(getUiGridWasmBinaryPath()).toBe('https://example.com/uiGrid/dist/ui-grid-wasm-web/ui_grid_wasm_bg.wasm');
   });
@@ -37,6 +39,7 @@ describe('ui-grid.wasm-path', () => {
     setUiGridWasmAssetBase('https://cdn.example.com/assets/grid');
 
     expect(getUiGridWasmAssetBase()).toBe('https://cdn.example.com/assets/grid/');
+    expect(getConfiguredUiGridWasmAssetBase()).toBe('https://cdn.example.com/assets/grid/');
     expect(getUiGridWasmModulePath()).toBe('https://cdn.example.com/assets/grid/dist/ui-grid-wasm-web/ui_grid_wasm.js');
     expect(getUiGridWasmBinaryPath()).toBe('https://cdn.example.com/assets/grid/dist/ui-grid-wasm-web/ui_grid_wasm_bg.wasm');
   });

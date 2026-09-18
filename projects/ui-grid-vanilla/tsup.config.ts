@@ -18,6 +18,7 @@ export default defineConfig([
     platform: 'browser',
     target: 'es2022',
     outDir: 'dist/browser',
+    external: ['@ornery/ui-grid-wasm/bundler'],
     outExtension: () => ({ js: '.js' }),
     tsconfig: './tsconfig.json',
     noExternal: ['@ornery/ui-grid-core'],

@@ -6,7 +6,12 @@ import {
   defaultGridEngine,
   registerRustWasmGridEngine,
 } from './ui-grid.engine';
-import { configureWasmSerializationAudit } from './grid.core';
+import {
+  clearWasmCoreModule,
+  configureWasmSerializationAudit,
+  getWasmCoreInitializationState,
+  isWasmReady,
+} from './grid.core';
 import { registerUiGridWasmEngineFromModule } from './ui-grid.engine.wasm';
 import { SORT_DIRECTIONS } from './grid.constants';
 import type { BuildGridPipelineContext, PipelineResult } from './grid.core';
@@ -41,6 +46,7 @@ function createContext(): BuildGridPipelineContext {
 describe('ui-grid.engine', () => {
   afterEach(() => {
     clearRustWasmGridEngine();
+    clearWasmCoreModule();
     configureWasmSerializationAudit({
       enabled: false,
       sizeThresholdBytes: 8_192,
@@ -85,6 +91,8 @@ describe('ui-grid.engine', () => {
     const result = defaultGridEngine.buildPipeline(createContext());
 
     expect(activeGridEngineBackend()).toBe('typescript');
+    expect(isWasmReady()).toBe(true);
+    expect(getWasmCoreInitializationState()).toBe('ready');
     expect(result.visibleRows.map((row) => row.id)).toEqual(['engine-spec-0', 'engine-spec-1']);
   });
 });
