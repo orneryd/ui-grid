@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import solid from 'vite-plugin-solid';
 
 export const config = defineConfig(({ isSsrBuild }) => ({
-  plugins: [solid({ ssr: true })],
+  plugins: [solid({ ssr: isSsrBuild })],
   build: {
     emptyOutDir: !isSsrBuild,
     lib: { entry: 'src/index.ts', formats: ['es'], fileName: () => isSsrBuild ? 'server.js' : 'index.js' },
