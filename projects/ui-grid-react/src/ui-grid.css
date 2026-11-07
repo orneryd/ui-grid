@@ -380,8 +380,12 @@
   background: color-mix(in srgb, var(--ui-grid-accent) 8%, var(--ui-grid-header-background));
 }
 
-.header-cell.is-pin-menu-open {
+.header-cell.is-pinned.is-pin-menu-open {
   z-index: var(--ui-grid-pin-menu-open-z-index);
+}
+
+.header-cell.is-pin-menu-open:not(.is-pinned) {
+  z-index: calc(var(--ui-grid-pinned-cell-z-index) - 1);
 }
 
 .column-resizer {
