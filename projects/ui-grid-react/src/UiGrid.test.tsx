@@ -258,6 +258,61 @@ describe('UiGrid React component', () => {
     expect(portalContent.length).toBeGreaterThan(0);
   });
 
+  it('keeps cell slots added in the same commit as a data change (filter cleared)', async () => {
+    // Repro: a server-side filter shows 1 row, then clearing it returns 3. The
+    // grid emits cellSlotsChanged for the returning rows synchronously while
+    // the wrapper applies the new options; the data-refresh effect in the
+    // same flush must not overwrite those additions with a stale snapshot.
+    const statusRenderer = (ctx: { value: unknown }) => <b>{`pill-${String(ctx.value)}`}</b>;
+    const slot = (row: (typeof baseData)[number], index: number) => ({
+      slotName: `cell-status-${row.id}`,
+      columnName: 'status',
+      rowId: row.id,
+      context: { $implicit: row.status, value: row.status, row, column: { name: 'status' }, rowIndex: index },
+    });
+    const columnDefs = [{ name: 'name', displayName: 'Customer' }, { name: 'status' }];
+    const oneRow = createOptions({ data: [baseData[0]], columnDefs });
+    const { container, rerender } = render(
+      <UiGrid options={oneRow} cellRenderers={{ status: statusRenderer }} />,
+    );
+    const el = await waitFor(() => {
+      const found = container.querySelector('ui-grid-element');
+      if (!found) throw new Error('not mounted');
+      return found as HTMLElement & { options: GridOptions };
+    });
+    await act(async () => {
+      el.dispatchEvent(new CustomEvent('cellSlotsChanged', { detail: { added: [slot(baseData[0], 0)], removed: [] } }));
+    });
+
+    // Fire the "added" delta from inside the options assignment, like the grid does.
+    const proto = Object.getPrototypeOf(el);
+    const descriptor = Object.getOwnPropertyDescriptor(proto, 'options')
+      ?? Object.getOwnPropertyDescriptor(Object.getPrototypeOf(proto), 'options');
+    Object.defineProperty(el, 'options', {
+      configurable: true,
+      get() { return descriptor?.get?.call(this); },
+      set(value: GridOptions) {
+        descriptor?.set?.call(this, value);
+        if (value.data.length === 3) {
+          el.dispatchEvent(new CustomEvent('cellSlotsChanged', {
+            detail: { added: [slot(baseData[1], 1), slot(baseData[2], 2)], removed: [] },
+          }));
+        }
+      },
+    });
+
+    // New row objects (as a refetch returns), so the data-refresh effect runs.
+    const threeRows = createOptions({ data: baseData.map((row) => ({ ...row })), columnDefs });
+    await act(async () => {
+      rerender(<UiGrid options={threeRows} cellRenderers={{ status: statusRenderer }} />);
+    });
+
+    for (const row of baseData) {
+      const wrapper = container.querySelector(`[slot="cell-status-${row.id}"]`);
+      expect(wrapper?.textContent).toBe(`pill-${row.status}`);
+    }
+  });
+
   it('feature flags disable columns via visible:false', async () => {
     const { gridApi } = await renderGrid({
       enableSorting: false,
