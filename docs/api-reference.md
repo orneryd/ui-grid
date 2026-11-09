@@ -173,6 +173,7 @@ Access the API via `onRegisterApi`. The API is organized into namespaces.
 | `filterChanged`             | `(filters) => void`                |
 | `groupingChanged`           | `(groupBy) => void`                |
 | `columnOrderChanged`        | `(order) => void`                  |
+| `columnSizeChanged`         | `(columnName, width) => void`      |
 | `rowsVisibleChanged`        | `(rows) => void`                   |
 | `rowsRendered`              | `(rows) => void`                   |
 | `scrollBegin` / `scrollEnd` | `() => void`                       |
