@@ -695,19 +695,19 @@ export function patchGroupRow(
   target: HTMLElement,
   group: GroupItem,
 ): void {
-  const snapshot = el.snapshot!;
   const controller = el.controller!;
   const iconKey = group.collapsed ? 'groupCollapsed' : 'groupExpanded';
   const icon = el.icons.resolve(iconKey);
   setAttr(target, 'data-collapsed', group.collapsed ? 'true' : 'false');
   setAttr(target, 'data-field', group.field);
+  setAttr(target, 'data-column-label', controller.groupColumnLabel(group));
   setAttr(target, 'data-label', group.label);
   setAttr(target, 'data-count', String(group.count));
   setAttr(target, 'data-depth', String(group.depth));
   setAttr(target, 'data-disclosure-label', controller.groupDisclosureLabel(group));
   setAttr(target, 'data-icon-path', icon.path);
   setAttr(target, 'data-icon-view-box', icon.viewBox ?? '0 0 24 24');
-  setAttr(target, 'data-rows-suffix', snapshot.labels.groupRowsSuffix);
+  setAttr(target, 'data-rows-suffix', controller.groupRowsSuffix(group));
 }
 
 /** Patch a body-cell element in place: class, sticky style, data-attrs,
