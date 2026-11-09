@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, act, waitFor } from '@testing-library/react';
+import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { UiGrid } from './UiGrid';
 import type { UiGridProps } from './UiGrid';
@@ -322,5 +322,141 @@ describe('UiGrid React component', () => {
       expect(shadowRoot.querySelectorAll('.expandable-row').length).toBe(1);
     });
     expect(cellFor('row-2', 'name').classList.contains('ui-grid-row-selected')).toBe(true);
+  });
+
+  describe('slot renderers', () => {
+    const slotWrapper = (container: HTMLElement, slotName: string) =>
+      container.querySelector(`ui-grid-element > [slot="${slotName}"]`);
+    const slotNames = (container: HTMLElement) =>
+      Array.from(container.querySelectorAll('ui-grid-element > [slot]')).map((n) =>
+        n.getAttribute('slot'),
+      );
+
+    it('header renderer replaces the header content for its column', async () => {
+      const { container } = await renderGrid(
+        {},
+        { headerRenderers: { status: (ctx) => <b data-testid="hdr">H:{ctx.column.name}</b> } },
+      );
+      await waitFor(() => {
+        expect(slotWrapper(container, 'header-status')).toBeTruthy();
+      });
+      expect(slotWrapper(container, 'header-status')!.textContent).toBe('H:status');
+      expect(slotWrapper(container, 'header-name')).toBeNull();
+    });
+
+    it('updates header portal content when the renderer identity changes', async () => {
+      const options = createOptions();
+      const { container, rerender } = render(
+        <UiGrid options={options} headerRenderers={{ status: () => <i>one</i> }} />,
+      );
+      await waitFor(() => {
+        expect(slotWrapper(container, 'header-status')?.textContent).toBe('one');
+      });
+      const el = container.querySelector('ui-grid-element') as any;
+      const spy = vi.spyOn(el, 'setFrameworkRenderedSlots');
+      rerender(<UiGrid options={options} headerRenderers={{ status: () => <i>two</i> }} />);
+      await waitFor(() => {
+        expect(slotWrapper(container, 'header-status')?.textContent).toBe('two');
+      });
+      expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('filter renderer renders a select and does not emit filterChanged', async () => {
+      const { container, gridApi } = await renderGrid(
+        {},
+        {
+          filterRenderers: {
+            status: (slot) => (
+              <select data-testid="status-filter" defaultValue={slot.value}>
+                <option value="">All</option>
+                <option value="Active">Active</option>
+              </select>
+            ),
+          },
+        },
+      );
+      const filterChanged = vi.fn();
+      gridApi.core.on.filterChanged(filterChanged);
+
+      await waitFor(() => {
+        expect(slotWrapper(container, 'filter-status')?.querySelector('select')).toBeTruthy();
+      });
+      const select = slotWrapper(container, 'filter-status')!.querySelector('select')!;
+      await act(async () => {
+        fireEvent.change(select, { target: { value: 'Active' } });
+      });
+      expect(select.value).toBe('Active');
+      expect(filterChanged).not.toHaveBeenCalled();
+    });
+
+    it('removing a renderer key unmounts its portal and removes the wrapper', async () => {
+      const options = createOptions();
+      const { container, rerender } = render(
+        <UiGrid
+          options={options}
+          headerRenderers={{ status: () => <i>s</i>, name: () => <i>n</i> }}
+        />,
+      );
+      await waitFor(() => {
+        expect(slotNames(container)).toEqual(
+          expect.arrayContaining(['header-status', 'header-name']),
+        );
+      });
+      rerender(<UiGrid options={options} headerRenderers={{ name: () => <i>n</i> }} />);
+      await waitFor(() => {
+        expect(slotWrapper(container, 'header-status')).toBeNull();
+      });
+      expect(slotWrapper(container, 'header-name')).toBeTruthy();
+    });
+
+    it('expandableRowRenderer mounts on expand and unmounts on collapse', async () => {
+      const { container, gridApi } = await renderGrid(
+        { enableExpandable: true },
+        {
+          expandableRowRenderer: (ctx) => <div>detail:{String(ctx.row['name'])}</div>,
+        },
+      );
+      expect(slotWrapper(container, 'expandable-row-row-1')).toBeNull();
+
+      await act(async () => {
+        gridApi.expandable.toggleRowExpansion(baseData[0] as Record<string, unknown>);
+      });
+      await waitFor(() => {
+        expect(slotWrapper(container, 'expandable-row-row-1')?.textContent).toBe('detail:Gamma');
+      });
+
+      await act(async () => {
+        gridApi.expandable.toggleRowExpansion(baseData[0] as Record<string, unknown>);
+      });
+      await waitFor(() => {
+        expect(slotWrapper(container, 'expandable-row-row-1')).toBeNull();
+      });
+    });
+
+    it('emptyStateRenderer shows with empty data', async () => {
+      const { container } = await renderGrid(
+        { data: [] },
+        { emptyStateRenderer: (slot) => <p>custom:{slot.heading}</p> },
+      );
+      await waitFor(() => {
+        expect(slotWrapper(container, 'empty')).toBeTruthy();
+      });
+      expect(slotWrapper(container, 'empty')!.textContent).toMatch(/^custom:/);
+    });
+
+    it('does not re-register slots on re-render with the same keys', async () => {
+      const options = createOptions();
+      const { container, rerender } = render(
+        <UiGrid options={options} headerRenderers={{ status: () => <i>a</i> }} />,
+      );
+      await waitFor(() => {
+        expect(slotWrapper(container, 'header-status')).toBeTruthy();
+      });
+      const el = container.querySelector('ui-grid-element') as any;
+      const spy = vi.spyOn(el, 'setFrameworkRenderedSlots');
+      rerender(<UiGrid options={options} headerRenderers={{ status: () => <i>b</i> }} />);
+      rerender(<UiGrid options={{ ...options }} headerRenderers={{ status: () => <i>c</i> }} />);
+      expect(spy).not.toHaveBeenCalled();
+    });
   });
 });

@@ -4,11 +4,17 @@ import type {
   GridBenchmarkResult,
   GridOptions,
   GridCellTemplateContext,
+  GridExpandableTemplateContext,
+  GridHeaderTemplateContext,
   GridRecord,
   UiGridApi,
 } from '@ornery/ui-grid-core';
 import type {
   FrameworkCellSlot,
+  FrameworkEmptyStateSlot,
+  FrameworkExpandableRowSlot,
+  FrameworkFilterSlot,
+  FrameworkHeaderSlot,
   FrameworkSlotDelta,
   UiGridStandaloneElement,
 } from '@ornery/ui-grid-vanilla';
@@ -18,35 +24,144 @@ export interface UiGridCellRenderers {
   [columnName: string]: (context: GridCellTemplateContext) => React.ReactNode;
 }
 
+export interface UiGridHeaderRenderers {
+  [columnName: string]: (context: GridHeaderTemplateContext) => React.ReactNode;
+}
+
+export interface UiGridFilterRenderers {
+  [columnName: string]: (slot: FrameworkFilterSlot) => React.ReactNode;
+}
+
 export interface UiGridProps {
   options: GridOptions;
   onRegisterApi?: (api: UiGridApi) => void;
   cellRenderers?: UiGridCellRenderers;
+  headerRenderers?: UiGridHeaderRenderers;
+  filterRenderers?: UiGridFilterRenderers;
+  expandableRowRenderer?: (context: GridExpandableTemplateContext) => React.ReactNode;
+  emptyStateRenderer?: (slot: FrameworkEmptyStateSlot) => React.ReactNode;
   className?: string;
 }
 
+type SlotKind = 'cell' | 'header' | 'filter' | 'expandable' | 'empty';
+
 interface SlotEntry {
+  kind: SlotKind;
   slotName: string;
   columnName: string;
   rowId: string;
   context: GridCellTemplateContext;
-  wrapper: HTMLSpanElement;
+  payload: unknown;
+  wrapper: HTMLElement;
 }
+
+interface SlotKindDescriptor {
+  eventName: string;
+  wrapperTag: 'span' | 'div';
+  toEntry: (slot: any) => Pick<SlotEntry, 'columnName' | 'rowId' | 'context' | 'payload'>;
+}
+
+const NO_CONTEXT = undefined as unknown as GridCellTemplateContext;
+
+const SLOT_KINDS: Record<SlotKind, SlotKindDescriptor> = {
+  cell: {
+    eventName: 'cellSlotsChanged',
+    wrapperTag: 'span',
+    toEntry: (slot: FrameworkCellSlot) => ({
+      columnName: slot.columnName,
+      rowId: slot.rowId,
+      context: slot.context,
+      payload: slot,
+    }),
+  },
+  header: {
+    eventName: 'headerSlotsChanged',
+    wrapperTag: 'span',
+    toEntry: (slot: FrameworkHeaderSlot) => ({
+      columnName: slot.columnName,
+      rowId: '',
+      context: NO_CONTEXT,
+      payload: slot,
+    }),
+  },
+  filter: {
+    eventName: 'filterSlotsChanged',
+    wrapperTag: 'span',
+    toEntry: (slot: FrameworkFilterSlot) => ({
+      columnName: slot.columnName,
+      rowId: '',
+      context: NO_CONTEXT,
+      payload: slot,
+    }),
+  },
+  expandable: {
+    eventName: 'expandableRowSlotsChanged',
+    wrapperTag: 'div',
+    toEntry: (slot: FrameworkExpandableRowSlot) => ({
+      columnName: '',
+      rowId: slot.rowId,
+      context: NO_CONTEXT,
+      payload: slot,
+    }),
+  },
+  empty: {
+    eventName: 'emptyStateSlotChanged',
+    wrapperTag: 'div',
+    toEntry: (slot: FrameworkEmptyStateSlot) => ({
+      columnName: '',
+      rowId: '',
+      context: NO_CONTEXT,
+      payload: slot,
+    }),
+  },
+};
+
+const SLOT_KIND_NAMES = Object.keys(SLOT_KINDS) as SlotKind[];
 
 const TAG_NAME = 'ui-grid-element';
 let definePromise: Promise<void> | null = null;
 
-export function UiGrid({ options, onRegisterApi, cellRenderers, className }: UiGridProps) {
+export function UiGrid({
+  options,
+  onRegisterApi,
+  cellRenderers,
+  headerRenderers,
+  filterRenderers,
+  expandableRowRenderer,
+  emptyStateRenderer,
+  className,
+}: UiGridProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const elementRef = React.useRef<UiGridStandaloneElement | null>(null);
   const [slots, setSlots] = React.useState<Map<string, SlotEntry>>(new Map());
   const cellRenderersRef = React.useRef(cellRenderers);
   cellRenderersRef.current = cellRenderers;
+  const slotConfigSignature = [
+    Object.keys(cellRenderers ?? {}).join('\u0000'),
+    Object.keys(headerRenderers ?? {}).join('\u0000'),
+    Object.keys(filterRenderers ?? {}).join('\u0000'),
+    expandableRowRenderer ? '1' : '0',
+    emptyStateRenderer ? '1' : '0',
+  ].join('\u0001');
+  const slotConfigRef = React.useRef({
+    cellRenderers,
+    headerRenderers,
+    filterRenderers,
+    expandableRowRenderer,
+    emptyStateRenderer,
+  });
+  slotConfigRef.current = {
+    cellRenderers,
+    headerRenderers,
+    filterRenderers,
+    expandableRowRenderer,
+    emptyStateRenderer,
+  };
   const onRegisterApiRef = React.useRef(onRegisterApi);
   onRegisterApiRef.current = onRegisterApi;
   const optionsRef = React.useRef(options);
   optionsRef.current = options;
-  const currentSlotColumnsRef = React.useRef<string[]>([]);
+  const appliedSlotConfigRef = React.useRef<string | null>(null);
   const wrapperRenderVersionRef = React.useRef(0);
   const scheduledWrapperRenderVersionRef = React.useRef(0);
   const wrapperRenderWaitersRef = React.useRef<Array<{ target: number; resolve: () => void }>>([]);
@@ -85,6 +200,10 @@ export function UiGrid({ options, onRegisterApi, cellRenderers, className }: UiG
 
     let el: UiGridStandaloneElement | null = null;
     let disposed = false;
+    const slotListeners = {} as Record<SlotKind, (event: Event) => void>;
+    for (const kind of SLOT_KIND_NAMES) {
+      slotListeners[kind] = (event) => handleSlotsChanged(kind, event);
+    }
 
     const mount = async () => {
       if (!definePromise) {
@@ -98,10 +217,16 @@ export function UiGrid({ options, onRegisterApi, cellRenderers, className }: UiG
       el.style.height = '100%';
       el.style.minHeight = '0';
       elementRef.current = el;
-      container.appendChild(el);
 
-      el.addEventListener('cellSlotsChanged', handleCellSlotsChanged);
+      for (const kind of SLOT_KIND_NAMES) {
+        el.addEventListener(SLOT_KINDS[kind].eventName, slotListeners[kind]);
+      }
+      // Flag slots and set options before the element connects so the first
+      // render emits every <slot> placeholder (the vanilla patch path does not
+      // swap already-rendered filter cells for placeholders).
+      syncSlotConfig(el);
       applyOptions(el, optionsRef.current);
+      container.appendChild(el);
     };
 
     void mount();
@@ -113,7 +238,9 @@ export function UiGrid({ options, onRegisterApi, cellRenderers, className }: UiG
         benchmarkSubscriptionUnsubscribeRef.current = null;
       }
       if (el) {
-        el.removeEventListener('cellSlotsChanged', handleCellSlotsChanged);
+        for (const kind of SLOT_KIND_NAMES) {
+          el.removeEventListener(SLOT_KINDS[kind].eventName, slotListeners[kind]);
+        }
         el.remove();
         elementRef.current = null;
       }
@@ -121,6 +248,14 @@ export function UiGrid({ options, onRegisterApi, cellRenderers, className }: UiG
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Re-register slots only when the renderer key sets / flags change
+  React.useEffect(() => {
+    const el = elementRef.current;
+    if (!el) return;
+    syncSlotConfig(el);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slotConfigSignature]);
 
   // Update options when they change
   React.useEffect(() => {
@@ -143,6 +278,7 @@ export function UiGrid({ options, onRegisterApi, cellRenderers, className }: UiG
     let changed = false;
     const nextSlots = new Map(slots);
     for (const [key, entry] of nextSlots) {
+      if (entry.kind !== 'cell') continue;
       const row = dataById.get(entry.rowId);
       if (!row) continue;
 
@@ -235,17 +371,6 @@ export function UiGrid({ options, onRegisterApi, cellRenderers, className }: UiG
   }
 
   function applyOptions(el: UiGridStandaloneElement, opts: GridOptions) {
-    const renderers = cellRenderersRef.current;
-    const cellSlotColumns: string[] = [];
-
-    if (renderers && opts.columnDefs) {
-      for (const col of opts.columnDefs) {
-        if (renderers[col.name]) {
-          cellSlotColumns.push(col.name);
-        }
-      }
-    }
-
     const wrappedOptions: GridOptions = {
       ...opts,
       onRegisterApi: (api) => {
@@ -256,21 +381,26 @@ export function UiGrid({ options, onRegisterApi, cellRenderers, className }: UiG
     };
 
     el.options = wrappedOptions;
-
-    const prev = currentSlotColumnsRef.current;
-    const columnsChanged =
-      cellSlotColumns.length !== prev.length || cellSlotColumns.some((name, i) => name !== prev[i]);
-
-    if (columnsChanged) {
-      currentSlotColumnsRef.current = cellSlotColumns;
-      el.setFrameworkRenderedSlots({ cells: cellSlotColumns });
-    }
   }
 
-  function handleCellSlotsChanged(event: Event) {
-    const detail = (event as CustomEvent<FrameworkSlotDelta<FrameworkCellSlot>>).detail;
+  function syncSlotConfig(el: UiGridStandaloneElement) {
+    if (appliedSlotConfigRef.current === slotConfigSignature) return;
+    appliedSlotConfigRef.current = slotConfigSignature;
+    const config = slotConfigRef.current;
+    el.setFrameworkRenderedSlots({
+      cells: Object.keys(config.cellRenderers ?? {}),
+      headers: Object.keys(config.headerRenderers ?? {}),
+      filters: Object.keys(config.filterRenderers ?? {}),
+      expandableRow: !!config.expandableRowRenderer,
+      emptyState: !!config.emptyStateRenderer,
+    });
+  }
+
+  function handleSlotsChanged(kind: SlotKind, event: Event) {
+    const detail = (event as CustomEvent<FrameworkSlotDelta<{ slotName: string }>>).detail;
     const el = elementRef.current;
     if (!el) return;
+    const descriptor = SLOT_KINDS[kind];
     if (detail.removed.length > 0 || detail.added.length > 0) {
       markWrapperRenderScheduled();
     }
@@ -292,15 +422,14 @@ export function UiGrid({ options, onRegisterApi, cellRenderers, className }: UiG
           existing.wrapper.remove();
         }
 
-        const wrapper = document.createElement('span');
+        const wrapper = document.createElement(descriptor.wrapperTag);
         wrapper.setAttribute('slot', slot.slotName);
         el.appendChild(wrapper);
 
         next.set(slot.slotName, {
+          kind,
           slotName: slot.slotName,
-          columnName: slot.columnName,
-          rowId: slot.rowId,
-          context: slot.context,
+          ...descriptor.toEntry(slot),
           wrapper,
         });
       }
@@ -311,13 +440,35 @@ export function UiGrid({ options, onRegisterApi, cellRenderers, className }: UiG
 
   // Render React portals into the slot wrappers
   const portals: React.ReactNode[] = [];
-  const renderers = cellRenderers;
-  if (renderers) {
-    for (const [, entry] of slots) {
-      const renderer = renderers[entry.columnName];
-      if (renderer) {
-        portals.push(createPortal(renderer(entry.context), entry.wrapper, entry.slotName));
+  for (const [, entry] of slots) {
+    const content = renderSlotEntry(entry);
+    if (content !== undefined) {
+      portals.push(createPortal(content, entry.wrapper, entry.slotName));
+    }
+  }
+
+  function renderSlotEntry(entry: SlotEntry): React.ReactNode | undefined {
+    switch (entry.kind) {
+      case 'cell': {
+        const renderer = cellRenderers?.[entry.columnName];
+        return renderer ? renderer(entry.context) : undefined;
       }
+      case 'header': {
+        const renderer = headerRenderers?.[entry.columnName];
+        return renderer ? renderer((entry.payload as FrameworkHeaderSlot).context) : undefined;
+      }
+      case 'filter': {
+        const renderer = filterRenderers?.[entry.columnName];
+        return renderer ? renderer(entry.payload as FrameworkFilterSlot) : undefined;
+      }
+      case 'expandable':
+        return expandableRowRenderer
+          ? expandableRowRenderer((entry.payload as FrameworkExpandableRowSlot).context)
+          : undefined;
+      case 'empty':
+        return emptyStateRenderer
+          ? emptyStateRenderer(entry.payload as FrameworkEmptyStateSlot)
+          : undefined;
     }
   }
 
