@@ -183,6 +183,36 @@ The vanilla element supports `<template>` elements with `slot` attributes for cu
 </ui-grid-element>
 ```
 
+### Framework-Rendered Slots
+
+Framework wrappers (React, Solid, Angular) render headers, filters, cells, expandable rows and the empty state themselves. They call `grid.setFrameworkRenderedSlots({ cells, headers, filters, expandableRow, emptyState })` with the column names (or `true`) to render, and the grid emits a `<slot>` for each instead of its own markup. You can call it at any time; changing the set re-renders the grid.
+
+After each render the grid fires one event per kind with `{ added, removed, updated }`:
+
+| Event | Slot payload |
+|---|---|
+| `cellSlotsChanged` | `FrameworkCellSlot` |
+| `headerSlotsChanged` | `FrameworkHeaderSlot` |
+| `filterSlotsChanged` | `FrameworkFilterSlot` (`value`, `placeholder`, `disabled`) |
+| `expandableRowSlotsChanged` | `FrameworkExpandableRowSlot` |
+| `groupRowSlotsChanged` | `FrameworkGroupRowSlot` |
+| `emptyStateSlotsChanged` | `FrameworkEmptyStateSlot` |
+
+`added` and `removed` list slots that appeared or went away; mount or unmount your content into a light-DOM child with the matching `slot` attribute. `updated` lists filter slots that stayed but whose value, placeholder or disabled state changed. `emptyStateSlotChanged` (singular) is still fired for existing wrappers.
+
+### Replacing Building Components
+
+The grid renders its filter cells, group rows and pager as custom elements: `ui-grid-filter-cell`, `ui-grid-group-row` and `ui-grid-pagination`. To replace one but keep the grid's layout (pinning, sticky positioning, horizontal scroll sync), define your own element under the same tag **before** the grid element is defined. The grid skips tags that already exist. This applies to every grid on the page.
+
+`ui-grid-filter-cell` contract:
+- **Attributes** (observe them): `data-column`, `data-value`, `data-placeholder`, `data-disabled` (`"true"` when the column can't be filtered), `data-pinned`, `data-pinned-left-last`, `data-pinned-right-first`, and `data-sticky-style` (inline `left`/`right` offset for pinned columns).
+- **Host classes and style** (set them from the attributes, as the built-in cell does): `filter-cell`, plus `is-pinned`, `is-pinned-left-last`, `is-pinned-right-first`; apply `data-sticky-style` as the host's `style`.
+- **Filtering:** an `<input data-role="filter" data-column="<column>">` anywhere in the cell (its shadow root included) filters the column on `input`. To filter some other way, filter the data yourself (`useExternalFiltering`).
+
+`ui-grid-group-row` contract:
+- **Attributes:** `data-field` (column name), `data-column-label` (column header), `data-label` (group value), `data-count`, `data-rows-suffix` (already singular for one row), `data-depth`, `data-collapsed`, `data-disclosure-label`, `data-icon-path`, `data-icon-view-box`.
+- **Toggling:** the grid sets `data-action="toggle-group"` and `data-group` on the host; keep them, and clicks collapse and expand the group.
+
 ### State API
 
 The vanilla element exposes `getState()` and `setState()` methods for save/restore:
