@@ -35,6 +35,7 @@ import {
   emptyDataMarkup,
 } from './templates';
 import type { UiGridStandaloneElement } from './ui-grid-standalone.element';
+import { formatPaginationRangeLabel } from './pagination-range-label';
 import { bodyCellClass } from './utils/cell-class';
 import { asGroupItem, isRowItem } from './utils/display-items';
 import {
@@ -828,7 +829,11 @@ export function patchPagination(
   setAttr(
     paginationEl,
     'data-range-label',
-    `${snapshot.firstRowIndex + 1}-${snapshot.lastRowIndex + 1} of ${snapshot.pipeline.totalItems}`,
+    formatPaginationRangeLabel({
+      firstRowIndex: snapshot.firstRowIndex,
+      lastRowIndex: snapshot.lastRowIndex,
+      totalItems: snapshot.pipeline.totalItems,
+    }),
   );
   setAttr(paginationEl, 'data-current-page', String(snapshot.currentPage));
   setAttr(paginationEl, 'data-total-pages', String(snapshot.totalPages));
