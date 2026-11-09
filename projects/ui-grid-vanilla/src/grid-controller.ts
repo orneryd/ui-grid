@@ -1972,9 +1972,17 @@ export class VanillaGridController {
     );
   }
 
+  // Core's index helpers describe the slice, which external paging skips; the
+  // range shown and returned by the API is where this page sits in totalItems.
+  private rangeOptions(): GridOptions {
+    return this.options.useExternalPagination === true
+      ? { ...this.options, useExternalPagination: false }
+      : this.options;
+  }
+
   private getFirstRowIndex(): number {
     return getFirstRowIndexValue(
-      this.options,
+      this.rangeOptions(),
       this.currentPage,
       this.pipeline.totalItems,
       this.pageSize,
@@ -1983,7 +1991,7 @@ export class VanillaGridController {
 
   private getLastRowIndex(): number {
     return getLastRowIndexValue(
-      this.options,
+      this.rangeOptions(),
       this.currentPage,
       this.pipeline.totalItems,
       this.pageSize,
