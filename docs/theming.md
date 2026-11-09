@@ -135,6 +135,7 @@ If you already ship older `--app-ui-grid-*` theme tokens, they still work as a c
 | `--ui-grid-pin-menu-radius` | `999px` | Inline pin chooser radius |
 | `--ui-grid-pin-menu-shadow` | `0 10px 24px color-mix(in srgb, var(--ui-grid-cell-color) 10%, transparent)` | Inline pin chooser shadow |
 | `--ui-grid-pin-menu-action-size` | `1.75rem` | Size of each left or right pin action |
+| `--ui-grid-pin-menu-direction` | `row` | `row` stacks Pin left above Pin right; `column` puts them side by side, for compact header rows |
 | `--ui-grid-pin-control-collapsed-size` | `1px` | Final collapsed size of the pin button while the chooser opens |
 | `--ui-grid-pin-control-transition-duration` | `160ms` | Duration for the inline pin control animation |
 | `--ui-grid-pin-control-transition-easing` | `cubic-bezier(0.22, 1, 0.36, 1)` | Easing curve for pin control motion |
@@ -155,6 +156,7 @@ If you already ship older `--app-ui-grid-*` theme tokens, they still work as a c
 
 | Variable | Default | Controls |
 |----------|---------|----------|
+| `--ui-grid-body-cell-align` | `start` | Vertical position of cell content in rows taller than it: `start`, `center`, `end` or `stretch` |
 | `--ui-grid-body-cell-padding-block` | `0.95rem` | Body cell vertical padding |
 | `--ui-grid-body-cell-padding-inline` | `1rem` | Body cell horizontal padding |
 | `--ui-grid-cell-shell-gap` | `0.55rem` | Gap between toggles and content inside a cell |
@@ -210,18 +212,29 @@ If you already ship older `--app-ui-grid-*` theme tokens, they still work as a c
 
 | Part Name | Target Element |
 |-----------|----------------|
-| `shell` | Outermost grid wrapper |
-| `hero` | Title/toolbar area |
-| `grid-frame` | Scrollable grid container |
-| `grid-toolbar` | Toolbar with row count |
+| `grid-frame` | Grid container (`role="grid"`) |
 | `header` | Header row container |
 | `header-cell` | Individual header cell |
+| `header-label` | Header cell label |
+| `header-actions` | Header cell sort, group and pin controls |
+| `pin-menu` | Pin left / Pin right chooser |
 | `filter-cell` | Filter input cell |
 | `body-cell` | Data cell |
 | `group-row` | Group header row |
 | `expandable-row` | Expanded detail row |
 | `pagination` | Pagination footer |
 | `empty-state` | Empty state message |
+
+## Adding CSS Inside The Grid
+
+For rules that tokens and parts don't cover, add CSS to the grid's shadow root with `addStyles`. It returns a function that removes the CSS again.
+
+```ts
+const grid = document.querySelector('ui-grid-element');
+const remove = grid.addStyles(`.pin-control-open .pin-menu { box-shadow: none; }`);
+```
+
+The grid styles itself with `adoptedStyleSheets`, which apply after any `<style>` element in the shadow root. A `<style>` you insert yourself therefore loses to the grid's rules at equal specificity. `addStyles` sheets are kept after the grid's own sheets, so they win.
 
 ## Example: Custom Brand Theme
 

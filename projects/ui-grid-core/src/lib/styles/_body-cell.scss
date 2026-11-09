@@ -2,6 +2,11 @@
 // Auto-extracted from grid.core.styles.scss
 
 .body-cell {
+  // One full-width column; --ui-grid-body-cell-align sets the content's
+  // vertical position in rows taller than it (start, center, end, stretch).
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: var(--ui-grid-body-cell-align);
   padding: var(--ui-grid-body-cell-padding-block) var(--ui-grid-body-cell-padding-inline);
   border-bottom: 1px solid var(--ui-grid-border-color);
   color: var(--ui-grid-cell-color);

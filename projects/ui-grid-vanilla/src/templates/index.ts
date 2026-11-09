@@ -34,11 +34,11 @@ export function bodyStaticMarkup(templateColumns: string, bodyContent: string): 
 }
 
 export function emptyDataMarkup(heading: string, description: string): string {
-  return `<div class="empty-state ui-grid-no-row-overlay"><strong>${heading}</strong><p>${description}</p></div>`;
+  return `<div part="empty-state" class="empty-state ui-grid-no-row-overlay"><strong>${heading}</strong><p>${description}</p></div>`;
 }
 
 export function expandableRowMarkup(expandableContent: string): string {
-  return `<div class="expandable-row ui-grid-row ui-grid-expandable-row" style="grid-column:1 / -1">${expandableContent}</div>`;
+  return `<div part="expandable-row" class="expandable-row ui-grid-row ui-grid-expandable-row" style="grid-column:1 / -1">${expandableContent}</div>`;
 }
 
 export function treeToggleMarkup(rowId: string, toggleLabel: string, iconViewBox: string, iconPath: string): string {
