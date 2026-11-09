@@ -31,6 +31,7 @@ import {
 import {
   bodyStaticMarkup,
   bodyVirtualMarkup,
+  virtualSpacerStyle,
   emptyDataMarkup,
 } from './templates';
 import type { UiGridStandaloneElement } from './ui-grid-standalone.element';
@@ -239,6 +240,7 @@ export function reconcileBodyRoot(
   templateColumns: string,
   virtualOffset: number,
   totalVirtualHeight: number,
+  rowSize: number,
 ): HTMLElement | null {
   const bodyViewport = root.querySelector<HTMLElement>('.grid-body-viewport');
   if (!bodyViewport) return null;
@@ -283,7 +285,7 @@ export function reconcileBodyRoot(
       return currentVirtual.querySelector<HTMLElement>('.grid-virtual-body');
     }
     const fresh = createFromMarkup(
-      bodyVirtualMarkup(templateColumns, totalVirtualHeight, virtualOffset, ''),
+      bodyVirtualMarkup(templateColumns, totalVirtualHeight, virtualOffset, '', rowSize),
     );
     if (fresh) swapBodyChild(bodyViewport, currentNode, fresh);
     return fresh?.querySelector<HTMLElement>('.grid-virtual-body') ?? null;
@@ -404,6 +406,7 @@ export function patchBodyRegion(
     templateColumns,
     virtualOffset,
     totalVirtualHeight,
+    snapshot.rowSize,
   );
 
   if (!hasRows) {
@@ -415,8 +418,9 @@ export function patchBodyRegion(
 
   if (virtualizationEnabled) {
     const spacer = root.querySelector<HTMLElement>('.grid-virtual-spacer');
-    if (spacer && totalVirtualHeight !== el.lastTotalVirtualHeight) {
-      spacer.setAttribute('style', `height:${totalVirtualHeight}px`);
+    const spacerStyle = virtualSpacerStyle(totalVirtualHeight, snapshot.rowSize);
+    if (spacer && spacer.getAttribute('style') !== spacerStyle) {
+      spacer.setAttribute('style', spacerStyle);
       el.lastTotalVirtualHeight = totalVirtualHeight;
     }
     if (bodyContainer) {

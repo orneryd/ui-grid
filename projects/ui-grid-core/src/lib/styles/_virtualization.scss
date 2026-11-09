@@ -16,3 +16,11 @@
   left: 0;
 }
 
+
+// Window math assumes every row is rowHeight tall (set on the spacer as
+// --ui-grid-row-height), so rows are held to it. Expanded rows keep their own height.
+.grid-virtual-body > :not(.expandable-row) {
+  box-sizing: border-box;
+  height: var(--ui-grid-row-height);
+  overflow: hidden;
+}
