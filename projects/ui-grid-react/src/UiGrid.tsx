@@ -134,6 +134,15 @@ export function UiGrid({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const elementRef = React.useRef<UiGridStandaloneElement | null>(null);
   const [slots, setSlots] = React.useState<Map<string, SlotEntry>>(new Map());
+  // Source of truth for slot entries. Event handlers and effects derive the
+  // next map from this ref (never from a render-time `slots` snapshot), and
+  // DOM work happens outside state updaters, so a data refresh can't drop
+  // slots that were added in the same commit.
+  const slotsRef = React.useRef<Map<string, SlotEntry>>(new Map());
+  const commitSlots = (next: Map<string, SlotEntry>) => {
+    slotsRef.current = next;
+    setSlots(next);
+  };
   const cellRenderersRef = React.useRef(cellRenderers);
   cellRenderersRef.current = cellRenderers;
   const slotConfigSignature = [
@@ -244,7 +253,7 @@ export function UiGrid({
         el.remove();
         elementRef.current = null;
       }
-      setSlots(new Map());
+      commitSlots(new Map());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -267,7 +276,8 @@ export function UiGrid({
 
   // Update existing slot contexts when data changes (same rows, new values)
   React.useEffect(() => {
-    if (slots.size === 0 || !options.data) return;
+    const current = slotsRef.current;
+    if (current.size === 0 || !options.data) return;
 
     const dataById = new Map<string, GridRecord>();
     for (const row of options.data) {
@@ -276,7 +286,7 @@ export function UiGrid({
     }
 
     let changed = false;
-    const nextSlots = new Map(slots);
+    const nextSlots = new Map(current);
     for (const [key, entry] of nextSlots) {
       if (entry.kind !== 'cell') continue;
       const row = dataById.get(entry.rowId);
@@ -295,7 +305,7 @@ export function UiGrid({
       }
     }
 
-    if (changed) setSlots(nextSlots);
+    if (changed) commitSlots(nextSlots);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options.data]);
 
@@ -405,37 +415,35 @@ export function UiGrid({
       markWrapperRenderScheduled();
     }
 
-    setSlots((prev) => {
-      const next = new Map(prev);
+    const next = new Map(slotsRef.current);
 
-      for (const slot of detail.removed) {
-        const entry = next.get(slot.slotName);
-        if (entry) {
-          entry.wrapper.remove();
-          next.delete(slot.slotName);
-        }
+    for (const slot of detail.removed) {
+      const entry = next.get(slot.slotName);
+      if (entry) {
+        entry.wrapper.remove();
+        next.delete(slot.slotName);
+      }
+    }
+
+    for (const slot of detail.added) {
+      const existing = next.get(slot.slotName);
+      if (existing) {
+        existing.wrapper.remove();
       }
 
-      for (const slot of detail.added) {
-        const existing = next.get(slot.slotName);
-        if (existing) {
-          existing.wrapper.remove();
-        }
+      const wrapper = document.createElement(descriptor.wrapperTag);
+      wrapper.setAttribute('slot', slot.slotName);
+      el.appendChild(wrapper);
 
-        const wrapper = document.createElement(descriptor.wrapperTag);
-        wrapper.setAttribute('slot', slot.slotName);
-        el.appendChild(wrapper);
+      next.set(slot.slotName, {
+        kind,
+        slotName: slot.slotName,
+        ...descriptor.toEntry(slot),
+        wrapper,
+      });
+    }
 
-        next.set(slot.slotName, {
-          kind,
-          slotName: slot.slotName,
-          ...descriptor.toEntry(slot),
-          wrapper,
-        });
-      }
-
-      return next;
-    });
+    commitSlots(next);
   }
 
   // Render React portals into the slot wrappers
