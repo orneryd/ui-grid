@@ -15,9 +15,11 @@ class MockResizeObserver {
   callback: ResizeObserverCallback;
   constructor(callback: ResizeObserverCallback) {
     this.callback = callback;
-    resizeObserverCallback = callback;
   }
-  observe = vi.fn();
+  // Keep the host's observer; the element also observes its body viewport.
+  observe = vi.fn((target: Element) => {
+    if (target.tagName.toLowerCase().startsWith('ui-grid-element')) resizeObserverCallback = this.callback;
+  });
   unobserve = vi.fn();
   disconnect = mockResizeObserverDisconnect;
 }
