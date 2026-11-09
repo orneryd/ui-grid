@@ -29,6 +29,8 @@
   // overflow: hidden like the old grid — strips are never user-scrollable.
   // JS mirrors body viewport scrollLeft onto them via syncHeaderHorizontalScroll.
   overflow: hidden;
+  // Match the body viewport's scrollport; the element sets the body's scrollbar width.
+  width: calc(100% - var(--ui-grid-scrollbar-width, 0px));
 }
 
 .grid-header-strip {
