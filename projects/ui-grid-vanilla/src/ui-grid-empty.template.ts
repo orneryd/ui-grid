@@ -14,7 +14,7 @@ export default function emptyTemplate(ctx: EmptyContext) {
       adoptStyles(root, shellCss, STYLE_KEY);
       root.innerHTML =
         `<section class="grid-shell ui-grid-shell">` +
-          `<div class="empty-state ui-grid-no-row-overlay">` +
+          `<div part="empty-state" class="empty-state ui-grid-no-row-overlay">` +
             `<strong>${ctx.message}</strong>` +
           `</div>` +
         `</section>`;
