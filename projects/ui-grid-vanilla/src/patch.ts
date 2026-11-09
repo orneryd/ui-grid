@@ -348,10 +348,16 @@ export function patchFilterCells(
   }
 
   for (const column of snapshot.visibleColumns) {
-    const target = existing.get(column.name);
-    if (!target) continue;
     const value = snapshot.activeFilters[column.name] ?? '';
     const canFilter = controller.isColumnFilterable(column);
+    if (el.frameworkSlots.hasFilter(column.name)) {
+      // Framework-rendered filter cells keep their <slot> placeholder; re-stage
+      // so the flush does not report the slot as removed.
+      el.frameworkSlots.stageFilter(column, value, controller.filterPlaceholder(column), !canFilter);
+      continue;
+    }
+    const target = existing.get(column.name);
+    if (!target) continue;
     const pinOffset = controller.isPinned(column) ? controller.pinnedOffset(column) : null;
     const stickyStyle = pinOffset ? `${pinOffset.side}:${pinOffset.offset};` : '';
     setAttr(target, 'data-value', value);
