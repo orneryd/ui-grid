@@ -137,6 +137,8 @@ export interface GridColumnDef {
   filter?: GridFilterDescriptor;
   sortingAlgorithm?: GridSortFn;
   valueGetter?: (row: GridRecord) => unknown;
+  /** Value rows are grouped by. Defaults to the cell value (`valueGetter`, then `field`, then `name`). */
+  groupingValue?: (row: GridRecord) => unknown;
   formatter?: (value: unknown, row: GridRecord) => string;
   headerRenderer?: (context: GridHeaderTemplateContext) => string;
   cellTemplate?: GridTemplateRefLike<GridCellTemplateContext>;
@@ -217,6 +219,8 @@ export interface GridLabels {
   statsVisibleRows: string;
   /** Group row – "rows" suffix */
   groupRowsSuffix: string;
+  /** Group row – suffix for a group of one row. Bundled locales derive it from `groupRowsSuffix`. */
+  groupRowSuffixOne?: string;
   /** Pin trigger for choosing left or right */
   pinColumn: string;
   /** Pin left action */

@@ -1645,6 +1645,17 @@ export class VanillaGridController {
     return gridGroupDisclosureLabel(group.collapsed, this.labels);
   }
 
+  groupColumnLabel(group: GroupItem): string {
+    const column = this.options.columnDefs.find((candidate) => candidate.name === group.field);
+    return column ? headerLabel(column) : group.field;
+  }
+
+  groupRowsSuffix(group: GroupItem): string {
+    const plural = this.labels.groupRowsSuffix;
+    if (group.count !== 1) return plural;
+    return this.labels.groupRowSuffixOne ?? GROUP_ROW_SUFFIX_ONE[plural] ?? plural;
+  }
+
   pinnedOffset(column: GridColumnDef): { side: 'left' | 'right'; offset: string } | null {
     return computePinnedOffset(this.visibleColumns, this.pinnedColumns, column);
   }
@@ -2537,6 +2548,15 @@ export class VanillaGridController {
     };
   }
 }
+
+// Singular group-row suffixes for the bundled locales' plurals, kept out of the
+// locale label set so it matches the WASM engine's.
+const GROUP_ROW_SUFFIX_ONE: Readonly<Record<string, string>> = {
+  rows: 'row',
+  lignes: 'ligne',
+  Zeilen: 'Zeile',
+  filas: 'fila',
+};
 
 export function createVanillaGridController(options: GridOptions): VanillaGridController {
   return new VanillaGridController(options);
