@@ -42,6 +42,7 @@ import {
   slotRegistryMarkup,
   treeToggleMarkup,
 } from './templates';
+import { formatPaginationRangeLabel } from './pagination-range-label';
 import type { UiGridStandaloneElement } from './ui-grid-standalone.element';
 import { bodyCellClass, headerCellClass } from './utils/cell-class';
 import { asGroupItem, isRowItem } from './utils/display-items';
@@ -349,8 +350,11 @@ export function renderPagination(
   const pageSizes = snapshot.options.paginationPageSizes ?? [10, 25, 50, 100];
   const prevIcon = el.icons.resolve('paginationPrev');
   const nextIcon = el.icons.resolve('paginationNext');
-  const totalItems = snapshot.pipeline.totalItems;
-  const rangeLabel = totalItems === 0 ? `0 of 0` : `${snapshot.firstRowIndex + 1}-${snapshot.lastRowIndex + 1} of ${totalItems}`;
+  const rangeLabel = formatPaginationRangeLabel({
+    firstRowIndex: snapshot.firstRowIndex,
+    lastRowIndex: snapshot.lastRowIndex,
+    totalItems: snapshot.pipeline.totalItems,
+  });
   return `<ui-grid-pagination part="pagination" data-range-label="${escapeHtml(rangeLabel)}" data-current-page="${snapshot.currentPage}" data-total-pages="${snapshot.totalPages}" data-page-label="${escapeHtml(snapshot.labels.paginationPage)}" data-of-label="${escapeHtml(snapshot.labels.paginationOf)}" data-prev-label="${escapeHtml(snapshot.labels.paginationPrevious)}" data-next-label="${escapeHtml(snapshot.labels.paginationNext)}" data-rows-label="${escapeHtml(snapshot.labels.paginationRows)}" data-prev-icon-path="${prevIcon.path}" data-prev-icon-view-box="${prevIcon.viewBox ?? '0 0 24 24'}" data-next-icon-path="${nextIcon.path}" data-next-icon-view-box="${nextIcon.viewBox ?? '0 0 24 24'}" data-page-sizes="${escapeHtml(JSON.stringify(pageSizes))}" data-page-size="${snapshot.pageSize}" data-prev-disabled="${snapshot.currentPage <= 1}" data-next-disabled="${snapshot.currentPage >= snapshot.totalPages}"></ui-grid-pagination>`;
 }
 
