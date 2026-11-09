@@ -21,8 +21,12 @@ export function filterRowMarkup(templateColumns: string, filterCells: string): s
   return `<div class="filter-grid ui-grid-header" style="grid-template-columns:${templateColumns}">${filterCells}</div>`;
 }
 
-export function bodyVirtualMarkup(templateColumns: string, totalVirtualHeight: number, virtualOffset: number, bodyContent: string): string {
-  return `<div class="grid-virtual-spacer" style="height:${totalVirtualHeight}px"><div class="body-grid ui-grid-canvas grid-virtual-body" style="grid-template-columns:${templateColumns};top:${virtualOffset}px">${bodyContent}</div></div>`;
+export function virtualSpacerStyle(totalVirtualHeight: number, rowSize: number): string {
+  return `height:${totalVirtualHeight}px;--ui-grid-row-height:${rowSize}px`;
+}
+
+export function bodyVirtualMarkup(templateColumns: string, totalVirtualHeight: number, virtualOffset: number, bodyContent: string, rowSize: number): string {
+  return `<div class="grid-virtual-spacer" style="${virtualSpacerStyle(totalVirtualHeight, rowSize)}"><div class="body-grid ui-grid-canvas grid-virtual-body" style="grid-template-columns:${templateColumns};top:${virtualOffset}px">${bodyContent}</div></div>`;
 }
 
 export function bodyStaticMarkup(templateColumns: string, bodyContent: string): string {

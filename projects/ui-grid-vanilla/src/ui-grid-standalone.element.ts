@@ -1259,7 +1259,7 @@ export class UiGridStandaloneElement extends HTMLElement {
     const body =
       snapshot.pipeline.displayItems.length > 0
         ? virtualizationEnabled
-          ? bodyVirtualMarkup(templateColumns, totalVirtualHeight, virtualOffset, bodyContent)
+          ? bodyVirtualMarkup(templateColumns, totalVirtualHeight, virtualOffset, bodyContent, snapshot.rowSize)
           : bodyStaticMarkup(templateColumns, bodyContent)
         : this.renderEmptyState(
             options.emptyMessage ?? labels.emptyHeading,
@@ -1318,8 +1318,9 @@ export class UiGridStandaloneElement extends HTMLElement {
     templateColumns: string,
     virtualOffset: number,
     totalVirtualHeight: number,
+    rowSize: number,
   ): HTMLElement | null {
-    return reconcileBodyRoot(this, root, kind, options, labels, templateColumns, virtualOffset, totalVirtualHeight);
+    return reconcileBodyRoot(this, root, kind, options, labels, templateColumns, virtualOffset, totalVirtualHeight, rowSize);
   }
 
   private reconcilePagination(
