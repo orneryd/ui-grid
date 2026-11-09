@@ -1,6 +1,6 @@
 {
   "name": "@ornery/ui-grid-vanilla",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "Vanilla DOM wrapper for the Rust/WASM-backed @ornery/ui-grid-core custom element",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -26,7 +26,7 @@
     "./browser/ui-grid-element.js": "./dist/browser/ui-grid-element.js"
   },
   "dependencies": {
-    "@ornery/ui-grid-core": "^5.0.2"
+    "@ornery/ui-grid-core": "^5.0.3"
   },
   "devDependencies": {
     "@ornery/ui-grid-core": "file:../ui-grid-core",

@@ -1,6 +1,6 @@
 {
   "name": "@ornery/ui-grid",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "Angular data-grid component wrapping the vanilla web component",
   "private": false,
   "sideEffects": false,
@@ -9,8 +9,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@ornery/ui-grid-core": "^5.0.2",
-    "@ornery/ui-grid-vanilla": "^5.0.2",
+    "@ornery/ui-grid-core": "^5.0.3",
+    "@ornery/ui-grid-vanilla": "^5.0.3",
     "tslib": "^2.8.1"
   },
   "peerDependencies": {

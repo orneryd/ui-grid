@@ -1,6 +1,6 @@
 {
   "name": "@ornery/ui-grid-react",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "React wrapper for @ornery/ui-grid-core",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -21,8 +21,8 @@
     "./styles": "./dist/ui-grid.css"
   },
   "peerDependencies": {
-    "@ornery/ui-grid-core": "^5.0.2",
-    "@ornery/ui-grid-vanilla": "^5.0.2",
+    "@ornery/ui-grid-core": "^5.0.3",
+    "@ornery/ui-grid-vanilla": "^5.0.3",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
