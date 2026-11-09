@@ -45,6 +45,8 @@ mountUiGrid(hostElement, {
 3. For each added slot: calls the matching render function, creates a React portal, appends to light DOM with `slot` attribute
 4. For removed slots: unmounts the portal
 
+Header, filter, expandable-row and empty-state slots use the same flow via `headerRenderers`, `filterRenderers`, `expandableRowRenderer` and `emptyStateRenderer` (events `headerSlotsChanged`, `filterSlotsChanged`, `expandableRowSlotsChanged`, `emptyStateSlotChanged`). Slots are flagged before the element connects so the first render emits every `<slot>` placeholder.
+
 ### `styledCell` Helper
 
 Quick inline-styled cell without creating a full component:
