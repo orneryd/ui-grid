@@ -9,7 +9,7 @@ describe('GRID_CORE_CSS pin menu z-index', () => {
 
   it('keeps an open unpinned header below the pinned cell layer so its pin menu cannot paint over pinned cells', () => {
     expect(GRID_CORE_CSS).toMatch(
-      /\.header-cell\.is-pin-menu-open:not\(\.is-pinned\)\s*\{\s*z-index:\s*calc\(var\(--ui-grid-pinned-cell-z-index\)\s*-\s*1\)/,
+      /\.header-cell\.is-pin-menu-open:not\(\.is-pinned\)\s*\{\s*z-index:\s*max\(0,\s*var\(--ui-grid-pinned-cell-z-index\)\s*-\s*1\)/,
     );
   });
 });
