@@ -707,6 +707,9 @@ export class UiGridStandaloneElement extends HTMLElement {
     this.templateObserver?.disconnect();
     this.templateObserver = null;
     this.teardownAutoResize();
+    this.scrollbarObserver?.disconnect();
+    this.scrollbarObserver = null;
+    this.observedBodyViewport = null;
     if (this.scrollFrame !== null) {
       cancelAnimationFrame(this.scrollFrame);
       this.scrollFrame = null;
@@ -1050,7 +1053,28 @@ export class UiGridStandaloneElement extends HTMLElement {
       });
     }
 
+    this.syncScrollbarCompensation(root);
     this.autoAdjustHeight(snapshot);
+  }
+
+  private scrollbarObserver: ResizeObserver | null = null;
+  private observedBodyViewport: HTMLElement | null = null;
+
+  // The header and filter strips have no scrollbar, so they are narrowed by the
+  // body viewport's to keep right-pinned cells and scroll range aligned (#7402).
+  private syncScrollbarCompensation(root: ShadowRoot): void {
+    const frame = root.querySelector<HTMLElement>('.grid-frame');
+    const viewport = root.querySelector<HTMLElement>('.grid-body-viewport');
+    if (!frame || !viewport) return;
+    const width = `${Math.max(0, viewport.offsetWidth - viewport.clientWidth)}px`;
+    if (frame.style.getPropertyValue('--ui-grid-scrollbar-width') !== width) {
+      frame.style.setProperty('--ui-grid-scrollbar-width', width);
+    }
+    if (viewport === this.observedBodyViewport || typeof ResizeObserver === 'undefined') return;
+    this.scrollbarObserver ??= new ResizeObserver(() => this.syncScrollbarCompensation(root));
+    if (this.observedBodyViewport) this.scrollbarObserver.unobserve(this.observedBodyViewport);
+    this.scrollbarObserver.observe(viewport);
+    this.observedBodyViewport = viewport;
   }
 
   /** @internal */
