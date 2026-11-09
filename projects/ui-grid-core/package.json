@@ -11,6 +11,11 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
+    "./wasm": {
+      "types": "./dist/wasm.d.ts",
+      "import": "./dist/wasm.mjs",
+      "require": "./dist/wasm.js"
+    },
     "./src/lib/styles/*": "./src/lib/styles/*",
     "./src/lib/grid.core.styles": "./src/lib/grid.core.styles.scss"
   },
@@ -19,13 +24,11 @@
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
-  "dependencies": {
-    "@ornery/ui-grid-wasm": "1.0.8"
-  },
   "overrides": {
     "esbuild": "0.28.1"
   },
   "devDependencies": {
+    "@ornery/ui-grid-wasm": "1.0.8",
     "esbuild-sass-plugin": "^3.7.0",
     "sass": "^1.101.0",
     "tsup": "^8.5.1",
@@ -38,5 +41,13 @@
     "build": "tsup && tsc -p tsconfig.dts.json",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
+  },
+  "peerDependencies": {
+    "@ornery/ui-grid-wasm": "^1.0.8"
+  },
+  "peerDependenciesMeta": {
+    "@ornery/ui-grid-wasm": {
+      "optional": true
+    }
   }
 }
