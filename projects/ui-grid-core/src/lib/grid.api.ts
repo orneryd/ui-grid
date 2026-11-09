@@ -176,6 +176,8 @@ export interface UiGridApi {
       sortChanged: (listener: Listener<[string | null, SortDirection]>) => () => void;
       groupingChanged: (listener: Listener<[string[]]>) => () => void;
       columnOrderChanged: (listener: Listener<[string[]]>) => () => void;
+      /** A column was resized by the user: column name and its new width (e.g. `"180px"`). */
+      columnSizeChanged: (listener: Listener<[string, string]>) => () => void;
       benchmarkComplete: (listener: Listener<[GridBenchmarkResult]>) => () => void;
     };
     raise: {
@@ -190,6 +192,7 @@ export interface UiGridApi {
       sortChanged: (columnName: string | null, direction: SortDirection) => void;
       groupingChanged: (groupBy: string[]) => void;
       columnOrderChanged: (order: string[]) => void;
+      columnSizeChanged: (columnName: string, width: string) => void;
       benchmarkComplete: (result: GridBenchmarkResult) => void;
     };
     refresh: () => void;
@@ -503,6 +506,7 @@ export function createGridApi(bindings: GridApiBindings): UiGridApi {
   const sortChanged = new GridEvent<[string | null, SortDirection]>();
   const groupingChanged = new GridEvent<[string[]]>();
   const columnOrderChanged = new GridEvent<[string[]]>();
+  const columnSizeChanged = new GridEvent<[string, string]>();
   const benchmarkComplete = new GridEvent<[GridBenchmarkResult]>();
   const paginationChanged = new GridEvent<[number, number]>();
   const rowExpandedStateChanged = new GridEvent<[GridRow, boolean]>();
@@ -651,6 +655,7 @@ export function createGridApi(bindings: GridApiBindings): UiGridApi {
         sortChanged: (listener) => sortChanged.subscribe(listener),
         groupingChanged: (listener) => groupingChanged.subscribe(listener),
         columnOrderChanged: (listener) => columnOrderChanged.subscribe(listener),
+        columnSizeChanged: (listener) => columnSizeChanged.subscribe(listener),
         benchmarkComplete: (listener) => benchmarkComplete.subscribe(listener)
       },
       raise: {
@@ -666,6 +671,7 @@ export function createGridApi(bindings: GridApiBindings): UiGridApi {
         sortChanged: (columnName, direction) => sortChanged.emit(columnName, direction),
         groupingChanged: (groupBy) => groupingChanged.emit(groupBy),
         columnOrderChanged: (order) => columnOrderChanged.emit(order),
+        columnSizeChanged: (columnName, width) => columnSizeChanged.emit(columnName, width),
         benchmarkComplete: (result) => benchmarkComplete.emit(result)
       },
       refresh: bindings.refresh,

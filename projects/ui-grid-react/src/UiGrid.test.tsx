@@ -444,6 +444,22 @@ describe('UiGrid React component', () => {
       expect(filterChanged).not.toHaveBeenCalled();
     });
 
+    it('filter renderer receives the new value when the filter changes', async () => {
+      const { container, gridApi } = await renderGrid(
+        {},
+        { filterRenderers: { status: (slot) => <output>{slot.value || 'none'}</output> } },
+      );
+      await waitFor(() => {
+        expect(slotWrapper(container, 'filter-status')?.textContent).toBe('none');
+      });
+      act(() => {
+        gridApi.core.setFilter('status', 'Active');
+      });
+      await waitFor(() => {
+        expect(slotWrapper(container, 'filter-status')?.textContent).toBe('Active');
+      });
+    });
+
     it('removing a renderer key unmounts its portal and removes the wrapper', async () => {
       const options = createOptions();
       const { container, rerender } = render(

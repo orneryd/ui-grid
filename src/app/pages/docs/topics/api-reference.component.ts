@@ -390,6 +390,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             <td><code>(order) => void</code></td>
           </tr>
           <tr>
+            <td><code>columnSizeChanged</code></td>
+            <td><code>(columnName, width) => void</code></td>
+          </tr>
+          <tr>
             <td><code>rowsVisibleChanged</code></td>
             <td><code>(rows) => void</code></td>
           </tr>

@@ -104,6 +104,8 @@ export interface FrameworkEmptyStateSlot {
 export interface FrameworkSlotDelta<TSlot> {
   added: TSlot[];
   removed: TSlot[];
+  /** Slots kept since the last render whose payload changed (filter slots: value, placeholder, disabled). */
+  updated?: TSlot[];
 }
 
 export function cellSlotName(column: GridColumnDef): string {
@@ -372,15 +374,24 @@ export class FrameworkSlotBridge {
     this.lastHeaderSlots = this.pendingHeaderSlots;
     this.pendingHeaderSlots = new Map();
 
-    this.diffAndEmit(this.lastFilterSlots, this.pendingFilterSlots, 'filterSlotsChanged');
+    this.diffAndEmit(
+      this.lastFilterSlots,
+      this.pendingFilterSlots,
+      'filterSlotsChanged',
+      (previous, current) =>
+        previous.value !== current.value ||
+        previous.placeholder !== current.placeholder ||
+        previous.disabled !== current.disabled,
+    );
     this.lastFilterSlots = this.pendingFilterSlots;
     this.pendingFilterSlots = new Map();
 
-    this.diffAndEmitSingleton(
-      this.lastEmptyStateSlot,
-      this.pendingEmptyStateSlot,
+    // emptyStateSlotChanged is the original (singular) name, kept for
+    // existing wrappers; emptyStateSlotsChanged matches the other kinds.
+    this.diffAndEmitSingleton(this.lastEmptyStateSlot, this.pendingEmptyStateSlot, [
+      'emptyStateSlotsChanged',
       'emptyStateSlotChanged',
-    );
+    ]);
     this.lastEmptyStateSlot = this.pendingEmptyStateSlot;
     this.pendingEmptyStateSlot = null;
   }
@@ -413,19 +424,23 @@ export class FrameworkSlotBridge {
     previous: Map<string, TSlot>,
     current: Map<string, TSlot>,
     eventName: string,
+    changed?: (previous: TSlot, current: TSlot) => boolean,
   ): void {
     const added: TSlot[] = [];
     const removed: TSlot[] = [];
+    const updated: TSlot[] = [];
     for (const [key, slot] of current) {
-      if (!previous.has(key)) added.push(slot);
+      const before = previous.get(key);
+      if (!before) added.push(slot);
+      else if (changed?.(before, slot)) updated.push(slot);
     }
     for (const [key, slot] of previous) {
       if (!current.has(key)) removed.push(slot);
     }
-    if (added.length === 0 && removed.length === 0) return;
+    if (added.length === 0 && removed.length === 0 && updated.length === 0) return;
     this.host.dispatchEvent(
       new CustomEvent<FrameworkSlotDelta<TSlot>>(eventName, {
-        detail: { added, removed },
+        detail: { added, removed, updated },
         bubbles: false,
         composed: false,
       }),
@@ -435,19 +450,21 @@ export class FrameworkSlotBridge {
   private diffAndEmitSingleton<TSlot>(
     previous: TSlot | null,
     current: TSlot | null,
-    eventName: string,
+    eventNames: readonly string[],
   ): void {
     if (previous === current) return;
     if (!previous && !current) return;
     const added: TSlot[] = current ? [current] : [];
     const removed: TSlot[] = previous ? [previous] : [];
-    this.host.dispatchEvent(
-      new CustomEvent<FrameworkSlotDelta<TSlot>>(eventName, {
-        detail: { added, removed },
-        bubbles: false,
-        composed: false,
-      }),
-    );
+    for (const eventName of eventNames) {
+      this.host.dispatchEvent(
+        new CustomEvent<FrameworkSlotDelta<TSlot>>(eventName, {
+          detail: { added, removed, updated: [] },
+          bubbles: false,
+          composed: false,
+        }),
+      );
+    }
   }
 }
 

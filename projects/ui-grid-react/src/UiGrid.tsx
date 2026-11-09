@@ -105,7 +105,7 @@ const SLOT_KINDS: Record<SlotKind, SlotKindDescriptor> = {
     }),
   },
   empty: {
-    eventName: 'emptyStateSlotChanged',
+    eventName: 'emptyStateSlotsChanged',
     wrapperTag: 'div',
     toEntry: (slot: FrameworkEmptyStateSlot) => ({
       columnName: '',
@@ -441,6 +441,12 @@ export function UiGrid({
         ...descriptor.toEntry(slot),
         wrapper,
       });
+    }
+
+    // Same slot, new payload (e.g. a filter's value): re-render in place.
+    for (const slot of detail.updated ?? []) {
+      const entry = next.get(slot.slotName);
+      if (entry) next.set(slot.slotName, { ...entry, ...descriptor.toEntry(slot) });
     }
 
     commitSlots(next);

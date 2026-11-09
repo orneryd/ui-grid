@@ -1533,8 +1533,10 @@ export class VanillaGridController {
 
   setColumnWidthOverride(columnName: string, widthPx: number): void {
     const nextWidth = `${Math.max(88, Math.round(widthPx))}px`;
+    if (this.columnWidthOverrides[columnName] === nextWidth) return;
     this.columnWidthOverrides = { ...this.columnWidthOverrides, [columnName]: nextWidth };
     this.refresh();
+    this.gridApi.core.raise.columnSizeChanged(columnName, nextWidth);
   }
 
   /** Returns the grid-template-columns string as if `columnName` had the given width,

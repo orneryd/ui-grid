@@ -250,6 +250,9 @@ export class UiGridStandaloneElement extends HTMLElement {
       // hasCell() / hasHeader() / etc. — values not captured by the
       // row-level fingerprint.
       this.lastRowStateFingerprints.clear();
+      // The patch path keeps existing nodes (e.g. a <ui-grid-filter-cell>
+      // that should now be a <slot>), so the next pass must be a full render.
+      this.lastStructureKey = null;
       this.render();
     }
   }
