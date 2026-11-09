@@ -1627,17 +1627,29 @@ export class VanillaGridController {
     return condition({ row: row.entity, column, rowIndex: row.index });
   }
 
+  // Pin state as laid out: the selection row-header column sits in front of
+  // the left-pinned columns, so it is pinned with them (#7399).
+  private layoutPinnedColumns(): PinnedColumnState {
+    const pinned = this.pinnedColumns;
+    if (pinned[SELECTION_COLUMN] !== undefined) return pinned;
+    if (!Object.values(pinned).includes('left')) return pinned;
+    if (this.visibleColumns[0]?.name !== SELECTION_COLUMN) return pinned;
+    return { [SELECTION_COLUMN]: 'left', ...pinned };
+  }
+
   isPinned(column: GridColumnDef): boolean {
-    return this.pinnedColumns[column.name] !== undefined;
+    return this.layoutPinnedColumns()[column.name] !== undefined;
   }
 
   isPinnedLeftLast(column: GridColumnDef): boolean {
-    const leftPinned = this.visibleColumns.filter((c) => this.pinnedColumns[c.name] === 'left');
+    const pinned = this.layoutPinnedColumns();
+    const leftPinned = this.visibleColumns.filter((c) => pinned[c.name] === 'left');
     return leftPinned.length > 0 && leftPinned[leftPinned.length - 1].name === column.name;
   }
 
   isPinnedRightFirst(column: GridColumnDef): boolean {
-    const rightPinned = this.visibleColumns.filter((c) => this.pinnedColumns[c.name] === 'right');
+    const pinned = this.layoutPinnedColumns();
+    const rightPinned = this.visibleColumns.filter((c) => pinned[c.name] === 'right');
     return rightPinned.length > 0 && rightPinned[0].name === column.name;
   }
 
@@ -1657,7 +1669,7 @@ export class VanillaGridController {
   }
 
   pinnedOffset(column: GridColumnDef): { side: 'left' | 'right'; offset: string } | null {
-    return computePinnedOffset(this.visibleColumns, this.pinnedColumns, column);
+    return computePinnedOffset(this.visibleColumns, this.layoutPinnedColumns(), column);
   }
 
   displayValue(row: GridRow, column: GridColumnDef): unknown {
@@ -2551,6 +2563,8 @@ export class VanillaGridController {
 
 // Singular group-row suffixes for the bundled locales' plurals, kept out of the
 // locale label set so it matches the WASM engine's.
+const SELECTION_COLUMN = 'selectionRowHeaderCol';
+
 const GROUP_ROW_SUFFIX_ONE: Readonly<Record<string, string>> = {
   rows: 'row',
   lignes: 'ligne',
