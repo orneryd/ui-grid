@@ -282,6 +282,10 @@
       0 10px 24px color-mix(in srgb, var(--_ui-grid-cell-color) 10%, transparent)
     )
   );
+  --_ui-grid-pin-menu-direction: var(
+    --ui-grid-pin-menu-direction,
+    var(--app-ui-grid-pin-menu-direction, row)
+  );
   --_ui-grid-pin-menu-action-size: var(
     --ui-grid-pin-menu-action-size,
     var(--app-ui-grid-pin-menu-action-size, 1.75rem)
@@ -341,6 +345,7 @@
     --ui-grid-body-cell-padding-inline,
     var(--app-ui-grid-body-cell-padding-inline, 1rem)
   );
+  --_ui-grid-body-cell-align: var(--ui-grid-body-cell-align, var(--app-ui-grid-body-cell-align, start));
   --_ui-grid-cell-shell-gap: var(--ui-grid-cell-shell-gap, var(--app-ui-grid-cell-shell-gap, 0.55rem));
   --_ui-grid-row-toggle-size: var(--ui-grid-row-toggle-size, var(--app-ui-grid-row-toggle-size, 1.55rem));
   --_ui-grid-row-toggle-radius: var(

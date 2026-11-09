@@ -85,6 +85,7 @@ import {
   type GridSaveState,
   type VanillaGridController,
 } from './grid-controller';
+import { addUserStyles } from './adopt-styles';
 import emptyTemplate from './ui-grid-empty.template';
 import gridShellTemplate from './ui-grid-shell.template';
 import {
@@ -117,6 +118,11 @@ export type VanillaUiGridElement = HTMLElement & {
    * full contract.
    */
   setFrameworkRenderedSlots(config: FrameworkRenderedSlotsConfig): void;
+  /**
+   * Add CSS to the grid's shadow root, after the grid's own styles so it wins
+   * at equal specificity. Returns a function that removes it.
+   */
+  addStyles(cssText: string): () => void;
 };
 
 type VanillaGridOptions = GridOptions & {
@@ -231,6 +237,10 @@ export class UiGridStandaloneElement extends HTMLElement {
    * the web component directly can ignore this method — the default
    * `<template slot="cell-columnName">` workflow still works.
    */
+  addStyles(cssText: string): () => void {
+    return addUserStyles(this.ensureShadowRoot(), cssText);
+  }
+
   setFrameworkRenderedSlots(config: FrameworkRenderedSlotsConfig): void {
     if (this.frameworkSlots.configure(config)) {
       // The set of slot placeholders changed — force a structural re-render

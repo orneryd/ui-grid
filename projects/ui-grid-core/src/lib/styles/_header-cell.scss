@@ -210,7 +210,10 @@
   grid-area: 1 / 1;
   z-index: var(--ui-grid-pin-menu-z-index);
   display: grid;
+  // row: Pin left above Pin right; column: side by side, for compact headers.
+  grid-auto-flow: var(--ui-grid-pin-menu-direction);
   grid-auto-rows: var(--ui-grid-pin-menu-action-size);
+  grid-auto-columns: var(--ui-grid-pin-menu-action-size);
   gap: var(--ui-grid-pin-menu-gap);
   padding: var(--ui-grid-pin-menu-padding);
   border: 1px solid var(--ui-grid-border-color);
@@ -242,6 +245,7 @@
 
 .pin-control-open {
   align-items: start;
+  overflow: visible;
 }
 
 .pin-control-open .pin-trigger {
@@ -257,6 +261,8 @@
     (var(--ui-grid-pin-menu-action-size) * 2) + var(--ui-grid-pin-menu-gap) +
       (var(--ui-grid-pin-menu-padding) * 2)
   );
+  width: max-content;
+  min-width: var(--ui-grid-control-size);
   opacity: 1;
   pointer-events: auto;
   transform: scale(1);
