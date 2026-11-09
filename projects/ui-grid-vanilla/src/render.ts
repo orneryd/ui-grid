@@ -70,7 +70,12 @@ export function renderHeaderCell(
     const inner = showSelectAll
       ? `<button type="button" class="ui-grid-selection-select-all" data-action="select-all" aria-label="Select all rows"${selectAll ? ' aria-checked="true"' : ' aria-checked="false"'}><span class="ui-grid-selection-checkbox${selectAll ? ' ui-grid-selection-checkbox-checked' : ''}"></span></button>`
       : '';
-    return `<ui-grid-header-cell class="header-cell ui-grid-selection-row-header" data-column="selectionRowHeaderCol">${inner}</ui-grid-header-cell>`;
+    const pinOffset = controller.isPinned(column) ? controller.pinnedOffset(column) : null;
+    const pinClass = pinOffset
+      ? ` is-pinned${controller.isPinnedLeftLast(column) ? ' is-pinned-left-last' : ''}`
+      : '';
+    const stickyStyle = pinOffset ? ` style="${escapeHtml(`${pinOffset.side}:${pinOffset.offset};`)}"` : '';
+    return `<ui-grid-header-cell class="header-cell ui-grid-selection-row-header${pinClass}"${stickyStyle} data-column="selectionRowHeaderCol">${inner}</ui-grid-header-cell>`;
   }
 
   // Framework-rendered header: emit a bare cell with a slot placeholder.
@@ -138,7 +143,8 @@ export function renderFilterCell(el: UiGridStandaloneElement, column: GridColumn
   if (column.name === 'selectionRowHeaderCol') {
     const pinOffset = el.controller!.isPinned(column) ? el.controller!.pinnedOffset(column) : null;
     const stickyStyle = pinOffset ? `${pinOffset.side}:${pinOffset.offset};` : '';
-    return `<div class="filter-cell ui-grid-selection-row-header" data-column="selectionRowHeaderCol"${stickyStyle ? ` style="${escapeHtml(stickyStyle)}"` : ''}></div>`;
+    const pinClass = pinOffset ? ' is-pinned' : '';
+    return `<div class="filter-cell ui-grid-selection-row-header${pinClass}" data-column="selectionRowHeaderCol"${stickyStyle ? ` style="${escapeHtml(stickyStyle)}"` : ''}></div>`;
   }
   const value = el.snapshot?.activeFilters[column.name] ?? '';
   const controller = el.controller!;
