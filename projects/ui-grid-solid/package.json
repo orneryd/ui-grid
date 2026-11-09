@@ -1,6 +1,6 @@
 {
   "name": "@ornery/ui-grid-solid",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "SolidJS adapter for uiGrid's vanilla renderer",
   "type": "module",
   "files": [
@@ -26,8 +26,8 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@ornery/ui-grid-core": "^5.0.2",
-    "@ornery/ui-grid-vanilla": "^5.0.2",
+    "@ornery/ui-grid-core": "^5.0.3",
+    "@ornery/ui-grid-vanilla": "^5.0.3",
     "@solidjs/web": ">=2.0.0-rc.4 <3",
     "solid-js": ">=2.0.0-rc.4 <3"
   },
