@@ -174,7 +174,7 @@ export function renderDisplayItem(
     const iconKey = group.collapsed ? 'groupCollapsed' : 'groupExpanded';
     const icon = el.icons.resolve(iconKey);
     const disclosureLabel = el.controller.groupDisclosureLabel(group);
-    return `<ui-grid-group-row data-action="toggle-group" data-group="${escapeHtml(group.id)}" data-collapsed="${group.collapsed ? 'true' : 'false'}" data-field="${escapeHtml(group.field)}" data-label="${escapeHtml(group.label)}" data-count="${group.count}" data-depth="${group.depth}" data-disclosure-label="${escapeHtml(disclosureLabel)}" data-icon-path="${icon.path}" data-icon-view-box="${icon.viewBox ?? '0 0 24 24'}" data-rows-suffix="${escapeHtml(el.snapshot.labels.groupRowsSuffix)}"></ui-grid-group-row>`;
+    return `<ui-grid-group-row data-action="toggle-group" data-group="${escapeHtml(group.id)}" data-collapsed="${group.collapsed ? 'true' : 'false'}" data-field="${escapeHtml(group.field)}" data-column-label="${escapeHtml(el.controller.groupColumnLabel(group))}" data-label="${escapeHtml(group.label)}" data-count="${group.count}" data-depth="${group.depth}" data-disclosure-label="${escapeHtml(disclosureLabel)}" data-icon-path="${icon.path}" data-icon-view-box="${icon.viewBox ?? '0 0 24 24'}" data-rows-suffix="${escapeHtml(el.controller.groupRowsSuffix(group))}"></ui-grid-group-row>`;
   }
 
   if (item.kind === 'expandable') {

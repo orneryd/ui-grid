@@ -1,6 +1,6 @@
 import { DisplayItem } from './grid.core.types';
 import { GridColumnDef, GridOptions, GridRow } from './grid.models';
-import { getPathValue, stringifyCellValue } from './grid.utils';
+import { getCellValue, getPathValue, stringifyCellValue } from './grid.utils';
 
 function isGroupingEnabled(options: GridOptions): boolean {
   return options.enableGrouping === true && options.enableTreeView !== true;
@@ -8,6 +8,12 @@ function isGroupingEnabled(options: GridOptions): boolean {
 
 function canExpandRows(options: GridOptions): boolean {
   return options.enableExpandable === true && !!options.expandableRowTemplate;
+}
+
+function getGroupingValue(row: GridRow, column: GridColumnDef | undefined, field: string): unknown {
+  if (column?.groupingValue) return column.groupingValue(row.entity);
+  if (column?.valueGetter || column?.field) return getCellValue(row.entity, column);
+  return getPathValue(row.entity, field);
 }
 
 function buildRowDisplayItems(rows: readonly GridRow[], options: GridOptions): DisplayItem[] {
@@ -37,9 +43,10 @@ function buildGroupedItems(
 
   const [currentField, ...rest] = groupBy;
   const groups = new Map<string, GridRow[]>();
+  const column = columns.find((candidate) => candidate.name === currentField);
 
   for (const row of rows) {
-    const value = stringifyCellValue(getPathValue(row.entity, currentField));
+    const value = stringifyCellValue(getGroupingValue(row, column, currentField));
     const key = value || 'Unassigned';
     const bucket = groups.get(key) ?? [];
     bucket.push(row);

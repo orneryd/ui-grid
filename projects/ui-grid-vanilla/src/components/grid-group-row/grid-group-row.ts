@@ -24,6 +24,7 @@ import { renderGroupRow } from './grid-group-row.template';
  *   data-group="category:Fruit"
  *   data-collapsed="false"
  *   data-field="category"
+ *   data-column-label="Category"
  *   data-label="Fruit"
  *   data-count="5"
  *   data-depth="0"
@@ -36,6 +37,8 @@ export class UIGridGroupRow extends HTMLElement {
 
   /** The grouping field name (e.g. "category"). */
   field = '';
+  /** The grouped column's header (e.g. "Category"); falls back to `field`. */
+  columnLabel = '';
   /** The group value label (e.g. "Fruit"). */
   label = '';
   /** Number of rows in this group. */
@@ -55,7 +58,7 @@ export class UIGridGroupRow extends HTMLElement {
   }
 
   static get observedAttributes(): string[] {
-    return ['data-group', 'data-collapsed', 'data-field', 'data-label',
+    return ['data-group', 'data-collapsed', 'data-field', 'data-column-label', 'data-label',
             'data-count', 'data-depth', 'data-disclosure-label',
             'data-icon-path', 'data-icon-view-box', 'data-rows-suffix'];
   }
@@ -73,6 +76,7 @@ export class UIGridGroupRow extends HTMLElement {
   private render(): void {
     const depth = parseInt(this.getAttribute('data-depth') ?? '0', 10);
     this.field = this.getAttribute('data-field') ?? '';
+    this.columnLabel = this.getAttribute('data-column-label') ?? '';
     this.label = this.getAttribute('data-label') ?? '';
     this.count = this.getAttribute('data-count') ?? '0';
     this.disclosureLabel = this.getAttribute('data-disclosure-label') ?? '';

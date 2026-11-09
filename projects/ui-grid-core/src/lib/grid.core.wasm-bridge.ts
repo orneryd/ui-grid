@@ -890,6 +890,17 @@ function hasColumnCallbacks(column: GridColumnDef): boolean {
   return typeof column.valueGetter === 'function' || typeof column.sortingAlgorithm === 'function';
 }
 
+// The WASM engine groups on the raw `name` path only.
+function hasCustomGroupingValue(columns: readonly GridColumnDef[], groupBy: readonly string[]): boolean {
+  return columns.some(
+    (column) =>
+      groupBy.includes(column.name) &&
+      (typeof column.groupingValue === 'function' ||
+        typeof column.valueGetter === 'function' ||
+        (column.field !== undefined && column.field !== column.name)),
+  );
+}
+
 function hasUnsupportedFilterCondition(column: GridColumnDef): boolean {
   const condition = column.filter?.condition;
   return condition instanceof RegExp || typeof condition === 'function';
@@ -910,6 +921,7 @@ function normalizeColumnForWasm(column: GridColumnDef): GridColumnDef {
     ...column,
     sortingAlgorithm: undefined,
     valueGetter: undefined,
+    groupingValue: undefined,
     formatter: undefined,
     headerRenderer: undefined,
     cellTemplate: undefined,
@@ -1537,7 +1549,7 @@ export const buildGridDisplayItems: typeof tsGrouping.buildGridDisplayItems = (
   groupBy,
   collapsedGroups,
 ) =>
-  requiresTemplateFallback(options)
+  requiresTemplateFallback(options) || hasCustomGroupingValue(columns, groupBy)
     ? tsGrouping.buildGridDisplayItems(rows, columns, options, groupBy, collapsedGroups)
     : withWasm(
         (wasm) =>
