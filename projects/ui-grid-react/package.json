@@ -21,8 +21,8 @@
     "./styles": "./dist/ui-grid.css"
   },
   "peerDependencies": {
-    "@ornery/ui-grid-core": "5.0.2",
-    "@ornery/ui-grid-vanilla": "5.0.2",
+    "@ornery/ui-grid-core": "^5.0.2",
+    "@ornery/ui-grid-vanilla": "^5.0.2",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },

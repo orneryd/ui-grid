@@ -12,6 +12,7 @@ import {
   registerWasmCoreModule,
 } from './grid.core.wasm-bridge';
 import { setUiGridWasmAssetBase } from './ui-grid.wasm-path';
+import { enableUiGridWasmEngine } from '../wasm';
 
 describe('WASM core initialization', () => {
   afterEach(() => {
@@ -19,10 +20,17 @@ describe('WASM core initialization', () => {
     setUiGridWasmAssetBase(null);
   });
 
-  it('loads the package runtime once for concurrent callers', async () => {
-    expect(getWasmCoreInitializationState()).toBe('idle');
+  it('does not load the package runtime without opting in', async () => {
+    await expect(initWasmCore()).resolves.toBe(false);
+    expect(getWasmCoreInitializationState()).toBe('failed');
+    expect(isWasmReady()).toBe(false);
+  });
 
-    const first = initWasmCore();
+  it('loads the package runtime once for concurrent callers after opting in', async () => {
+    await initWasmCore();
+    expect(getWasmCoreInitializationState()).toBe('failed');
+
+    const first = enableUiGridWasmEngine().then(() => true);
     const second = initWasmCore();
 
     expect(getWasmCoreInitializationState()).toBe('loading');

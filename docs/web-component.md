@@ -164,7 +164,9 @@ const grid = await mountVanillaUiGrid(
 );
 ```
 
-If no WASM module is provided, or if WASM initialization fails, the grid automatically falls back to the JavaScript engine.
+To load it through your bundler instead of passing a module, call `enableUiGridWasmEngine()` from `@ornery/ui-grid-core/wasm` once at startup.
+
+WASM is opt-in. Without a module, an `enableUiGridWasmEngine()` call or a configured WASM asset base, the grid never loads WASM and your bundle doesn't include it. If WASM initialization fails, the grid falls back to the JavaScript engine.
 
 ### Slot Templates
 

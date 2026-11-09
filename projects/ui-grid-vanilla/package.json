@@ -26,7 +26,7 @@
     "./browser/ui-grid-element.js": "./dist/browser/ui-grid-element.js"
   },
   "dependencies": {
-    "@ornery/ui-grid-core": "5.0.2"
+    "@ornery/ui-grid-core": "^5.0.2"
   },
   "devDependencies": {
     "@ornery/ui-grid-core": "file:../ui-grid-core",

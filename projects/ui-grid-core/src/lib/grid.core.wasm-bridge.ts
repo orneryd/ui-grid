@@ -563,13 +563,34 @@ function currentWasmInitSource(): string {
   return getConfiguredUiGridWasmAssetBase() ?? 'package';
 }
 
+// Set by the opt-in `@ornery/ui-grid-core/wasm` entry. The main entry never
+// imports @ornery/ui-grid-wasm, so bundlers leave it out unless an app asks.
+let wasmPackageLoader: (() => Promise<object>) | null = null;
+
+export function setUiGridWasmPackageLoader(loader: () => Promise<object>): void {
+  wasmPackageLoader = loader;
+  // Forget a load that failed for lack of a loader, so the next call retries.
+  if (!wasmCore && wasmInitState !== 'loading') {
+    wasmInitGeneration += 1;
+    wasmInitPromise = null;
+    wasmInitSource = null;
+    wasmInitState = 'idle';
+  }
+}
+
 async function loadWasmCoreModule(): Promise<UiGridWasmCoreModule> {
   if (!getConfiguredUiGridWasmAssetBase()) {
-    return import('@ornery/ui-grid-wasm/bundler') as Promise<UiGridWasmCoreModule>;
+    if (!wasmPackageLoader) {
+      throw new Error(
+        'UI Grid WASM is opt-in: call enableUiGridWasmEngine() from @ornery/ui-grid-core/wasm, ' +
+          'configure a WASM asset base, or register a module with registerUiGridWasmEngineFromModule().',
+      );
+    }
+    return (await wasmPackageLoader()) as UiGridWasmCoreModule;
   }
 
   const module = (await import(
-    /* @vite-ignore */ getUiGridWasmModulePath()
+    /* webpackIgnore: true */ /* turbopackIgnore: true */ /* @vite-ignore */ getUiGridWasmModulePath()
   )) as UiGridWasmCoreModule;
   if (typeof module.default !== 'function') {
     throw new Error('UI Grid WASM web module does not export an initializer');

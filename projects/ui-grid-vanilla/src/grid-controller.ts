@@ -15,7 +15,8 @@ import {
   defaultGridEngine,
   expandAllGridRowsCommand,
   expandAllGridTreeRowsCommand,
-  enableUiGridWasmEngine,
+  initWasmCore,
+  getConfiguredUiGridWasmAssetBase,
   getWasmCoreInitializationState,
   findGridRowById as coreFindGridRowById,
   formatGridCellDisplayValue,
@@ -1926,18 +1927,29 @@ export class VanillaGridController {
     this.emit();
   }
 
+  private awaitingWasmEngine = false;
+
+  // WASM is opt-in (#7396). The grid starts a load only when the app set a
+  // WASM asset base; otherwise it waits for a load the app started. Either
+  // way it refreshes once WASM is ready so it switches engines.
   private maybeEnableWasmEngine(): void {
-    if (getWasmCoreInitializationState() !== 'idle') {
+    const state = getWasmCoreInitializationState();
+    const optedIn = state === 'loading' || (state === 'idle' && getConfiguredUiGridWasmAssetBase() !== null);
+    if (this.awaitingWasmEngine || !optedIn) {
       return;
     }
 
-    void enableUiGridWasmEngine()
-      .then(() => {
-        if (!this.disposed) {
+    this.awaitingWasmEngine = true;
+    void initWasmCore()
+      .then((ready) => {
+        this.awaitingWasmEngine = false;
+        if (ready && !this.disposed) {
           this.refresh();
         }
       })
-      .catch(() => undefined);
+      .catch(() => {
+        this.awaitingWasmEngine = false;
+      });
   }
 
   private emit(): void {

@@ -26,8 +26,8 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@ornery/ui-grid-core": "5.0.2",
-    "@ornery/ui-grid-vanilla": "5.0.2",
+    "@ornery/ui-grid-core": "^5.0.2",
+    "@ornery/ui-grid-vanilla": "^5.0.2",
     "@solidjs/web": ">=2.0.0-rc.4 <3",
     "solid-js": ">=2.0.0-rc.4 <3"
   },
