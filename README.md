@@ -81,12 +81,27 @@ Everything below ships free and MIT-licensed. No enterprise tier, no license key
 npm install @ornery/ui-grid
 ```
 
-The WASM runtime is installed transitively and loaded through your application
-bundler. No `angular.json` asset entry or `dist/ui-grid-wasm-web` copy is needed,
-and applications should not register the TypeScript pipeline as a WASM engine.
+The grid runs on its TypeScript engine. The Rust/WASM engine is optional and
+loads only when your app asks for it. To load it through your bundler, install
+it and enable it once at startup:
+
+```bash
+npm install @ornery/ui-grid-wasm
+```
+
+```typescript
+import { enableUiGridWasmEngine } from '@ornery/ui-grid-core/wasm';
+
+void enableUiGridWasmEngine();
+```
+
+Grids switch to WASM when it is ready. No `angular.json` asset entry or
+`dist/ui-grid-wasm-web` copy is needed, and applications should not register
+the TypeScript pipeline as a WASM engine. Apps that never import
+`@ornery/ui-grid-core/wasm` don't bundle the WASM package.
 
 For an unbundled deployment that hosts the web-target WASM files separately,
-configure their asset root before mounting a grid:
+configure their asset root before mounting a grid. This also opts in:
 
 ```typescript
 import { setUiGridWasmAssetBase } from '@ornery/ui-grid';

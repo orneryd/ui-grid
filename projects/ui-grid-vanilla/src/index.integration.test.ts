@@ -181,9 +181,24 @@ describe('mountVanillaUiGrid integration', () => {
     ]);
   });
 
-  it('lazy-loads the wasm engine once and refreshes through it when ready', async () => {
-    const enableSpy = vi.spyOn(core, 'enableUiGridWasmEngine').mockImplementation(async () => {
-      core.registerWasmCoreModule({});
+  it('never loads the wasm engine on its own', async () => {
+    const enableSpy = vi.spyOn(core, 'enableUiGridWasmEngine');
+    const controller = createVanillaGridController({
+      id: 'controller-wasm-opt-in',
+      data: [{ id: 'r1', name: 'Gamma' }],
+      columnDefs: [{ name: 'name' }],
+    });
+
+    controller.setFilter('name', 'Gamma');
+    await new Promise((resolveNext) => window.setTimeout(resolveNext, 20));
+
+    expect(enableSpy).not.toHaveBeenCalled();
+    expect(core.getWasmCoreInitializationState()).toBe('idle');
+    enableSpy.mockRestore();
+  });
+
+  it('switches to the wasm engine when a load the app started finishes', async () => {
+    const fakeRustEngine = () =>
       core.registerRustWasmGridEngine({
         buildPipeline(context) {
           return {
@@ -200,7 +215,17 @@ describe('mountVanillaUiGrid integration', () => {
           };
         },
       });
-    });
+    let finishLoad: (module: object) => void = () => undefined;
+    core.setUiGridWasmPackageLoader(
+      () =>
+        new Promise((resolveLoad) => {
+          finishLoad = (module) => {
+            fakeRustEngine();
+            resolveLoad(module);
+          };
+        }),
+    );
+    const enabled = core.enableUiGridWasmEngine();
 
     const controller = createVanillaGridController({
       id: 'controller-wasm-bootstrap',
@@ -212,22 +237,16 @@ describe('mountVanillaUiGrid integration', () => {
       enableSorting: true,
       enableFiltering: true,
     });
+    expect(controller.getSnapshot().pipeline.pipelineMs).not.toBe(123);
 
-    expect(enableSpy).toHaveBeenCalledTimes(1);
-
+    finishLoad({});
+    await enabled;
     await waitFor(() => {
       const snapshot = controller.getSnapshot();
       return activeGridEngineBackend() === 'rust-wasm' && snapshot.pipeline.pipelineMs === 123
         ? snapshot
         : null;
     });
-
-    controller.setFilter('name', 'Alpha');
-    controller.sortColumn('name', SORT_DIRECTIONS.asc);
-
-    expect(enableSpy).toHaveBeenCalledTimes(1);
-    expect(controller.getSnapshot().pipeline.pipelineMs).toBe(123);
-    enableSpy.mockRestore();
   });
 
   it('applies overridable SVG icons for controls', async () => {
