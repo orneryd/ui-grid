@@ -18,7 +18,6 @@ import type {
   FrameworkSlotDelta,
   UiGridStandaloneElement,
 } from '@ornery/ui-grid-vanilla';
-import { defineStandaloneUiGridElement } from '@ornery/ui-grid-vanilla';
 
 export interface UiGridCellRenderers {
   [columnName: string]: (context: GridCellTemplateContext) => React.ReactNode;
@@ -216,7 +215,9 @@ export function UiGrid({
 
     const mount = async () => {
       if (!definePromise) {
-        definePromise = defineStandaloneUiGridElement(TAG_NAME);
+        definePromise = import('@ornery/ui-grid-vanilla').then(({ defineStandaloneUiGridElement }) =>
+          defineStandaloneUiGridElement(TAG_NAME),
+        );
       }
       await definePromise;
       if (disposed) return;
