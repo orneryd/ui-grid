@@ -15,7 +15,7 @@
     "build:pages": "npm run prepare:wasm && npm run build:core && npm run build --prefix projects/ui-grid-vanilla && npm run build --prefix projects/ui-grid-react && ng build --configuration production --base-href /ui-grid/ --deploy-url /ui-grid/",
     "build:core": "npm run build --prefix projects/ui-grid-core",
     "build:library": "npm run prepare:wasm && npm run build:core && npm run build --prefix projects/ui-grid-vanilla && ng build uiGridPackage",
-    "build:library:preset": "npm run prepare:wasm && node scripts/build-library-preset.mjs",
+    "build:library:preset": "npm run build:vanilla && node scripts/build-library-preset.mjs",
     "build:package": "npm run build:library:preset -- --preset=full && node scripts/prepare-release-package.mjs --presets full",
     "build:vanilla": "npm run prepare:wasm && npm run build:core && npm run build --prefix projects/ui-grid-vanilla",
     "publish:package": "npm publish ./dist/npm-package --access public",

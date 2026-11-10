@@ -14,7 +14,7 @@ for (let index = 2; index < process.argv.length; index += 2) {
 
 const rootDir = process.cwd();
 const outputDir = path.resolve(rootDir, args.get('--output') || 'dist/npm-package');
-const elementDir = path.resolve(rootDir, args.get('--element') || 'dist/ui-grid-element');
+const elementDir = path.resolve(rootDir, args.get('--element') || 'projects/ui-grid-vanilla/dist/browser');
 const wasmDir = path.resolve(rootDir, args.get('--wasm') || 'dist/ui-grid-wasm');
 const rootPackage = JSON.parse(await readFile(path.join(rootDir, 'package.json'), 'utf8'));
 const sourcePackage = JSON.parse(await readFile(path.join(rootDir, 'projects/ui-grid/package.json'), 'utf8'));
@@ -121,7 +121,7 @@ const finalPackageJson = {
       default: './wasm/ui_grid_wasm.js'
     },
     ...presetExports,
-    './element': './element/main.js',
+    './element': './element/ui-grid-element.js',
     './package.json': './package.json'
   }
 };
@@ -142,5 +142,5 @@ function entryDefaultFromPackage(packageJson) {
 }
 
 function normalizeSubpath(entryPath, preset) {
-  return path.posix.join('./presets', preset, entryPath.replace(/^\.\//, ''));
+  return ensureDotSlash(path.posix.join('presets', preset, entryPath.replace(/^\.\//, '')));
 }

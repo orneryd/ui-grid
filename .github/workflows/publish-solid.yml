@@ -10,7 +10,7 @@ on:
       version:
         description: Public version to publish
         required: true
-        default: 5.0.2
+        default: 5.0.3
 
 jobs:
   publish:
@@ -61,12 +61,12 @@ jobs:
           const pkg = require(path);
           pkg.version = process.env.VERSION;
           for (const name of ['@ornery/ui-grid-core', '@ornery/ui-grid-vanilla']) {
-            pkg.peerDependencies[name] = process.env.VERSION;
+            pkg.peerDependencies[name] = `^${process.env.VERSION}`;
           }
           fs.writeFileSync(path, `${JSON.stringify(pkg, null, 2)}\n`);
           if (pkg.version !== process.env.VERSION) throw new Error('Package version was not updated');
           for (const name of ['@ornery/ui-grid-core', '@ornery/ui-grid-vanilla']) {
-            if (pkg.peerDependencies[name] !== process.env.VERSION) throw new Error(`Invalid ${name} peer`);
+            if (pkg.peerDependencies[name] !== `^${process.env.VERSION}`) throw new Error(`Invalid ${name} peer`);
           }
           NODE
 

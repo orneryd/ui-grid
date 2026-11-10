@@ -504,6 +504,58 @@ describe('UiGrid React component', () => {
       });
     });
 
+    it('refreshes header and filter column payloads without replacing portals', async () => {
+      const options = createOptions();
+      const props = {
+        headerRenderers: { status: (ctx: any) => <b>{ctx.column.displayName ?? 'old'}</b> },
+        filterRenderers: { status: (slot: any) => <b>{slot.column.displayName ?? 'old'}</b> },
+      };
+      const { container, rerender } = render(<UiGrid options={options} {...props} />);
+      await waitFor(() => expect(slotWrapper(container, 'header-status')?.textContent).toBe('old'));
+      const header = slotWrapper(container, 'header-status');
+      const filter = slotWrapper(container, 'filter-status');
+      rerender(<UiGrid options={{ ...options, columnDefs: options.columnDefs.map(c =>
+        c.name === 'status' ? { ...c, displayName: 'Updated status' } : c) }} {...props} />);
+      await waitFor(() => expect(header?.textContent).toBe('Updated status'));
+      expect(filter?.textContent).toBe('Updated status');
+      expect(slotWrapper(container, 'header-status')).toBe(header);
+      expect(slotWrapper(container, 'filter-status')).toBe(filter);
+    });
+
+    it('refreshes expanded detail data without collapsing or remounting', async () => {
+      let api!: UiGridApi;
+      const options = createOptions({ enableExpandable: true }, registered => { api = registered; });
+      const renderer = (ctx: any) => <div>{ctx.row.name}</div>;
+      const { container, rerender } = render(<UiGrid options={options} expandableRowRenderer={renderer} />);
+      await waitFor(() => expect(api).toBeTruthy());
+      act(() => api.expandable.toggleRowExpansion(baseData[0] as Record<string, unknown>));
+      await waitFor(() => expect(slotWrapper(container, 'expandable-row-row-1')?.textContent).toBe('Gamma'));
+      const wrapper = slotWrapper(container, 'expandable-row-row-1');
+      rerender(<UiGrid options={{ ...options, data: baseData.map(row => ({ ...row, name: `${row.name}!` })) }} expandableRowRenderer={renderer} />);
+      await waitFor(() => expect(wrapper?.textContent).toBe('Gamma!'));
+      expect(slotWrapper(container, 'expandable-row-row-1')).toBe(wrapper);
+    });
+
+    it('preserves empty-state component state across options updates', async () => {
+      const mounted = vi.fn();
+      function Empty({ heading }: { heading: string }) {
+        React.useEffect(() => { mounted(); }, []);
+        return <input aria-label={heading} defaultValue="draft" />;
+      }
+      const renderer = (slot: any) => <Empty heading={slot.heading} />;
+      const options = createOptions({ data: [] });
+      const { container, rerender } = render(<UiGrid options={options} emptyStateRenderer={renderer} />);
+      await waitFor(() => expect(slotWrapper(container, 'empty')?.querySelector('input')).toBeTruthy());
+      const wrapper = slotWrapper(container, 'empty');
+      const input = wrapper!.querySelector('input')!;
+      fireEvent.change(input, { target: { value: 'keep my draft' } });
+      rerender(<UiGrid options={{ ...options, emptyMessage: 'Updated empty state' }} emptyStateRenderer={renderer} />);
+      await waitFor(() => expect(wrapper?.querySelector('input')?.getAttribute('aria-label')).toBe('Updated empty state'));
+      expect(slotWrapper(container, 'empty')).toBe(wrapper);
+      expect(input.value).toBe('keep my draft');
+      expect(mounted).toHaveBeenCalledTimes(1);
+    });
+
     it('emptyStateRenderer shows with empty data', async () => {
       const { container } = await renderGrid(
         { data: [] },

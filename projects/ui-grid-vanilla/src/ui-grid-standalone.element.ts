@@ -220,6 +220,11 @@ export class UiGridStandaloneElement extends HTMLElement {
     this.ensureController(this.buildEffectiveOptions(this.activeOptions));
   }
 
+  /** Append application CSS after the grid styles; return a removal callback. */
+  addStyles(cssText: string): () => void {
+    return addUserStyles(this.ensureShadowRoot(), cssText);
+  }
+
   /**
    * Declare which slots are framework-rendered. When a slot is flagged, the
    * element renders a `<slot name="…">` placeholder at the usual site instead
@@ -237,10 +242,6 @@ export class UiGridStandaloneElement extends HTMLElement {
    * the web component directly can ignore this method — the default
    * `<template slot="cell-columnName">` workflow still works.
    */
-  addStyles(cssText: string): () => void {
-    return addUserStyles(this.ensureShadowRoot(), cssText);
-  }
-
   setFrameworkRenderedSlots(config: FrameworkRenderedSlotsConfig): void {
     if (this.frameworkSlots.configure(config)) {
       // The set of slot placeholders changed — force a structural re-render

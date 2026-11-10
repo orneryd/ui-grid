@@ -10,6 +10,7 @@ import {
   initWasmCore,
   isWasmReady,
   registerWasmCoreModule,
+  setUiGridWasmPackageLoader,
 } from './grid.core.wasm-bridge';
 import { setUiGridWasmAssetBase } from './ui-grid.wasm-path';
 import { enableUiGridWasmEngine } from '../wasm';
@@ -17,6 +18,7 @@ import { enableUiGridWasmEngine } from '../wasm';
 describe('WASM core initialization', () => {
   afterEach(() => {
     clearWasmCoreModule();
+    setUiGridWasmPackageLoader(null);
     setUiGridWasmAssetBase(null);
   });
 
@@ -35,6 +37,14 @@ describe('WASM core initialization', () => {
 
     expect(getWasmCoreInitializationState()).toBe('loading');
     await expect(Promise.all([first, second])).resolves.toEqual([true, true]);
+    expect(getWasmCoreInitializationState()).toBe('ready');
+    expect(isWasmReady()).toBe(true);
+  });
+
+  it('opts in while a missing-loader attempt is still pending', async () => {
+    const unconfigured = initWasmCore();
+    await expect(enableUiGridWasmEngine()).resolves.toBeUndefined();
+    await unconfigured;
     expect(getWasmCoreInitializationState()).toBe('ready');
     expect(isWasmReady()).toBe(true);
   });

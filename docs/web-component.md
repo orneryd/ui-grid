@@ -198,7 +198,7 @@ After each render the grid fires one event per kind with `{ added, removed, upda
 | `groupRowSlotsChanged` | `FrameworkGroupRowSlot` |
 | `emptyStateSlotsChanged` | `FrameworkEmptyStateSlot` |
 
-`added` and `removed` list slots that appeared or went away; mount or unmount your content into a light-DOM child with the matching `slot` attribute. `updated` lists filter slots that stayed but whose value, placeholder or disabled state changed. `emptyStateSlotChanged` (singular) is still fired for existing wrappers.
+`added` and `removed` list slots that appeared or went away; mount or unmount your content into a light-DOM child with the matching `slot` attribute. `updated` lists existing filter, header and expandable-row slots whose payload changed. Update their content in place to preserve component state. `emptyStateSlotChanged` (singular) is still fired for existing wrappers.
 
 ### Replacing Building Components
 

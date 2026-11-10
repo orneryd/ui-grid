@@ -358,6 +358,8 @@ export class FrameworkSlotBridge {
       this.lastExpandableRowSlots,
       this.pendingExpandableRowSlots,
       'expandableRowSlotsChanged',
+      (previous, current) => previous.context.row !== current.context.row ||
+        previous.rowIndex !== current.rowIndex || previous.context.expanded !== current.context.expanded,
     );
     this.lastExpandableRowSlots = this.pendingExpandableRowSlots;
     this.pendingExpandableRowSlots = new Map();
@@ -370,7 +372,8 @@ export class FrameworkSlotBridge {
     this.lastGroupRowSlots = this.pendingGroupRowSlots;
     this.pendingGroupRowSlots = new Map();
 
-    this.diffAndEmit(this.lastHeaderSlots, this.pendingHeaderSlots, 'headerSlotsChanged');
+    this.diffAndEmit(this.lastHeaderSlots, this.pendingHeaderSlots, 'headerSlotsChanged',
+      (previous, current) => previous.context.column !== current.context.column);
     this.lastHeaderSlots = this.pendingHeaderSlots;
     this.pendingHeaderSlots = new Map();
 
@@ -381,7 +384,8 @@ export class FrameworkSlotBridge {
       (previous, current) =>
         previous.value !== current.value ||
         previous.placeholder !== current.placeholder ||
-        previous.disabled !== current.disabled,
+        previous.disabled !== current.disabled ||
+        previous.column !== current.column,
     );
     this.lastFilterSlots = this.pendingFilterSlots;
     this.pendingFilterSlots = new Map();

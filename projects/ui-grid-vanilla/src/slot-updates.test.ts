@@ -80,6 +80,31 @@ describe('framework slot updates', () => {
     expect(delta.updated?.map((slot) => [slot.slotName, slot.value])).toEqual([['filter-name', 'Al']]);
   });
 
+  it.each(['left', 'right'] as const)('keeps %s-pinned filter slots aligned after resizing', async (side) => {
+    const { grid } = await mount(`slot-resize-${side}`);
+    const pinned = side === 'left' ? { pinnedLeft: true } : { pinnedRight: true };
+    grid.options = {
+      ...grid.options,
+      enablePinning: true,
+      columnDefs: [
+        { name: 'name', width: '180px', ...pinned },
+        { name: 'other', width: '120px', ...pinned },
+      ],
+    };
+    const filtered = side === 'left' ? 'other' : 'name';
+    const resized = side === 'left' ? 'name' : 'other';
+    grid.setFrameworkRenderedSlots({ filters: [filtered] });
+    const slot = await waitFor(() => grid.shadowRoot!.querySelector(`slot[name="filter-${filtered}"]`));
+    const wrapper = slot.parentElement!;
+    expect(wrapper.style[side]).toBe(side === 'left' ? 'calc(180px)' : 'calc(120px)');
+    const controller = (grid as unknown as { controller: ReturnType<typeof createVanillaGridController> }).controller;
+    controller.setColumnWidthOverride(resized, 240);
+    await waitFor(() => grid.shadowRoot!.querySelector(`[data-column="${resized}"]`));
+    expect(wrapper.style[side]).toBe('calc(240px)');
+    expect(wrapper.querySelector('slot')).toBe(slot);
+    expect(wrapper.classList.contains('is-pinned')).toBe(true);
+  });
+
   it('fires emptyStateSlotsChanged and the original singular name', async () => {
     const { grid } = await mount('empty-event');
     const seen: string[] = [];
