@@ -319,6 +319,7 @@ export class VanillaGridController {
   private columnWidthOverrides: Record<string, string> = {};
   private viewportWidth = 0;
   private currentPage = 1;
+  private lastOptionsCurrentPage: number | undefined;
   private pageSize = 0;
   private editingCell: GridCellPosition | null = null;
   private editingValue = '';
@@ -353,6 +354,7 @@ export class VanillaGridController {
   readonly gridApi: UiGridApi;
 
   constructor(options: GridOptions) {
+    this.syncPaginationCurrentPage(options);
     this.options = options;
     this.labels = resolveGridLabels(options.labels);
     // Validator registry is built from the resolved labels so default
@@ -601,7 +603,16 @@ export class VanillaGridController {
     this.subscribers.clear();
   }
 
+  private syncPaginationCurrentPage(options: GridOptions): void {
+    const page = options.paginationCurrentPage;
+    if (page !== undefined && page !== this.lastOptionsCurrentPage) {
+      this.currentPage = Number.isFinite(page) ? Math.max(1, Math.floor(page)) : 1;
+    }
+    this.lastOptionsCurrentPage = page;
+  }
+
   setOptions(options: GridOptions): void {
+    this.syncPaginationCurrentPage(options);
     this.options = options;
     this.labels = resolveGridLabels(options.labels);
     // Re-register the built-in validators so their messages track the

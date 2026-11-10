@@ -26,6 +26,24 @@ describe('pagination range', () => {
     expect(snapshot.pipeline.visibleRows).toHaveLength(2);
   });
 
+  it('honors a declarative server page while preserving interactive page changes', () => {
+    const options = {
+      id: 'controlled-range', data: page(2), columnDefs: [{ name: 'name' }],
+      enablePagination: true, useExternalPagination: true, paginationPageSize: 10,
+      paginationCurrentPage: 2, totalItems: 32,
+    };
+    const controller = createVanillaGridController(options);
+    expect(controller.getSnapshot().firstRowIndex).toBe(10);
+    expect(controller.gridApi.pagination.getFirstRowIndex()).toBe(10);
+    controller.seekPage(3);
+    controller.setOptions({ ...options, data: page(10) });
+    expect(controller.getSnapshot().firstRowIndex).toBe(20);
+    controller.setOptions({ ...options, paginationCurrentPage: 4 });
+    expect(controller.getSnapshot().firstRowIndex).toBe(30);
+    expect(controller.gridApi.pagination.getLastRowIndex()).toBe(31);
+    controller.dispose();
+  });
+
   it('keeps client-side ranges unchanged', () => {
     const controller = createVanillaGridController({
       id: 'client-range',
