@@ -567,10 +567,11 @@ function currentWasmInitSource(): string {
 // imports @ornery/ui-grid-wasm, so bundlers leave it out unless an app asks.
 let wasmPackageLoader: (() => Promise<object>) | null = null;
 
-export function setUiGridWasmPackageLoader(loader: () => Promise<object>): void {
+export function setUiGridWasmPackageLoader(loader: (() => Promise<object>) | null): void {
+  const hadLoader = wasmPackageLoader !== null;
   wasmPackageLoader = loader;
   // Forget a load that failed for lack of a loader, so the next call retries.
-  if (!wasmCore && wasmInitState !== 'loading') {
+  if (!wasmCore && (wasmInitState !== 'loading' || (!hadLoader && wasmInitSource === 'package'))) {
     wasmInitGeneration += 1;
     wasmInitPromise = null;
     wasmInitSource = null;

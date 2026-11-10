@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { readFileSync, writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 
 const rootDir = resolve(new URL('..', import.meta.url).pathname);
 const targetVersion = process.argv[2];
@@ -88,12 +88,9 @@ function updatePackageLock(filePath) {
     for (const [pkgPath, pkg] of Object.entries(lock.packages)) {
       if (!pkg || typeof pkg !== 'object') continue;
 
-      const inferredName = inferPackageName(pkgPath, pkg);
-      if (
-        inferredName &&
-        internalPackages.includes(inferredName) &&
-        (pkgPath === '' || pkg.link === true)
-      ) {
+      const localManifest = resolve(dirname(absolutePath), pkgPath, 'package.json');
+      const isReleasePackage = packageFiles.some((file) => resolve(rootDir, file) === localManifest);
+      if (pkgPath === '' || (isReleasePackage && pkg.link !== true)) {
         pkg.version = targetVersion;
       }
 
@@ -146,20 +143,6 @@ function syncPeerDependenciesMeta(pkg) {
   if (Object.keys(peerDependenciesMeta).length === 0) {
     delete pkg.peerDependenciesMeta;
   }
-}
-
-function inferPackageName(pkgPath, pkg) {
-  if (typeof pkg.name === 'string') {
-    return pkg.name;
-  }
-
-  const marker = 'node_modules/';
-  const markerIndex = pkgPath.lastIndexOf(marker);
-  if (markerIndex === -1) {
-    return null;
-  }
-
-  return pkgPath.slice(markerIndex + marker.length);
 }
 
 for (const file of packageFiles) {

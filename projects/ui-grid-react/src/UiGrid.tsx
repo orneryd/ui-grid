@@ -411,13 +411,15 @@ export function UiGrid({
     const el = elementRef.current;
     if (!el) return;
     const descriptor = SLOT_KINDS[kind];
-    if (detail.removed.length > 0 || detail.added.length > 0) {
+    if (detail.removed.length > 0 || detail.added.length > 0 || (detail.updated?.length ?? 0) > 0) {
       markWrapperRenderScheduled();
     }
 
     const next = new Map(slotsRef.current);
 
+    const replacing = new Set(detail.added.map((slot) => slot.slotName));
     for (const slot of detail.removed) {
+      if (replacing.has(slot.slotName)) continue;
       const entry = next.get(slot.slotName);
       if (entry) {
         entry.wrapper.remove();
@@ -428,7 +430,8 @@ export function UiGrid({
     for (const slot of detail.added) {
       const existing = next.get(slot.slotName);
       if (existing) {
-        existing.wrapper.remove();
+        next.set(slot.slotName, { ...existing, ...descriptor.toEntry(slot) });
+        continue;
       }
 
       const wrapper = document.createElement(descriptor.wrapperTag);

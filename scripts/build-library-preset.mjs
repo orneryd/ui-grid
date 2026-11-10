@@ -133,6 +133,7 @@ const projectRoot = path.join(rootDir, 'projects', 'ui-grid');
 const outputDir = path.resolve(rootDir, args.get('--output') || path.join('dist', `ui-grid-${presetName}`));
 const generatedNgPackage = path.join(projectRoot, `ng-package.${presetName}.generated.json`);
 const sourcePackage = JSON.parse(await readFile(path.join(projectRoot, 'package.json'), 'utf8'));
+const baseNgPackage = JSON.parse(await readFile(path.join(projectRoot, 'ng-package.json'), 'utf8'));
 
 const relativeOutputDir = path.relative(projectRoot, outputDir).replace(/\\/g, '/');
 
@@ -142,7 +143,7 @@ const generatedNgPackageSource = `${JSON.stringify({
   lib: {
     entryFile: preset.entryFile
   },
-  allowedNonPeerDependencies: ['tslib']
+  allowedNonPeerDependencies: baseNgPackage.allowedNonPeerDependencies
 }, null, 2)}\n`;
 
 await rm(outputDir, { recursive: true, force: true });
