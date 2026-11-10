@@ -19,6 +19,10 @@ Fixes reported from integrating 5.0.2 into a Next.js and React app.
 
 ### Fixed
 
+- **Empty pagination** (#7400) — both initial and updated empty results show `0 of 0` with disabled navigation.
+- **Pin chooser stacking** (#7399) — open unpinned headers stay below pinned headers with a nonnegative z-index.
+- **Next.js server rendering** — the React wrapper loads custom elements only on client mount.
+- **Declarative pagination** — `paginationCurrentPage` sets the initial page and applies changed values without resetting interactive navigation on unchanged options.
 - **External pagination range** (#7404) — the pager and `getFirstRowIndex`/`getLastRowIndex` describe the current server page instead of `1-<total> of <total>`.
 - **Virtual rows sized to `rowHeight`** (#7405) — no blank band below the last row.
 - **Header and filter alignment with a body scrollbar** (#7402) — right-pinned columns line up and the header scrolls as far as the body.
