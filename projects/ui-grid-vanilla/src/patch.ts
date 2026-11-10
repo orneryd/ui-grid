@@ -344,7 +344,9 @@ export function patchFilterCells(
 ): void {
   const controller = el.controller!;
   const existing = new Map<string, HTMLElement>();
-  for (const e of filterGrid.querySelectorAll<HTMLElement>('ui-grid-filter-cell[data-column]')) {
+  for (const e of filterGrid.querySelectorAll<HTMLElement>(
+    'ui-grid-filter-cell[data-column], .ui-grid-filter-container[data-column]',
+  )) {
     const column = e.dataset['column'];
     if (column) existing.set(column, e);
   }
@@ -356,6 +358,11 @@ export function patchFilterCells(
       // Framework-rendered filter cells keep their <slot> placeholder; re-stage
       // so the flush does not report the slot as removed.
       el.frameworkSlots.stageFilter(column, value, controller.filterPlaceholder(column), !canFilter);
+      const target = existing.get(column.name);
+      const pinOffset = controller.isPinned(column) ? controller.pinnedOffset(column) : null;
+      if (target) {
+        setAttr(target, 'style', pinOffset ? `${pinOffset.side}:${pinOffset.offset};` : '');
+      }
       continue;
     }
     const target = existing.get(column.name);

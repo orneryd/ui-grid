@@ -15,7 +15,7 @@ Fixes reported from integrating 5.0.2 into a Next.js and React app.
 - **`core.on.columnSizeChanged(columnName, width)`** (#7397).
 - **`groupingValue(row)` on column defs** (#7403) — groups on a different value than the cell shows.
 - **React slot renderers** (#7397) — `headerRenderers`, `filterRenderers`, `expandableRowRenderer` and `emptyStateRenderer`.
-- **`updated` in slot deltas** (#7397) — filter slots whose value, placeholder or disabled state changed. `emptyStateSlotsChanged` is fired alongside the singular `emptyStateSlotChanged`.
+- **`updated` in slot deltas** (#7397) — filter, header and expandable slots whose payload changed. `emptyStateSlotsChanged` is fired alongside the singular `emptyStateSlotChanged`.
 
 ### Fixed
 
@@ -27,6 +27,10 @@ Fixes reported from integrating 5.0.2 into a Next.js and React app.
 - **Pinned framework header and filter slots** — now sticky like the default cells.
 - **Filter slots** (#7397) — stay mounted across patch renders and can be turned on after the first render.
 - **React slots added in the same commit as a data change** (#7397) — no longer render blank.
+- **React slot refreshes** — expanded details and header/filter metadata update in place; empty-state components preserve local state across refreshes.
+- **Pinned filter resizing** — custom filter slots follow resized neighboring pinned columns.
+- **WASM opt-in recovery** — enabling WASM during an unconfigured load retries correctly.
+- **Release packaging** — synchronize local lockfile metadata, preserve caret ranges in publishing checks, and package the current vanilla browser bundle.
 - **Escaping** — group-row and filter-cell templates escape their values.
 
 ## v5.0.1 — 2026-08-25
