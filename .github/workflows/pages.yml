@@ -55,7 +55,6 @@ jobs:
           mkdir -p dist/pages
           cp -R dist/uiGrid/browser/. dist/pages/
           cp dist/uiGrid/3rdpartylicenses.txt dist/pages/
-          cp dist/uiGrid/prerendered-routes.json dist/pages/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
