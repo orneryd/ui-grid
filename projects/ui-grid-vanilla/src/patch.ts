@@ -432,14 +432,14 @@ export function patchBodyRegion(
       el.lastTotalVirtualHeight = totalVirtualHeight;
     }
     if (bodyContainer) {
-      const nextBodyStyle = `grid-template-columns:${templateColumns};top:${virtualOffset}px`;
+      const nextBodyStyle = `grid-template-columns:${templateColumns};--ui-grid-template-columns:${templateColumns};top:${virtualOffset}px`;
       if (bodyContainer.getAttribute('style') !== nextBodyStyle) {
         bodyContainer.setAttribute('style', nextBodyStyle);
         el.lastVirtualOffset = virtualOffset;
       }
     }
   } else if (bodyContainer) {
-    const nextStyle = `grid-template-columns:${templateColumns}`;
+    const nextStyle = `grid-template-columns:${templateColumns};--ui-grid-template-columns:${templateColumns}`;
     if (bodyContainer.getAttribute('style') !== nextStyle) {
       bodyContainer.setAttribute('style', nextStyle);
     }
@@ -529,24 +529,28 @@ export function patchExistingRows(
   const expandableEls: HTMLElement[] = [];
   for (let c = 0; c < bodyContainer.children.length; c++) {
     const node = bodyContainer.children[c] as HTMLElement;
-    const tag = node.tagName;
-    if (tag === 'UI-GRID-GROUP-ROW') {
-      const id = node.dataset['group'];
-      if (id) groupEls.set(id, node);
-    } else if (tag === 'UI-GRID-BODY-CELL') {
-      const rowId = node.dataset['row'];
-      const colName = node.dataset['column'];
-      if (rowId && colName) {
-        let rowMap = cellEls.get(rowId);
-        if (!rowMap) {
-          rowMap = new Map<string, HTMLElement>();
-          cellEls.set(rowId, rowMap);
-        }
-        rowMap.set(colName, node);
-      }
-    } else if (tag === 'DIV' && node.classList.contains('expandable-row')) {
-      expandableEls.push(node);
+    const group = node.matches('ui-grid-group-row') ? node : node.querySelector<HTMLElement>('ui-grid-group-row');
+    if (group) {
+      const id = group.dataset['group'];
+      if (id) groupEls.set(id, group);
     }
+    for (const cell of node.matches('ui-grid-body-cell')
+      ? [node]
+      : node.querySelectorAll<HTMLElement>('ui-grid-body-cell[data-row][data-column]')) {
+      const rowId = cell.dataset['row'];
+      const colName = cell.dataset['column'];
+      if (!rowId || !colName) continue;
+      let rowMap = cellEls.get(rowId);
+      if (!rowMap) {
+        rowMap = new Map<string, HTMLElement>();
+        cellEls.set(rowId, rowMap);
+      }
+      rowMap.set(colName, cell);
+    }
+    const expandable = node.matches('.expandable-row')
+      ? node
+      : node.querySelector<HTMLElement>('.expandable-row');
+    if (expandable) expandableEls.push(expandable);
   }
 
   const templateMarkupMap = new Map<string, string | null>();
