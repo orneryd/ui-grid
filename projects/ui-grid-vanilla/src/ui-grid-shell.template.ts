@@ -27,7 +27,7 @@ export default function gridShellTemplate(ctx: ShellContext) {
         `<section class="grid-frame ui-grid" part="grid-frame" role="grid" aria-label="${ctx.gridTitle}">` +
           `<div class="grid-table ui-grid-contents-wrapper" style="${ctx.gridTableStyle}">` +
             `<div class="grid-header-strip">` +
-              `<div class="header-grid ui-grid-header ui-grid-header-canvas" part="header" style="grid-template-columns:${ctx.templateColumns}">` +
+              `<div class="header-grid ui-grid-header ui-grid-header-canvas" part="header" role="row" style="grid-template-columns:${ctx.templateColumns}">` +
                 ctx.headerContent +
               `</div>` +
             `</div>` +

@@ -18,7 +18,7 @@ export function slotRegistryMarkup(cellSlots: string): string {
 }
 
 export function filterRowMarkup(templateColumns: string, filterCells: string): string {
-  return `<div class="filter-grid ui-grid-header" style="grid-template-columns:${templateColumns}">${filterCells}</div>`;
+  return `<div class="filter-grid ui-grid-header" role="row" style="grid-template-columns:${templateColumns}">${filterCells}</div>`;
 }
 
 export function virtualSpacerStyle(totalVirtualHeight: number, rowSize: number): string {
@@ -26,11 +26,11 @@ export function virtualSpacerStyle(totalVirtualHeight: number, rowSize: number):
 }
 
 export function bodyVirtualMarkup(templateColumns: string, totalVirtualHeight: number, virtualOffset: number, bodyContent: string, rowSize: number): string {
-  return `<div class="grid-virtual-spacer" style="${virtualSpacerStyle(totalVirtualHeight, rowSize)}"><div class="body-grid ui-grid-canvas grid-virtual-body" style="grid-template-columns:${templateColumns};top:${virtualOffset}px">${bodyContent}</div></div>`;
+  return `<div class="grid-virtual-spacer" style="${virtualSpacerStyle(totalVirtualHeight, rowSize)}"><div class="body-grid ui-grid-canvas grid-virtual-body" role="rowgroup" style="grid-template-columns:${templateColumns};--ui-grid-template-columns:${templateColumns};top:${virtualOffset}px">${bodyContent}</div></div>`;
 }
 
 export function bodyStaticMarkup(templateColumns: string, bodyContent: string): string {
-  return `<div class="body-grid ui-grid-canvas" style="grid-template-columns:${templateColumns}">${bodyContent}</div>`;
+  return `<div class="body-grid ui-grid-canvas" role="rowgroup" style="grid-template-columns:${templateColumns};--ui-grid-template-columns:${templateColumns}">${bodyContent}</div>`;
 }
 
 export function emptyDataMarkup(heading: string, description: string): string {
@@ -38,7 +38,7 @@ export function emptyDataMarkup(heading: string, description: string): string {
 }
 
 export function expandableRowMarkup(expandableContent: string): string {
-  return `<div part="expandable-row" class="expandable-row ui-grid-row ui-grid-expandable-row" style="grid-column:1 / -1">${expandableContent}</div>`;
+  return `<div part="expandable-row" class="expandable-row ui-grid-row" role="row" style="grid-column:1 / -1"><div role="gridcell">${expandableContent}</div></div>`;
 }
 
 export function treeToggleMarkup(rowId: string, toggleLabel: string, iconViewBox: string, iconPath: string): string {
