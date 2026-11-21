@@ -242,6 +242,7 @@ export function reconcileBodyRoot(
   virtualOffset: number,
   totalVirtualHeight: number,
   rowSize: number,
+  detailRowHeight: number,
 ): HTMLElement | null {
   const bodyViewport = root.querySelector<HTMLElement>('.grid-body-viewport');
   if (!bodyViewport) return null;
@@ -286,7 +287,14 @@ export function reconcileBodyRoot(
       return currentVirtual.querySelector<HTMLElement>('.grid-virtual-body');
     }
     const fresh = createFromMarkup(
-      bodyVirtualMarkup(templateColumns, totalVirtualHeight, virtualOffset, '', rowSize),
+      bodyVirtualMarkup(
+        templateColumns,
+        totalVirtualHeight,
+        virtualOffset,
+        '',
+        rowSize,
+        detailRowHeight,
+      ),
     );
     if (fresh) swapBodyChild(bodyViewport, currentNode, fresh);
     return fresh?.querySelector<HTMLElement>('.grid-virtual-body') ?? null;
@@ -415,6 +423,7 @@ export function patchBodyRegion(
     virtualOffset,
     totalVirtualHeight,
     snapshot.rowSize,
+    el.detailRowHeight(),
   );
 
   if (!hasRows) {
@@ -426,7 +435,11 @@ export function patchBodyRegion(
 
   if (virtualizationEnabled) {
     const spacer = root.querySelector<HTMLElement>('.grid-virtual-spacer');
-    const spacerStyle = virtualSpacerStyle(totalVirtualHeight, snapshot.rowSize);
+    const spacerStyle = virtualSpacerStyle(
+      totalVirtualHeight,
+      snapshot.rowSize,
+      el.detailRowHeight(),
+    );
     if (spacer && spacer.getAttribute('style') !== spacerStyle) {
       spacer.setAttribute('style', spacerStyle);
       el.lastTotalVirtualHeight = totalVirtualHeight;

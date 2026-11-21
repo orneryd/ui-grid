@@ -1,0 +1,4 @@
+- [x] Account for configured detail heights in virtual layout and scrolling.
+- [x] Test multiple expansions, collapse, and virtual offsets.
+- [ ] Account for actual detail content taller than the configured minimum.
+- [ ] Verify browser behavior and PR CI.

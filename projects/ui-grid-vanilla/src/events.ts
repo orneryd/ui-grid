@@ -844,17 +844,18 @@ export function bindEvents(el: UiGridStandaloneElement): void {
       if (!snapshot) return;
 
       if (snapshot.pipeline.virtualizationEnabled) {
-        const overscan = 4;
-        const nextStartIndex = Math.max(
-          0,
-          Math.floor(el.scrollPosition / snapshot.rowSize) - overscan,
-        );
-        const startChanged = nextStartIndex !== el.lastVirtualStartIndex;
-
+        // Compare the layout-aware window start: expanded detail rows shift
+        // later items down, so index * rowSize misses real window changes.
         if (el.scrollFrame !== null) cancelAnimationFrame(el.scrollFrame);
         el.scrollFrame = requestAnimationFrame(() => {
           el.scrollFrame = null;
-          if (startChanged) el.renderVirtualBody();
+          const current = el.snapshot;
+          if (current?.pipeline.virtualizationEnabled) {
+            const next = el.calculateBodyWindow(current);
+            if (next.startIndex !== el.lastVirtualStartIndex || next.endIndex !== el.lastVirtualEndIndex) {
+              el.renderVirtualBody();
+            }
+          }
           maybeTriggerInfiniteScroll(el);
         });
         return;
