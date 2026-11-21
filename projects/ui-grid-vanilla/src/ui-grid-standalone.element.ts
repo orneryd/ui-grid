@@ -86,6 +86,13 @@ import {
   type VanillaGridController,
 } from './grid-controller';
 import { addUserStyles } from './adopt-styles';
+import {
+  calculateDisplayWindow,
+  getDisplayLayout,
+  resolveDetailRowHeight,
+  type DisplayLayout,
+  type DisplayWindow,
+} from './virtual-window';
 import emptyTemplate from './ui-grid-empty.template';
 import gridShellTemplate from './ui-grid-shell.template';
 import {
@@ -156,6 +163,7 @@ export class UiGridStandaloneElement extends HTMLElement {
   /** @internal */ scrollFrame: number | null = null;
   /** @internal */ suppressScrollEvent = false;
   /** @internal */ lastVirtualStartIndex = -1;
+  /** @internal */ lastVirtualEndIndex = -1;
   /** @internal */ measuredHeaderStickyHeight = 0;
   /** @internal */ measuredFilterStickyHeight = 0;
   /** @internal */ stickyHeightRelayoutQueued = false;
@@ -925,6 +933,48 @@ export class UiGridStandaloneElement extends HTMLElement {
    * imperative sync strategy the old ui-grid used in ui-grid-viewport.js.
    */
   /**
+   * @internal Height reserved for one expanded detail row. Read by the
+   * virtual layout math and mirrored onto the spacer as
+   * `--ui-grid-expandable-row-height` so the rendered row matches it.
+   */
+  detailRowHeight(): number {
+    return resolveDetailRowHeight(this.options.expandableRowHeight);
+  }
+
+  /** @internal Cumulative display-item layout for `snapshot` (memoized). */
+  displayLayout(snapshot: GridControllerSnapshot | null = this.snapshot): DisplayLayout | null {
+    if (!snapshot) return null;
+    return getDisplayLayout(
+      snapshot.pipeline.displayItems,
+      snapshot.rowSize,
+      this.detailRowHeight(),
+    );
+  }
+
+  /** @internal Body viewport height the virtual window slices against. */
+  bodyWindowViewportHeight(snapshot: GridControllerSnapshot): number {
+    const bodyViewport = this.shadowRoot?.querySelector<HTMLElement>('.grid-body-viewport');
+    return bodyViewport
+      ? Math.max(snapshot.rowSize, bodyViewport.clientHeight)
+      : Math.max(snapshot.rowSize, (snapshot.options.minRowsToShow ?? 10) * snapshot.rowSize);
+  }
+
+  /** @internal Virtual window for the current scroll position. */
+  calculateBodyWindow(snapshot: GridControllerSnapshot): DisplayWindow {
+    return calculateDisplayWindow(
+      getDisplayLayout(
+        snapshot.pipeline.displayItems,
+        snapshot.rowSize,
+        this.detailRowHeight(),
+      ),
+      {
+        scrollTop: this.scrollPosition,
+        viewportHeight: this.bodyWindowViewportHeight(snapshot),
+      },
+    );
+  }
+
+  /**
    * Targeted update for virtual scroll: replaces only the rendered rows inside
    * the existing `.grid-virtual-body` without touching the scroll container.
    * This preserves momentum/inertia scrolling because the `.grid-table` element
@@ -952,19 +1002,17 @@ export class UiGridStandaloneElement extends HTMLElement {
       this.dataFrame = null;
     }
 
-    const bodyViewport = root?.querySelector<HTMLElement>('.grid-body-viewport');
-    const bodyViewportHeight = bodyViewport
-      ? Math.max(snapshot.rowSize, bodyViewport.clientHeight)
-      : Math.max(snapshot.rowSize, (snapshot.options.minRowsToShow ?? 10) * snapshot.rowSize);
-    const overscan = 4;
-    const startIndex = Math.max(0, Math.floor(this.scrollPosition / snapshot.rowSize) - overscan);
+    // Expanded detail rows are taller than rowSize, so the window start,
+    // offset and slice all come from the cumulative display layout.
+    const virtualWindow = this.calculateBodyWindow(snapshot);
+    const startIndex = virtualWindow.startIndex;
     this.lastVirtualStartIndex = startIndex;
-    const visibleCount = Math.ceil(bodyViewportHeight / snapshot.rowSize) + overscan * 2;
+    this.lastVirtualEndIndex = virtualWindow.endIndex;
     const itemsToRender = snapshot.pipeline.displayItems.slice(
-      startIndex,
-      Math.min(snapshot.pipeline.displayItems.length, startIndex + visibleCount),
+      virtualWindow.startIndex,
+      virtualWindow.endIndex,
     );
-    const virtualOffset = startIndex * snapshot.rowSize;
+    const virtualOffset = virtualWindow.offsetY;
 
     virtualBody.style.top = `${virtualOffset}px`;
     virtualBody.innerHTML = itemsToRender
@@ -1190,31 +1238,33 @@ export class UiGridStandaloneElement extends HTMLElement {
     const paginationEnabled = controller.isPaginationEnabled();
     const showPagination = controller.shouldShowPaginationControls();
     const virtualizationEnabled = snapshot.pipeline.virtualizationEnabled;
-    // Measure the body viewport from the DOM when available; on first paint
-    // fall back to a reasonable default so virtualisation has something to
-    // slice against until the element is measured.
-    const bodyViewport = this.shadowRoot?.querySelector<HTMLElement>('.grid-body-viewport');
-    const bodyViewportHeight = bodyViewport
-      ? Math.max(snapshot.rowSize, bodyViewport.clientHeight)
-      : Math.max(snapshot.rowSize, (options.minRowsToShow ?? 10) * snapshot.rowSize);
+    // Expanded detail rows are taller than rowSize, so the window start,
+    // offset and spacer height all come from the cumulative display layout
+    // rather than index * rowSize.
+    const layout = getDisplayLayout(
+      snapshot.pipeline.displayItems,
+      snapshot.rowSize,
+      this.detailRowHeight(),
+    );
 
     let startIndex = 0;
     let itemsToRender: readonly DisplayItem[] = snapshot.pipeline.displayItems;
     let virtualOffset = 0;
-    const totalVirtualHeight = snapshot.pipeline.displayItems.length * snapshot.rowSize;
+    const totalVirtualHeight = layout.totalHeight;
 
     if (virtualizationEnabled) {
-      const overscan = 4;
-      startIndex = Math.max(0, Math.floor(this.scrollPosition / snapshot.rowSize) - overscan);
+      const virtualWindow = this.calculateBodyWindow(snapshot);
+      startIndex = virtualWindow.startIndex;
       this.lastVirtualStartIndex = startIndex;
-      const visibleCount = Math.ceil(bodyViewportHeight / snapshot.rowSize) + overscan * 2;
+      this.lastVirtualEndIndex = virtualWindow.endIndex;
       itemsToRender = snapshot.pipeline.displayItems.slice(
-        startIndex,
-        Math.min(snapshot.pipeline.displayItems.length, startIndex + visibleCount),
+        virtualWindow.startIndex,
+        virtualWindow.endIndex,
       );
-      virtualOffset = startIndex * snapshot.rowSize;
+      virtualOffset = virtualWindow.offsetY;
     } else {
       this.lastVirtualStartIndex = -1;
+      this.lastVirtualEndIndex = -1;
     }
 
     // Structure key: only the outer-shell layout. Things that swap the body
@@ -1297,7 +1347,14 @@ export class UiGridStandaloneElement extends HTMLElement {
     const body =
       snapshot.pipeline.displayItems.length > 0
         ? virtualizationEnabled
-          ? bodyVirtualMarkup(templateColumns, totalVirtualHeight, virtualOffset, bodyContent, snapshot.rowSize)
+          ? bodyVirtualMarkup(
+              templateColumns,
+              totalVirtualHeight,
+              virtualOffset,
+              bodyContent,
+              snapshot.rowSize,
+              this.detailRowHeight(),
+            )
           : bodyStaticMarkup(templateColumns, bodyContent)
         : this.renderEmptyState(
             options.emptyMessage ?? labels.emptyHeading,
@@ -1357,8 +1414,9 @@ export class UiGridStandaloneElement extends HTMLElement {
     virtualOffset: number,
     totalVirtualHeight: number,
     rowSize: number,
+    detailRowHeight: number,
   ): HTMLElement | null {
-    return reconcileBodyRoot(this, root, kind, options, labels, templateColumns, virtualOffset, totalVirtualHeight, rowSize);
+    return reconcileBodyRoot(this, root, kind, options, labels, templateColumns, virtualOffset, totalVirtualHeight, rowSize, detailRowHeight);
   }
 
   private reconcilePagination(
@@ -1618,19 +1676,13 @@ export class UiGridStandaloneElement extends HTMLElement {
       };
     }
 
-    const bodyViewport = this.shadowRoot?.querySelector<HTMLElement>('.grid-body-viewport');
-    const bodyViewportHeight = bodyViewport
-      ? Math.max(snapshot.rowSize, bodyViewport.clientHeight)
-      : Math.max(snapshot.rowSize, (snapshot.options.minRowsToShow ?? 10) * snapshot.rowSize);
-    const overscan = 4;
-    const startIndex = Math.max(0, Math.floor(this.scrollPosition / snapshot.rowSize) - overscan);
-    const visibleCount = Math.ceil(bodyViewportHeight / snapshot.rowSize) + overscan * 2;
+    const virtualWindow = this.calculateBodyWindow(snapshot);
 
     return {
-      startIndex,
+      startIndex: virtualWindow.startIndex,
       items: snapshot.pipeline.displayItems.slice(
-        startIndex,
-        Math.min(snapshot.pipeline.displayItems.length, startIndex + visibleCount),
+        virtualWindow.startIndex,
+        virtualWindow.endIndex,
       ),
     };
   }

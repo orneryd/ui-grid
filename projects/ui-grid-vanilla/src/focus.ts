@@ -18,6 +18,7 @@ import {
   type GridRow,
 } from '@ornery/ui-grid-core';
 import type { UiGridStandaloneElement } from './ui-grid-standalone.element';
+import { displayItemHeight, displayItemTop } from './virtual-window';
 import { cssEscape } from './utils/cell-class';
 import { isRowItem } from './utils/display-items';
 
@@ -147,8 +148,12 @@ export function scrollFocusedRowIntoView(el: UiGridStandaloneElement, rowId: str
   if (index < 0) return;
   const bodyViewport = el.shadowRoot?.querySelector<HTMLElement>('.grid-body-viewport');
   if (!bodyViewport) return;
-  const rowTop = index * snapshot.rowSize;
-  const rowBottom = rowTop + snapshot.rowSize;
+  // Expanded detail rows above the target shift it down by their extra
+  // height, so read the cumulative layout instead of index * rowSize.
+  const layout = el.displayLayout(snapshot);
+  if (!layout) return;
+  const rowTop = displayItemTop(layout, index);
+  const rowBottom = rowTop + displayItemHeight(layout, index);
   const viewportTop = bodyViewport.scrollTop;
   const viewportHeight = bodyViewport.clientHeight;
   if (rowTop < viewportTop) {
