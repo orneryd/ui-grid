@@ -312,7 +312,7 @@ export function reconcilePagination(
 ): void {
   const gridTable = root.querySelector<HTMLElement>('.grid-table');
   if (!gridTable) return;
-  const existing = gridTable.querySelector<HTMLElement>(':scope > ui-grid-pagination');
+  const existing = gridTable.querySelector<HTMLElement>(':scope > [part="pagination"]');
 
   if (!shouldShow) {
     if (existing) existing.remove();
@@ -346,7 +346,7 @@ export function patchFilterCells(
   const controller = el.controller!;
   const existing = new Map<string, HTMLElement>();
   for (const e of filterGrid.querySelectorAll<HTMLElement>(
-    'ui-grid-filter-cell[data-column], .ui-grid-filter-container[data-column]',
+    '[part="filter-cell"][data-column], .ui-grid-filter-container[data-column]',
   )) {
     const column = e.dataset['column'];
     if (column) existing.set(column, e);
@@ -530,7 +530,7 @@ export function patchExistingRows(
   for (let c = 0; c < bodyContainer.children.length; c++) {
     const node = bodyContainer.children[c] as HTMLElement;
     const tag = node.tagName;
-    if (tag === 'UI-GRID-GROUP-ROW') {
+    if (node.getAttribute('part') === 'group-row' && node.dataset['group']) {
       const id = node.dataset['group'];
       if (id) groupEls.set(id, node);
     } else if (tag === 'UI-GRID-BODY-CELL') {
