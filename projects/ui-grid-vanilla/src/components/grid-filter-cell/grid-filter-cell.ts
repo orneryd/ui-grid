@@ -50,10 +50,13 @@ export class UIGridFilterCell extends HTMLElement {
     this.sync();
   }
 
-  attributeChangedCallback(): void {
-    if (this.mounted) {
-      this.sync();
+  attributeChangedCallback(name: string): void {
+    if (!this.mounted) return;
+    if (name === 'data-label') {
+      this.inputEl?.setAttribute('aria-label', this.getAttribute('data-label') ?? '');
+      return;
     }
+    this.sync();
   }
 
   private sync(): void {
