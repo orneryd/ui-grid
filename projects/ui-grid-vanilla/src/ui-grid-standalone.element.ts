@@ -28,6 +28,7 @@ import {
 } from './attribute-bridge';
 import {
   getTemplateMarkup as getTemplateMarkupFromLightDom,
+  gridHeaderRowCount,
   renderBodyCell,
   renderCellTemplate,
   renderCellTemplateFromMarkup,
@@ -69,6 +70,7 @@ import {
   observeTemplateSlots,
   syncHeaderHorizontalScroll,
 } from './events';
+import { FILTER_ROW_INDEX, ariaGridRowCount } from './utils/aria';
 import { bodyCellClass } from './utils/cell-class';
 import { asGroupItem, isRowItem } from './utils/display-items';
 import { escapeHtml } from './utils/dom';
@@ -174,6 +176,8 @@ export class UiGridStandaloneElement extends HTMLElement {
   filterRowContent = '';
   bodyContent = '';
   paginationContent = '';
+  gridRowCount = 0;
+  gridColCount = 0;
   /** @internal */ dataFrame: number | null = null;
   /** @internal */ pendingPatchedRowIds: Set<string> | null = null;
   /** @internal */ pendingDataRefreshMode: 'patch' | 'virtual' | 'full' | null = null;
@@ -1278,15 +1282,25 @@ export class UiGridStandaloneElement extends HTMLElement {
 
     const slotRegistry = this.renderSlotRegistry(snapshot.visibleColumns);
     const header = snapshot.visibleColumns
-      .map((column) =>
-        this.renderHeaderCell(column, sortEnabled, groupingEnabled, pinningEnabled, options),
+      .map((column, columnIndex) =>
+        this.renderHeaderCell(
+          column,
+          sortEnabled,
+          groupingEnabled,
+          pinningEnabled,
+          options,
+          columnIndex,
+        ),
       )
       .join('');
 
     const filterRow = filterEnabled
       ? filterRowMarkup(
           templateColumns,
-          snapshot.visibleColumns.map((column) => this.renderFilterCell(column)).join(''),
+          snapshot.visibleColumns
+            .map((column, columnIndex) => this.renderFilterCell(column, columnIndex))
+            .join(''),
+          FILTER_ROW_INDEX,
         )
       : '';
 
@@ -1307,6 +1321,11 @@ export class UiGridStandaloneElement extends HTMLElement {
     const pagination = paginationEnabled && showPagination ? this.renderPagination(snapshot) : '';
 
     this.gridTitle = escapeHtml(options.title ?? 'Data grid');
+    this.gridRowCount = ariaGridRowCount(
+      gridHeaderRowCount(this),
+      snapshot.pipeline.displayItems.length,
+    );
+    this.gridColCount = snapshot.visibleColumns.length;
     const stickyTop = this.measuredHeaderStickyHeight || options.headerRowHeight || 50;
     const paginationHeight = this.measuredPaginationHeight();
     const tableHeight = this.clientHeight || ((options.minRowsToShow ?? 10) * snapshot.rowSize + (this.measuredHeaderStickyHeight || options.headerRowHeight || 50) + this.measuredFilterStickyHeight + paginationHeight);
@@ -1396,8 +1415,9 @@ export class UiGridStandaloneElement extends HTMLElement {
     column: GridColumnDef,
     displayIndex: number,
     templateMarkupMap: Map<string, string | null>,
+    columnIndex: number,
   ): void {
-    patchBodyCell(this, cell, row, column, displayIndex, templateMarkupMap);
+    patchBodyCell(this, cell, row, column, displayIndex, templateMarkupMap, columnIndex);
   }
 
   private patchPagination(paginationEl: HTMLElement, snapshot: GridControllerSnapshot): void {
@@ -1410,12 +1430,21 @@ export class UiGridStandaloneElement extends HTMLElement {
     groupingEnabled: boolean,
     pinningEnabled: boolean,
     options: GridOptions,
+    columnIndex: number,
   ): string {
-    return renderHeaderCell(this, column, sortEnabled, groupingEnabled, pinningEnabled, options);
+    return renderHeaderCell(
+      this,
+      column,
+      sortEnabled,
+      groupingEnabled,
+      pinningEnabled,
+      options,
+      columnIndex,
+    );
   }
 
-  private renderFilterCell(column: GridColumnDef): string {
-    return renderFilterCell(this, column);
+  private renderFilterCell(column: GridColumnDef, columnIndex: number): string {
+    return renderFilterCell(this, column, columnIndex);
   }
 
   /**
@@ -1493,8 +1522,13 @@ export class UiGridStandaloneElement extends HTMLElement {
     return renderDisplayItem(this, item, displayIndex);
   }
 
-  private renderBodyCell(row: GridRow, column: GridColumnDef, displayIndex: number): string {
-    return renderBodyCell(this, row, column, displayIndex);
+  private renderBodyCell(
+    row: GridRow,
+    column: GridColumnDef,
+    displayIndex: number,
+    columnIndex: number,
+  ): string {
+    return renderBodyCell(this, row, column, displayIndex, columnIndex);
   }
 
   private renderPagination(snapshot: GridControllerSnapshot): string {

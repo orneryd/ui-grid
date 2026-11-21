@@ -20,6 +20,7 @@ import type {
 } from '@ornery/ui-grid-core';
 import type { GridControllerSnapshot } from './grid-controller';
 import {
+  gridHeaderRowCount,
   renderCellShellContents,
   renderCellTemplateFromMarkup,
   renderDisplayItem,
@@ -36,6 +37,7 @@ import {
 } from './templates';
 import type { UiGridStandaloneElement } from './ui-grid-standalone.element';
 import { formatPaginationRangeLabel } from './pagination-range-label';
+import { ariaBodyRowIndex, ariaColIndex, ariaGridRowCount } from './utils/aria';
 import { bodyCellClass } from './utils/cell-class';
 import { asGroupItem, isRowItem } from './utils/display-items';
 import {
@@ -161,6 +163,16 @@ export function renderPatch(
   if (gridFrame && gridFrame.getAttribute('aria-label') !== nextTitle) {
     gridFrame.setAttribute('aria-label', nextTitle);
   }
+  if (gridFrame) {
+    // Row/column counts change far more often than the shell structure
+    // (paging, filtering, column visibility), so they are patched in place.
+    setAttr(
+      gridFrame,
+      'aria-rowcount',
+      String(ariaGridRowCount(gridHeaderRowCount(el), snapshot.pipeline.displayItems.length)),
+    );
+    setAttr(gridFrame, 'aria-colcount', String(snapshot.visibleColumns.length));
+  }
 
   // Grid table wrapper styles (sticky-top CSS var + explicit height).
   const gridTable = root.querySelector<HTMLElement>('.grid-table');
@@ -179,8 +191,16 @@ export function renderPatch(
       headerGrid.setAttribute('style', nextHeaderStyle);
     }
     const headerHtml = snapshot.visibleColumns
-      .map((column) =>
-        renderHeaderCell(el, column, sortEnabled, groupingEnabled, pinningEnabled, options),
+      .map((column, columnIndex) =>
+        renderHeaderCell(
+          el,
+          column,
+          sortEnabled,
+          groupingEnabled,
+          pinningEnabled,
+          options,
+          columnIndex,
+        ),
       )
       .join('');
     if (headerGrid.innerHTML !== headerHtml) {
@@ -523,34 +543,41 @@ export function patchExistingRows(
   const columns = snapshot.visibleColumns;
 
   // Build O(1) lookup maps from a single pass over bodyContainer.children.
-  // This replaces the previous O(rows×cols) querySelector approach.
-  const groupEls = new Map<string, HTMLElement>();
+  // The walk stops at the row boundary: rows are direct children of the body
+  // container and cells are direct children of their row. Descending with
+  // querySelectorAll instead would also collect the cells of a grid nested
+  // inside a cell template and then patch those in place of the real cells.
+  const headerRows = gridHeaderRowCount(el);
+  const rowEls = new Map<string, HTMLElement>();
+  const groupEls = new Map<string, { row: HTMLElement; cell: HTMLElement }>();
   const cellEls = new Map<string, Map<string, HTMLElement>>();
   const expandableEls: HTMLElement[] = [];
   for (let c = 0; c < bodyContainer.children.length; c++) {
     const node = bodyContainer.children[c] as HTMLElement;
-    const group = node.matches('ui-grid-group-row') ? node : node.querySelector<HTMLElement>('ui-grid-group-row');
-    if (group) {
-      const id = group.dataset['group'];
-      if (id) groupEls.set(id, group);
+    if (node.matches('.ui-grid-group-row-container')) {
+      const groupCell = directChild(node, 'ui-grid-group-row, .ui-grid-group-row');
+      const id = groupCell?.dataset['group'];
+      if (groupCell && id) groupEls.set(id, { row: node, cell: groupCell });
+      continue;
     }
-    for (const cell of node.matches('ui-grid-body-cell')
-      ? [node]
-      : node.querySelectorAll<HTMLElement>('ui-grid-body-cell[data-row][data-column]')) {
-      const rowId = cell.dataset['row'];
-      const colName = cell.dataset['column'];
-      if (!rowId || !colName) continue;
-      let rowMap = cellEls.get(rowId);
-      if (!rowMap) {
-        rowMap = new Map<string, HTMLElement>();
-        cellEls.set(rowId, rowMap);
+    if (node.matches('.expandable-row')) {
+      expandableEls.push(node);
+      continue;
+    }
+    const rowId = node.dataset['row'];
+    if (!rowId) continue;
+    if (node.matches('ui-grid-body-cell[data-column]')) {
+      // Body container holding bare cells (no row wrapper).
+      collectRowCell(cellEls, rowId, node);
+      continue;
+    }
+    rowEls.set(rowId, node);
+    for (let i = 0; i < node.children.length; i++) {
+      const child = node.children[i] as HTMLElement;
+      if (child.matches('ui-grid-body-cell[data-column]')) {
+        collectRowCell(cellEls, rowId, child);
       }
-      rowMap.set(colName, cell);
     }
-    const expandable = node.matches('.expandable-row')
-      ? node
-      : node.querySelector<HTMLElement>('.expandable-row');
-    if (expandable) expandableEls.push(expandable);
   }
 
   const templateMarkupMap = new Map<string, string | null>();
@@ -579,7 +606,8 @@ export function patchExistingRows(
       const group = asGroupItem(item);
       const target = groupEls.get(group.id);
       if (target) {
-        patchGroupRow(el, target, group);
+        setAttr(target.row, 'aria-rowindex', String(ariaBodyRowIndex(headerRows, displayIndex)));
+        patchGroupRow(el, target.cell, group);
       }
       continue;
     }
@@ -589,10 +617,15 @@ export function patchExistingRows(
       // fingerprint (which only tracks row identity) stays the same.
       const target = expandableEls[expandableIndex++];
       if (target) {
+        setAttr(target, 'aria-rowindex', String(ariaBodyRowIndex(headerRows, displayIndex)));
+        // The detail content lives inside the row's single spanning
+        // gridcell; replace that cell's contents so a fast-path patch cannot
+        // strip the gridcell role off the row.
+        const cell = directChild(target, '[role="gridcell"]') ?? target;
         const row = (item as DisplayItem & { row: GridRow }).row;
         const nextHtml = renderExpandableTemplate(el, row);
-        if (target.innerHTML !== nextHtml) {
-          target.innerHTML = nextHtml;
+        if (cell.innerHTML !== nextHtml) {
+          cell.innerHTML = nextHtml;
         }
       }
       continue;
@@ -602,6 +635,10 @@ export function patchExistingRows(
 
     const row = item.row;
     visitedRowIds.add(row.id);
+    const rowEl = rowEls.get(row.id);
+    if (rowEl) {
+      setAttr(rowEl, 'aria-rowindex', String(ariaBodyRowIndex(headerRows, displayIndex)));
+    }
     const rowCells = cellEls.get(row.id);
     if (!rowCells) continue;
 
@@ -646,10 +683,11 @@ export function patchExistingRows(
 
     el.lastRowStateFingerprints.set(row.id, { fingerprint: rowFingerprint, entity: row.entity });
 
-    for (const column of columns) {
+    for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+      const column = columns[columnIndex]!;
       const target = rowCells.get(column.name);
       if (!target) continue;
-      patchBodyCell(el, target, row, column, displayIndex, templateMarkupMap);
+      patchBodyCell(el, target, row, column, displayIndex, templateMarkupMap, columnIndex);
     }
   }
 
@@ -701,6 +739,33 @@ function buildRowFingerprint(
   return `${displayIndex}|${flags}|${row.treeLevel}|${row.height}|${row.expandedRowHeight}|${invalidBits}`;
 }
 
+/** First direct child matching `selector`, or null. Never descends past the
+ * immediate children: cell content can host a nested grid whose own rows and
+ * cells must not be mistaken for this grid's. */
+function directChild(node: HTMLElement, selector: string): HTMLElement | null {
+  for (let i = 0; i < node.children.length; i++) {
+    const child = node.children[i] as HTMLElement;
+    if (child.matches(selector)) return child;
+  }
+  return null;
+}
+
+/** Register `cell` under its row id + column name in the cell lookup map. */
+function collectRowCell(
+  cellEls: Map<string, Map<string, HTMLElement>>,
+  rowId: string,
+  cell: HTMLElement,
+): void {
+  const columnName = cell.dataset['column'];
+  if (!columnName) return;
+  let rowMap = cellEls.get(rowId);
+  if (!rowMap) {
+    rowMap = new Map<string, HTMLElement>();
+    cellEls.set(rowId, rowMap);
+  }
+  rowMap.set(columnName, cell);
+}
+
 /** Patch a group-row element's data-attrs. */
 export function patchGroupRow(
   el: UiGridStandaloneElement,
@@ -720,6 +785,9 @@ export function patchGroupRow(
   setAttr(target, 'data-icon-path', icon.path);
   setAttr(target, 'data-icon-view-box', icon.viewBox ?? '0 0 24 24');
   setAttr(target, 'data-rows-suffix', controller.groupRowsSuffix(group));
+  // The group row is one gridcell spanning every visible column.
+  setAttr(target, 'aria-colindex', '1');
+  setAttr(target, 'aria-colspan', String(Math.max(1, el.snapshot?.visibleColumns.length ?? 1)));
 }
 
 /** Patch a body-cell element in place: class, sticky style, data-attrs,
@@ -731,6 +799,7 @@ export function patchBodyCell(
   column: GridColumnDef,
   displayIndex: number,
   templateMarkupMap: Map<string, string | null>,
+  columnIndex: number,
 ): void {
   const controller = el.controller!;
   const rowId = row.id;
@@ -771,6 +840,7 @@ export function patchBodyCell(
     ),
   );
   setStyle(cell, stickyStyle);
+  setAttr(cell, 'aria-colindex', String(ariaColIndex(columnIndex)));
   setAttr(cell, 'data-odd', String(isOdd));
   setAttr(cell, 'data-align', align);
   setAttr(cell, 'data-pinned', String(isPinned));
