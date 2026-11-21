@@ -171,7 +171,7 @@ export function renderFilterCell(el: UiGridStandaloneElement, column: GridColumn
     return `<div part="filter-cell" class="filter-cell ui-grid-filter-container${pinClass}" data-column="${escapeHtml(column.name)}"${stickyStyle ? ` style="${escapeHtml(stickyStyle)}"` : ''}><slot name="${escapeHtml(slotName)}"></slot></div>`;
   }
 
-  return `<ui-grid-filter-cell part="filter-cell" data-column="${escapeHtml(column.name)}" data-value="${escapeHtml(value)}" data-placeholder="${escapeHtml(controller.filterPlaceholder(column))}" data-disabled="${!canFilter}" data-pinned="${controller.isPinned(column)}" data-pinned-left-last="${controller.isPinnedLeftLast(column)}" data-pinned-right-first="${controller.isPinnedRightFirst(column)}" data-sticky-style="${escapeHtml(stickyStyle)}"></ui-grid-filter-cell>`;
+  return `<ui-grid-filter-cell part="filter-cell" data-column="${escapeHtml(column.name)}" data-value="${escapeHtml(value)}" data-placeholder="${escapeHtml(controller.filterPlaceholder(column))}" data-label="${escapeHtml(`${controller.filterPlaceholder(column)} ${column.displayName || column.name}`)}" data-disabled="${!canFilter}" data-pinned="${controller.isPinned(column)}" data-pinned-left-last="${controller.isPinnedLeftLast(column)}" data-pinned-right-first="${controller.isPinnedRightFirst(column)}" data-sticky-style="${escapeHtml(stickyStyle)}"></ui-grid-filter-cell>`;
 }
 
 /** Render one display-item: group row, expandable row, or the cells of a
