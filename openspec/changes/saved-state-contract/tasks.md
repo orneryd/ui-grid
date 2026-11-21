@@ -1,0 +1,4 @@
+- [x] Align public declarations with saved payloads and preserve compatibility.
+- [x] Verify core state normalization and vanilla save/restore behavior.
+- [x] Verify the public React API round trip.
+- [ ] Verify PR CI and review broader integration behavior.

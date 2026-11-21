@@ -154,15 +154,49 @@ export interface GridBenchmarkOptions {
   iterations?: number;
 }
 
+/** Pagination slice of the legacy declarative saved-state payload. */
+export interface GridSavedStatePagination {
+  paginationCurrentPage: number;
+  paginationPageSize: number;
+}
+
+/**
+ * Payload returned by `gridApi.saveState.save()` and accepted by
+ * `gridApi.saveState.restore()`.
+ *
+ * The live payload is flat and reuses the controller's own field names
+ * (`activeFilters`, `sortState`, `currentPage`, ...) because that is what
+ * `save()` has always serialised and what consumers persist. Every member is
+ * optional: `save()` omits fields disabled by the per-field `save*` options
+ * and `restore()` leaves omitted fields untouched.
+ *
+ * The `sort` / `filters` / `grouping` / `pagination` / `expandable` /
+ * `treeView` / `pinning` members are the older declarative aliases. `save()`
+ * never emits them; `restore()` still accepts them so payloads produced by
+ * `buildGridSavedState` keep restoring. When a payload carries both, the
+ * canonical member wins.
+ */
 export interface GridSavedState {
+  sortState?: SortState;
+  activeFilters?: Record<string, string>;
+  groupByColumns?: string[];
+  /** Collapsed group keys - only captured when `saveGroupingExpandedStates` is on. */
+  collapsedGroups?: Record<string, boolean>;
+  pinnedColumns?: Record<string, 'left' | 'right'>;
   columnOrder?: string[];
-  filters?: Record<string, string>;
+  columnWidthOverrides?: Record<string, string>;
+  currentPage?: number;
+  pageSize?: number;
+  selectedRowIds?: string[];
+  focusedCell?: GridCellPosition | null;
+  expandedRows?: Record<string, boolean>;
+  expandedTreeRows?: Record<string, boolean>;
+  scrollTop?: number;
+  scrollLeft?: number;
   sort?: SortState;
+  filters?: Record<string, string>;
   grouping?: string[];
-  pagination?: {
-    paginationCurrentPage: number;
-    paginationPageSize: number;
-  };
+  pagination?: GridSavedStatePagination;
   expandable?: Record<string, boolean>;
   treeView?: Record<string, boolean>;
   pinning?: Record<string, 'left' | 'right'>;

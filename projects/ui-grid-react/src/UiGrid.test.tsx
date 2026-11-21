@@ -108,6 +108,16 @@ describe('UiGrid React component', () => {
     vi.useRealTimers();
   });
 
+  it('round-trips a filter through the public saved-state API', async () => {
+    const { gridApi } = await renderGrid();
+    act(() => gridApi.core.setFilter('status', 'Active'));
+    const saved = gridApi.saveState.save();
+    expect(saved.activeFilters).toEqual({ status: 'Active' });
+    act(() => gridApi.core.setFilter('status', 'Pilot'));
+    act(() => gridApi.saveState.restore(saved));
+    expect(gridApi.saveState.save().activeFilters).toEqual({ status: 'Active' });
+  });
+
   it('registers the API and renders headers and rows', async () => {
     const { shadowRoot, gridApi } = await renderGrid();
 
