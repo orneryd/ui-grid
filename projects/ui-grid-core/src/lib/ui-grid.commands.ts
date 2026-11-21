@@ -250,13 +250,20 @@ export function restoreGridStateCommand(
   }
 
   if (restorePlan.pagination) {
-    access.setCurrentPage(restorePlan.pagination.currentPage);
-    access.setPageSize(restorePlan.pagination.pageSize);
-    raiseGridPaginationChanged(
-      gridApi,
-      restorePlan.pagination.currentPage,
-      access.getEffectivePageSize(),
-    );
+    const currentPage = restorePlan.pagination.currentPage;
+    const pageSize = restorePlan.pagination.pageSize;
+
+    if (currentPage !== undefined) {
+      access.setCurrentPage(currentPage);
+    }
+
+    if (pageSize !== undefined) {
+      access.setPageSize(pageSize);
+    }
+
+    if (currentPage !== undefined) {
+      raiseGridPaginationChanged(gridApi, currentPage, access.getEffectivePageSize());
+    }
   }
 
   if (restorePlan.expandable) {
