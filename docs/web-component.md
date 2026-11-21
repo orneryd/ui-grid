@@ -217,7 +217,7 @@ grid.options = {
 };
 ```
 
-Unspecified components use the default tags; other grids are unaffected. Define each custom element with `customElements.define` before mounting the grid. Changing these options rebuilds the grid shell. Invalid custom-element names fall back to the default tag. Replacement elements must implement the same attributes and events as their built-in counterparts.
+Unspecified components use the default tags; other grids are unaffected. Define each custom element with `customElements.define` before mounting the grid. Changing these options rebuilds the grid shell. Malformed tag strings fall back to the default tag. Replacement elements must implement the same attributes and events as their built-in counterparts.
 
 `ui-grid-filter-cell` contract:
 - **Attributes** (observe them): `data-column`, `data-value`, `data-placeholder`, `data-disabled` (`"true"` when the column can't be filtered), `data-pinned`, `data-pinned-left-last`, `data-pinned-right-first`, and `data-sticky-style` (inline `left`/`right` offset for pinned columns).
