@@ -1,0 +1,4 @@
+- [x] Set and patch an accessible name for each default filter input.
+- [x] Verify multiple columns, a disabled filter, and a changed display name.
+- [x] Run the vanilla unit suite.
+- [ ] Verify CI on the pull request.

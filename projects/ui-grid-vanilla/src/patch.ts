@@ -372,6 +372,7 @@ export function patchFilterCells(
     const stickyStyle = pinOffset ? `${pinOffset.side}:${pinOffset.offset};` : '';
     setAttr(target, 'data-value', value);
     setAttr(target, 'data-placeholder', controller.filterPlaceholder(column));
+    setAttr(target, 'data-label', `${controller.filterPlaceholder(column)} ${column.displayName || column.name}`);
     setAttr(target, 'data-disabled', String(!canFilter));
     setAttr(target, 'data-pinned', String(controller.isPinned(column)));
     setAttr(target, 'data-pinned-left-last', String(controller.isPinnedLeftLast(column)));

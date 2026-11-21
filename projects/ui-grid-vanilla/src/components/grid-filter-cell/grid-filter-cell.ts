@@ -33,7 +33,7 @@ export class UIGridFilterCell extends HTMLElement {
   }
 
   static get observedAttributes(): string[] {
-    return ['data-column', 'data-value', 'data-placeholder', 'data-disabled',
+    return ['data-column', 'data-value', 'data-placeholder', 'data-label', 'data-disabled',
             'data-pinned', 'data-pinned-left-last', 'data-pinned-right-first',
             'data-sticky-style'];
   }
@@ -50,16 +50,20 @@ export class UIGridFilterCell extends HTMLElement {
     this.sync();
   }
 
-  attributeChangedCallback(): void {
-    if (this.mounted) {
-      this.sync();
+  attributeChangedCallback(name: string): void {
+    if (!this.mounted) return;
+    if (name === 'data-label') {
+      this.inputEl?.setAttribute('aria-label', this.getAttribute('data-label') ?? '');
+      return;
     }
+    this.sync();
   }
 
   private sync(): void {
     const columnName = this.getAttribute('data-column') ?? '';
     const value = this.getAttribute('data-value') ?? '';
     const placeholder = this.getAttribute('data-placeholder') ?? '';
+    const label = this.getAttribute('data-label') ?? '';
     const disabled = this.getAttribute('data-disabled') === 'true';
     const isPinned = this.getAttribute('data-pinned') === 'true';
     const isPinnedLeftLast = this.getAttribute('data-pinned-left-last') === 'true';
@@ -92,6 +96,9 @@ export class UIGridFilterCell extends HTMLElement {
     if (input) {
       if (input.dataset['column'] !== columnName) {
         input.dataset['column'] = columnName;
+      }
+      if (input.getAttribute('aria-label') !== label) {
+        input.setAttribute('aria-label', label);
       }
       if (input.placeholder !== placeholder) {
         input.placeholder = placeholder;
