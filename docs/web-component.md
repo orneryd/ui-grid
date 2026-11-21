@@ -204,6 +204,21 @@ After each render the grid fires one event per kind with `{ added, removed, upda
 
 The grid renders its filter cells, group rows and pager as custom elements: `ui-grid-filter-cell`, `ui-grid-group-row` and `ui-grid-pagination`. To replace one but keep the grid's layout (pinning, sticky positioning, horizontal scroll sync), define your own element under the same tag **before** the grid element is defined. The grid skips tags that already exist. This applies to every grid on the page.
 
+For a single grid, register your own autonomous custom elements and select their tag names with `options.components`:
+
+```ts
+grid.options = {
+  ...grid.options,
+  components: {
+    filterCell: 'my-filter-cell',
+    groupRow: 'my-group-row',
+    pagination: 'my-grid-pagination',
+  },
+};
+```
+
+Unspecified components use the default tags; other grids are unaffected. Define each custom element with `customElements.define` before mounting the grid. Changing these options rebuilds the grid shell. Malformed tag strings fall back to the default tag. Replacement elements must implement the same attributes and events as their built-in counterparts.
+
 `ui-grid-filter-cell` contract:
 - **Attributes** (observe them): `data-column`, `data-value`, `data-placeholder`, `data-disabled` (`"true"` when the column can't be filtered), `data-pinned`, `data-pinned-left-last`, `data-pinned-right-first`, and `data-sticky-style` (inline `left`/`right` offset for pinned columns).
 - **Host classes and style** (set them from the attributes, as the built-in cell does): `filter-cell`, plus `is-pinned`, `is-pinned-left-last`, `is-pinned-right-first`; apply `data-sticky-style` as the host's `style`.

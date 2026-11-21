@@ -62,3 +62,8 @@ export function swapBodyChild(
     container.appendChild(next);
   }
 }
+
+/** Resolve an autonomous custom-element tag without inserting arbitrary markup. */
+export function componentTag(value: string | undefined, fallback: string): string {
+  return value && /^[a-z][a-z0-9._-]*-[a-z0-9._-]+$/.test(value) ? value : fallback;
+}

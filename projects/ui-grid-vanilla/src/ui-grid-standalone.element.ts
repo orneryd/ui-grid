@@ -1117,7 +1117,7 @@ export class UiGridStandaloneElement extends HTMLElement {
   }
 
   measuredPaginationHeight(): number {
-    const paginationEl = this.shadowRoot?.querySelector<HTMLElement>('ui-grid-pagination');
+    const paginationEl = this.shadowRoot?.querySelector<HTMLElement>('[part="pagination"]');
     if (!paginationEl) return 0;
     return paginationEl.offsetHeight || 44;
   }
@@ -1230,6 +1230,7 @@ export class UiGridStandaloneElement extends HTMLElement {
       .join('|');
     const structureKey = [
       columnFingerprint,
+      JSON.stringify(options.components ?? {}),
       filterEnabled ? '1' : '0',
       paginationEnabled ? '1' : '0',
     ].join('#');

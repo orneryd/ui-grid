@@ -46,7 +46,7 @@ import { formatPaginationRangeLabel } from './pagination-range-label';
 import type { UiGridStandaloneElement } from './ui-grid-standalone.element';
 import { bodyCellClass, headerCellClass } from './utils/cell-class';
 import { asGroupItem, isRowItem } from './utils/display-items';
-import { escapeHtml } from './utils/dom';
+import { componentTag, escapeHtml } from './utils/dom';
 
 /**
  * Render a single column's header cell. Emits the selection-row-header
@@ -171,7 +171,8 @@ export function renderFilterCell(el: UiGridStandaloneElement, column: GridColumn
     return `<div part="filter-cell" class="filter-cell ui-grid-filter-container${pinClass}" data-column="${escapeHtml(column.name)}"${stickyStyle ? ` style="${escapeHtml(stickyStyle)}"` : ''}><slot name="${escapeHtml(slotName)}"></slot></div>`;
   }
 
-  return `<ui-grid-filter-cell part="filter-cell" data-column="${escapeHtml(column.name)}" data-value="${escapeHtml(value)}" data-placeholder="${escapeHtml(controller.filterPlaceholder(column))}" data-disabled="${!canFilter}" data-pinned="${controller.isPinned(column)}" data-pinned-left-last="${controller.isPinnedLeftLast(column)}" data-pinned-right-first="${controller.isPinnedRightFirst(column)}" data-sticky-style="${escapeHtml(stickyStyle)}"></ui-grid-filter-cell>`;
+  const tag = componentTag(el.snapshot?.options.components?.filterCell, 'ui-grid-filter-cell');
+  return `<${tag} part="filter-cell" data-column="${escapeHtml(column.name)}" data-value="${escapeHtml(value)}" data-placeholder="${escapeHtml(controller.filterPlaceholder(column))}" data-disabled="${!canFilter}" data-pinned="${controller.isPinned(column)}" data-pinned-left-last="${controller.isPinnedLeftLast(column)}" data-pinned-right-first="${controller.isPinnedRightFirst(column)}" data-sticky-style="${escapeHtml(stickyStyle)}"></${tag}>`;
 }
 
 /** Render one display-item: group row, expandable row, or the cells of a
@@ -193,7 +194,8 @@ export function renderDisplayItem(
     const iconKey = group.collapsed ? 'groupCollapsed' : 'groupExpanded';
     const icon = el.icons.resolve(iconKey);
     const disclosureLabel = el.controller.groupDisclosureLabel(group);
-    return `<ui-grid-group-row part="group-row" data-action="toggle-group" data-group="${escapeHtml(group.id)}" data-collapsed="${group.collapsed ? 'true' : 'false'}" data-field="${escapeHtml(group.field)}" data-column-label="${escapeHtml(el.controller.groupColumnLabel(group))}" data-label="${escapeHtml(group.label)}" data-count="${group.count}" data-depth="${group.depth}" data-disclosure-label="${escapeHtml(disclosureLabel)}" data-icon-path="${icon.path}" data-icon-view-box="${icon.viewBox ?? '0 0 24 24'}" data-rows-suffix="${escapeHtml(el.controller.groupRowsSuffix(group))}"></ui-grid-group-row>`;
+    const tag = componentTag(el.snapshot.options.components?.groupRow, 'ui-grid-group-row');
+    return `<${tag} part="group-row" data-action="toggle-group" data-group="${escapeHtml(group.id)}" data-collapsed="${group.collapsed ? 'true' : 'false'}" data-field="${escapeHtml(group.field)}" data-column-label="${escapeHtml(el.controller.groupColumnLabel(group))}" data-label="${escapeHtml(group.label)}" data-count="${group.count}" data-depth="${group.depth}" data-disclosure-label="${escapeHtml(disclosureLabel)}" data-icon-path="${icon.path}" data-icon-view-box="${icon.viewBox ?? '0 0 24 24'}" data-rows-suffix="${escapeHtml(el.controller.groupRowsSuffix(group))}"></${tag}>`;
   }
 
   if (item.kind === 'expandable') {
@@ -355,7 +357,8 @@ export function renderPagination(
     lastRowIndex: snapshot.lastRowIndex,
     totalItems: snapshot.pipeline.totalItems,
   });
-  return `<ui-grid-pagination part="pagination" data-range-label="${escapeHtml(rangeLabel)}" data-current-page="${snapshot.currentPage}" data-total-pages="${snapshot.totalPages}" data-page-label="${escapeHtml(snapshot.labels.paginationPage)}" data-of-label="${escapeHtml(snapshot.labels.paginationOf)}" data-prev-label="${escapeHtml(snapshot.labels.paginationPrevious)}" data-next-label="${escapeHtml(snapshot.labels.paginationNext)}" data-rows-label="${escapeHtml(snapshot.labels.paginationRows)}" data-prev-icon-path="${prevIcon.path}" data-prev-icon-view-box="${prevIcon.viewBox ?? '0 0 24 24'}" data-next-icon-path="${nextIcon.path}" data-next-icon-view-box="${nextIcon.viewBox ?? '0 0 24 24'}" data-page-sizes="${escapeHtml(JSON.stringify(pageSizes))}" data-page-size="${snapshot.pageSize}" data-prev-disabled="${snapshot.currentPage <= 1}" data-next-disabled="${snapshot.currentPage >= snapshot.totalPages}"></ui-grid-pagination>`;
+  const tag = componentTag(snapshot.options.components?.pagination, 'ui-grid-pagination');
+  return `<${tag} part="pagination" data-range-label="${escapeHtml(rangeLabel)}" data-current-page="${snapshot.currentPage}" data-total-pages="${snapshot.totalPages}" data-page-label="${escapeHtml(snapshot.labels.paginationPage)}" data-of-label="${escapeHtml(snapshot.labels.paginationOf)}" data-prev-label="${escapeHtml(snapshot.labels.paginationPrevious)}" data-next-label="${escapeHtml(snapshot.labels.paginationNext)}" data-rows-label="${escapeHtml(snapshot.labels.paginationRows)}" data-prev-icon-path="${prevIcon.path}" data-prev-icon-view-box="${prevIcon.viewBox ?? '0 0 24 24'}" data-next-icon-path="${nextIcon.path}" data-next-icon-view-box="${nextIcon.viewBox ?? '0 0 24 24'}" data-page-sizes="${escapeHtml(JSON.stringify(pageSizes))}" data-page-size="${snapshot.pageSize}" data-prev-disabled="${snapshot.currentPage <= 1}" data-next-disabled="${snapshot.currentPage >= snapshot.totalPages}"></${tag}>`;
 }
 
 /** Hidden `<slot>` registry block so the element's shadow DOM exposes a

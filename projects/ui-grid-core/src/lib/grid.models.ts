@@ -284,7 +284,14 @@ export interface GridLabels {
  */
 export const DEFAULT_GRID_LABELS: Readonly<GridLabels> = defaultLabels;
 
+export interface GridComponentOverrides {
+  filterCell?: string;
+  groupRow?: string;
+  pagination?: string;
+}
+
 export interface GridOptions {
+  components?: GridComponentOverrides;
   id: string;
   title?: string;
   data: readonly GridRecord[];

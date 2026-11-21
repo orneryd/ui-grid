@@ -1,0 +1,4 @@
+- [x] Select validated custom element tags per grid and support options updates.
+- [x] Preserve patching and component events for custom tags.
+- [x] Test independent grids, updates, group rows, filtering, and invalid tags.
+- [ ] Complete package and CI verification.
