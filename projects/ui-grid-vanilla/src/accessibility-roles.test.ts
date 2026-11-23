@@ -342,6 +342,7 @@ describe('grid accessibility roles', () => {
 
     const menu = root.querySelector('.pin-menu');
     expect(menu?.getAttribute('role')).toBe('menu');
+    expect(menu?.hasAttribute('inert')).toBe(true);
     expect([...(menu?.children ?? [])].map((child) => child.getAttribute('role'))).toEqual([
       'menuitem',
       'menuitem',
@@ -365,5 +366,34 @@ describe('grid accessibility roles', () => {
       ),
     );
     expect(expandedTrigger.getAttribute('aria-expanded')).toBe('true');
+    expect(expandedTrigger.getAttribute('tabindex')).toBe('-1');
+    expect(root.querySelector('.pin-menu')?.hasAttribute('inert')).toBe(false);
+    expect((root.activeElement as HTMLElement | null)?.dataset['action']).toBe('pin-left');
+
+    pressKey(root.activeElement as HTMLElement, 'ArrowDown');
+    expect((root.activeElement as HTMLElement | null)?.dataset['action']).toBe('pin-right');
+    pressKey(root.activeElement as HTMLElement, 'Home');
+    expect((root.activeElement as HTMLElement | null)?.dataset['action']).toBe('pin-left');
+    pressKey(root.activeElement as HTMLElement, 'Escape');
+
+    const closedTrigger = root.querySelector<HTMLElement>(
+      '.header-cell[data-column="name"] .pin-trigger',
+    );
+    expect(root.querySelector('.pin-menu')?.hasAttribute('inert')).toBe(true);
+    expect(closedTrigger?.getAttribute('tabindex')).toBeNull();
+    expect(root.activeElement).toBe(closedTrigger);
+
+    pressKey(closedTrigger!, 'ArrowDown');
+    expect(root.querySelector('.pin-menu')?.hasAttribute('inert')).toBe(false);
+    expect((root.activeElement as HTMLElement | null)?.dataset['action']).toBe('pin-left');
+
+    const nextColumnTrigger = root.querySelector<HTMLElement>(
+      '.header-cell[data-column="status"] .pin-trigger',
+    );
+    nextColumnTrigger?.focus();
+    await waitFor(() =>
+      root.querySelector('.pin-menu')?.hasAttribute('inert') ? {} : null,
+    );
+    expect(root.activeElement).toBe(nextColumnTrigger);
   });
 });

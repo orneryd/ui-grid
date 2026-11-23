@@ -46,6 +46,37 @@ function bodyCellFromEvent(event: Event): HTMLElement | null {
   return null;
 }
 
+function focusPinTrigger(root: ShadowRoot, columnName: string): void {
+  const trigger = [...root.querySelectorAll<HTMLElement>('[data-action="pin-trigger"]')].find(
+    (candidate) => candidate.dataset['column'] === columnName,
+  );
+  trigger?.focus();
+}
+
+function focusPinMenuItem(root: ShadowRoot, index: number): void {
+  const menu = root.querySelector<HTMLElement>('.pin-menu:not([inert])');
+  const items = menu?.querySelectorAll<HTMLElement>('[role="menuitem"]');
+  items?.item(index)?.focus();
+}
+
+function closePinMenu(el: UiGridStandaloneElement, root: ShadowRoot, restoreTriggerFocus: boolean): void {
+  const columnName = el.openPinMenuColumn;
+  if (!columnName) return;
+
+  el.openPinMenuColumn = null;
+  const headerCell = [...root.querySelectorAll<HTMLElement>('.header-cell[data-column]')].find(
+    (candidate) => candidate.dataset['column'] === columnName,
+  );
+  headerCell?.classList.remove('is-pin-menu-open');
+  if (headerCell) headerCell.dataset['pinMenuOpen'] = 'false';
+  headerCell?.querySelector('.pin-control')?.classList.remove('pin-control-open');
+  headerCell?.querySelector<HTMLElement>('.pin-menu')?.setAttribute('inert', '');
+  const trigger = headerCell?.querySelector<HTMLElement>('.pin-trigger');
+  trigger?.setAttribute('aria-expanded', 'false');
+  trigger?.removeAttribute('tabindex');
+  if (restoreTriggerFocus) focusPinTrigger(root, columnName);
+}
+
 /**
  * Watch the element's light DOM for `<template slot="…">` changes so
  * consumer template edits trigger a re-render. Ports the old grid's
@@ -213,8 +244,7 @@ export function bindEvents(el: UiGridStandaloneElement): void {
     if (!action) return;
 
     if (el.openPinMenuColumn && !realTarget.closest('.pin-control')) {
-      el.openPinMenuColumn = null;
-      el.render();
+      closePinMenu(el, root, false);
       return;
     }
 
@@ -265,8 +295,13 @@ export function bindEvents(el: UiGridStandaloneElement): void {
           return;
         }
 
-        el.openPinMenuColumn = el.openPinMenuColumn === columnName ? null : columnName;
-        el.render();
+        if (el.openPinMenuColumn === columnName) {
+          closePinMenu(el, root, true);
+        } else {
+          el.openPinMenuColumn = columnName;
+          el.render();
+          focusPinMenuItem(root, 0);
+        }
       }
       return;
     }
@@ -276,6 +311,8 @@ export function bindEvents(el: UiGridStandaloneElement): void {
       if (columnName) {
         el.openPinMenuColumn = null;
         el.controller.pinColumn(columnName, action === 'pin-left' ? 'left' : 'right');
+        el.render();
+        focusPinTrigger(root, columnName);
       }
       return;
     }
@@ -334,6 +371,22 @@ export function bindEvents(el: UiGridStandaloneElement): void {
 
   root.addEventListener('focusout', (event) => {
     const relatedTarget = (event as FocusEvent).relatedTarget as HTMLElement | null;
+    const target = event.target as HTMLElement | null;
+    const openColumnName = el.openPinMenuColumn;
+    const relatedColumn = relatedTarget
+      ?.closest<HTMLElement>('.pin-control')
+      ?.closest<HTMLElement>('.header-cell')?.dataset['column'];
+    if (openColumnName && target?.closest('.pin-menu') && relatedColumn !== openColumnName) {
+      root.ownerDocument.defaultView?.setTimeout(() => {
+        const activeColumn = root.activeElement
+          ?.closest<HTMLElement>('.pin-control')
+          ?.closest<HTMLElement>('.header-cell')?.dataset['column'];
+        if (el.openPinMenuColumn === openColumnName && activeColumn !== openColumnName) {
+          closePinMenu(el, root, false);
+        }
+      }, 0);
+    }
+
     if (!relatedTarget?.closest('.body-cell[data-row][data-column]')) {
       el.focusedCell = null;
     }
@@ -522,6 +575,53 @@ export function bindEvents(el: UiGridStandaloneElement): void {
     const keyboardEvent = event as KeyboardEvent;
     const target = event.target as HTMLElement | null;
     if (!target || !el.controller) return;
+
+    const pinMenu = target.closest<HTMLElement>('.pin-menu:not([inert])');
+    if (pinMenu) {
+      const items = [...pinMenu.querySelectorAll<HTMLElement>('[role="menuitem"]')];
+      const currentItem = target.closest<HTMLElement>('[role="menuitem"]');
+      const currentIndex = currentItem ? items.indexOf(currentItem) : -1;
+      if (keyboardEvent.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        closePinMenu(el, root, true);
+        return;
+      }
+
+      if (items.length > 0) {
+        let nextIndex: number | null = null;
+        if (keyboardEvent.key === 'ArrowDown' || keyboardEvent.key === 'ArrowRight') {
+          nextIndex = (currentIndex + 1 + items.length) % items.length;
+        } else if (keyboardEvent.key === 'ArrowUp' || keyboardEvent.key === 'ArrowLeft') {
+          nextIndex = (currentIndex - 1 + items.length) % items.length;
+        } else if (keyboardEvent.key === 'Home') {
+          nextIndex = 0;
+        } else if (keyboardEvent.key === 'End') {
+          nextIndex = items.length - 1;
+        }
+
+        if (nextIndex !== null) {
+          event.preventDefault();
+          items[nextIndex]?.focus();
+        }
+      }
+      return;
+    }
+
+    const pinTrigger = target.closest<HTMLElement>('[data-action="pin-trigger"]');
+    if (pinTrigger && keyboardEvent.key === 'ArrowDown') {
+      const columnName = pinTrigger.dataset['column'];
+      const column = columnName
+        ? el.snapshot?.visibleColumns.find((candidate) => candidate.name === columnName)
+        : undefined;
+      if (columnName && column && !el.controller.isPinned(column)) {
+        event.preventDefault();
+        el.openPinMenuColumn = columnName;
+        el.render();
+        focusPinMenuItem(root, 0);
+      }
+      return;
+    }
 
     const onBodyCell = bodyCellFromEvent(event);
 
