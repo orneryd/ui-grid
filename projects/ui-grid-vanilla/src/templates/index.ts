@@ -17,8 +17,14 @@ export function slotRegistryMarkup(cellSlots: string): string {
   return `<div hidden class="slot-registry">${cellSlots}<slot name="expandable-row"></slot></div>`;
 }
 
-export function filterRowMarkup(templateColumns: string, filterCells: string): string {
-  return `<div class="filter-grid ui-grid-header" style="grid-template-columns:${templateColumns}">${filterCells}</div>`;
+/** `rowIndex` is the 1-based `aria-rowindex` for the filter row (2 when the
+ * column-header row is row 1). */
+export function filterRowMarkup(
+  templateColumns: string,
+  filterCells: string,
+  rowIndex: number,
+): string {
+  return `<div class="filter-grid ui-grid-header" role="row" aria-rowindex="${rowIndex}" style="grid-template-columns:${templateColumns}">${filterCells}</div>`;
 }
 
 export function virtualSpacerStyle(totalVirtualHeight: number, rowSize: number): string {
@@ -26,19 +32,27 @@ export function virtualSpacerStyle(totalVirtualHeight: number, rowSize: number):
 }
 
 export function bodyVirtualMarkup(templateColumns: string, totalVirtualHeight: number, virtualOffset: number, bodyContent: string, rowSize: number): string {
-  return `<div class="grid-virtual-spacer" style="${virtualSpacerStyle(totalVirtualHeight, rowSize)}"><div class="body-grid ui-grid-canvas grid-virtual-body" style="grid-template-columns:${templateColumns};top:${virtualOffset}px">${bodyContent}</div></div>`;
+  return `<div class="grid-virtual-spacer" style="${virtualSpacerStyle(totalVirtualHeight, rowSize)}"><div class="body-grid ui-grid-canvas grid-virtual-body" role="rowgroup" style="grid-template-columns:${templateColumns};--ui-grid-template-columns:${templateColumns};top:${virtualOffset}px">${bodyContent}</div></div>`;
 }
 
 export function bodyStaticMarkup(templateColumns: string, bodyContent: string): string {
-  return `<div class="body-grid ui-grid-canvas" style="grid-template-columns:${templateColumns}">${bodyContent}</div>`;
+  return `<div class="body-grid ui-grid-canvas" role="rowgroup" style="grid-template-columns:${templateColumns};--ui-grid-template-columns:${templateColumns}">${bodyContent}</div>`;
 }
 
 export function emptyDataMarkup(heading: string, description: string): string {
   return `<div part="empty-state" class="empty-state ui-grid-no-row-overlay"><strong>${heading}</strong><p>${description}</p></div>`;
 }
 
-export function expandableRowMarkup(expandableContent: string): string {
-  return `<div part="expandable-row" class="expandable-row ui-grid-row ui-grid-expandable-row" style="grid-column:1 / -1">${expandableContent}</div>`;
+/** An expandable detail row. Carries its own `aria-rowindex` because it is a
+ * row in the grid's row sequence, and a single `gridcell` spanning every
+ * column to hold the detail content. */
+export function expandableRowMarkup(
+  expandableContent: string,
+  rowIndex: number,
+  columnCount: number,
+): string {
+  const colspan = columnCount > 1 ? ` aria-colspan="${columnCount}"` : '';
+  return `<div part="expandable-row" class="expandable-row ui-grid-row ui-grid-expandable-row" role="row" aria-rowindex="${rowIndex}" style="grid-column:1 / -1"><div role="gridcell" aria-colindex="1"${colspan}>${expandableContent}</div></div>`;
 }
 
 export function treeToggleMarkup(rowId: string, toggleLabel: string, iconViewBox: string, iconPath: string): string {

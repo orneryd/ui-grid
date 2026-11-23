@@ -1,0 +1,5 @@
+- [x] Expose row, cell, and virtual index semantics.
+- [x] Preserve nested content and expandable cell roles on patch renders.
+- [x] Add role and index regression tests.
+- [ ] Complete pin menu keyboard and closed-state accessibility.
+- [ ] Verify real-browser layout and accessibility tree.

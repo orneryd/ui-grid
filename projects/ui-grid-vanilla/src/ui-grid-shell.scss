@@ -23,3 +23,33 @@
 @include filter-cell.rules;
 @include group-row.rules;
 @include pagination.rules;
+
+.body-grid {
+  display: block;
+}
+
+.ui-grid-data-row,
+.ui-grid-group-row-container {
+  display: grid;
+  grid-template-columns: var(--ui-grid-template-columns);
+  min-width: max-content;
+  width: 100%;
+}
+
+.body-grid > .ui-grid-data-row .body-cell:hover:not(.row-focused):not(.cell-focused):not(.cell-editing) {
+  background: var(--ui-grid-row-hover);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ui-grid-accent) 10%, transparent);
+}
+
+.body-grid > .ui-grid-data-row .body-cell.row-focused {
+  background: var(--ui-grid-row-focus-background);
+}
+
+.body-grid > .ui-grid-data-row .body-cell.cell-focused {
+  background: var(--ui-grid-cell-focus-background);
+  box-shadow: var(--ui-grid-cell-focus-ring);
+}
+
+.body-grid > .ui-grid-data-row .body-cell.cell-editing {
+  background: var(--ui-grid-cell-editing-background);
+}
